@@ -1,13 +1,22 @@
+from sqlalchemy import Column, Integer, String, Float
 from typing import Any, List
-from pydantic import  BaseModel
-from datetime import datetime
+from src.db.database import Base
 
-class GroupModel(BaseModel):
-    id: str
-    name: str
-    first_token: str
-    size: int
-    units_of_measure: List[str]
-    items: List[Any]
-    created_at: datetime
-    updated_at: datetime
+class GroupModel(Base):
+    __tablename__ = 'f03_banco_precos_grupos'
+    grupo = Column(String, primary_key=True)
+    dsc_unidade_medida =  Column(String)
+    media =  Column(String)
+    qtd =  Column(Integer)
+    max =  Column(Integer)
+    min =  Column(Integer)
+    mediana =  Column(Float)
+    desvio_padrao =  Column(Float)
+    var =  Column(String)
+    quantil_1 =  Column(Float)
+    quantil_3 =  Column(Float)
+    primeiro_termo =  Column(String)
+    ruido =  Column(Integer)
+    metadata_trilha_versao =  Column(String)
+    metadata_trilha_data_execucao =  Column(String)
+    metadata_nome_trilha =  Column(String)
