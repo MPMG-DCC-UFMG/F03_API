@@ -4,8 +4,8 @@ from fastapi import APIRouter, Query
 class ListGroupsQueryParams:
     def __init__(
         self,
-        limit: int = Query(0, description="Query limit"),
-        offset: int = Query(15, description="Query offset"),
+        limit: int = Query(15, description="Query limit"),
+        offset: int = Query(0, description="Query offset"),
         sort: Optional[str] = Query(None,description="The sorting attribute"),
         name: Optional[str] = Query(None, description="Group name"),
         first_token: Optional[str] = Query(None, description="Group first token"),
