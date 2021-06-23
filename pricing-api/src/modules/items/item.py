@@ -5,7 +5,7 @@ from src.db.database import Base
 class ItemModel(Base):
     __tablename__ = 'f03_banco_precos_itens'
     item_id = Column(String, primary_key=True)
-    grupo = Column(String)
+    grupo = Column(String) # Talvez incluir a relação já no ORM, para retornar as informações do grupo já na consulta ao item
     grupo_ruido = Column(String)
     item_ruido = Column(String)
     preco = Column(String)
