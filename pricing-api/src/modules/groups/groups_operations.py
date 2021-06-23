@@ -17,6 +17,7 @@ class ListGroupsQueryParams:
         self.name = name
         self.first_token = first_token
         self.unit = unit
+
 class GetGroupByFirstToken:
     def __init__(
         self,
