@@ -19,6 +19,6 @@ class GroupsRepository:
         if (bool(params.unit)):
             filters.append(GroupModel.dsc_unidade_medida.__eq__(params.unit))
 
-        rows = db_session.query(GroupModel).filter(and_(*filters))[params.offset:params.limit]
+        rows = db_session.query(GroupModel).filter(and_(*filters))[params.offset:params.offset+params.limit]
 
         return list(map(lambda x: x.__dict__, rows))
