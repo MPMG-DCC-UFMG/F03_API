@@ -1,7 +1,7 @@
 from src.modules.groups.groups_operations import ListGroupsQueryParams
 from src.modules.groups.group import GroupModel
 from src.db.database import db_session
-from sqlalchemy import and_, desc
+from sqlalchemy import and_, desc, asc
 
 class GroupsRepository:
 
@@ -21,7 +21,8 @@ class GroupsRepository:
 
         if (bool(params.sort)):
             sort_statement = getattr(GroupModel, params.sort)
-            rows = db_session.query(GroupModel).filter(and_(*filters)).order_by(desc(sort_statement))[params.offset:params.offset+params.limit]
+            order = desc(sort_statement) if params.order == "desc" else asc(sort_statement)
+            rows = db_session.query(GroupModel).filter(and_(*filters)).order_by(order)[params.offset:params.offset+params.limit]
         else:
             rows = db_session.query(GroupModel).filter(and_(*filters))[params.offset:params.offset+params.limit]
 
