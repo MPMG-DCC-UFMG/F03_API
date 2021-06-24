@@ -6,11 +6,11 @@ class ListGroupsQueryParams:
         self,
         limit: int = Query(15, description="Query limit"),
         offset: int = Query(0, description="Query offset"),
-        sort: Optional[str] = Query(None,description="The sorting attribute"),
-        order: Optional[str] = Query("desc",description="The sorting order", regex="^asc|desc$"),
-        name: Optional[str] = Query(None, description="Group name"),
-        first_token: Optional[str] = Query(None, description="Group first token"),
-        unit:  Optional[str] = Query(None, description="Group unit of measure"),
+        sort: Optional[str] = Query(None,description="Atributo de ordenação"),
+        order: Optional[str] = Query("desc",description="Critério de ordenação", regex="^asc|desc$"),
+        name: Optional[str] = Query(None, description="Nome do grupo"),
+        first_token: Optional[str] = Query(None, description="Primeiro termo"),
+        unit:  Optional[str] = Query(None, description="Unidade de medida"),
     ):
         self.limit = limit
         self.offset = offset
