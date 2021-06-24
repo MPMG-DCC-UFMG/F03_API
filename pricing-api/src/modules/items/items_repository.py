@@ -13,20 +13,20 @@ class ItemsRepository:
 
         filters = []
         # Ideia: passar a construção dessa lista filters para o construtor da classe ListItemsQueryParams.
-        if (params.county):
-            filters.append(ItemModel.municipio == params.county)
-        if (params.year):
+        if bool(params.county):
+            filters.append(ItemModel.municipio.__eq__(params.county))
+        if bool(params.year):
             filters.append(ItemModel.ano.in_(params.year))
-        if (params.description):
+        if bool(params.description):
             filters.append(ItemModel.original.ilike("%" + params.description + "%"))
-        if (params.group):
-            filters.append(ItemModel.grupo == params.group)
-        if (params.before):
+        if bool(params.group):
+            filters.append(ItemModel.grupo.__eq__(params.group))
+        if bool(params.before):
             filters.append(ItemModel.data <= params.before)
-        if (params.after):
+        if bool(params.after):
             filters.append(ItemModel.data >= params.after)
-        if (params.first_token):
-            filters.append(ItemModel.primeiro_termo == params.first_token)
+        if bool(params.first_token):
+            filters.append(ItemModel.primeiro_termo.__eq__(params.first_token))
 
         filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
