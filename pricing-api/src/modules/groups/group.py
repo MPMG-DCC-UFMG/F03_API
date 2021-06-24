@@ -4,7 +4,8 @@ from src.db.database import Base
 
 class GroupModel(Base):
     __tablename__ = 'f03_banco_precos_grupos'
-    grupo = Column(String, primary_key=True)
+    grupo_id = Column(String, primary_key=True)
+    grupo = Column(String)
     dsc_unidade_medida =  Column(String)
     media =  Column(String)
     qtd =  Column(Integer)

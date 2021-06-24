@@ -7,6 +7,6 @@ groups_router = APIRouter()
 async def list_groups(params: ListGroupsQueryParams = Depends()):
   return service.list(params)
 
-@groups_router.get('/{id}', description='Find group by their ID', )
+@groups_router.get('/{id}', description='Find group by ID', )
 async def get_group(id: str):
   return service.find_by_id(id)
