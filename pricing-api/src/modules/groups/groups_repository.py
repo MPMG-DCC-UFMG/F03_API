@@ -19,11 +19,8 @@ class GroupsRepository:
         if (bool(params.unit)):
             filters.append(GroupModel.dsc_unidade_medida.__eq__(params.unit))
 
-        if (bool(params.sort)):
-            sort_statement = getattr(GroupModel, params.sort)
-            order = desc(sort_statement) if params.order == "desc" else asc(sort_statement)
-            rows = db_session.query(GroupModel).filter(and_(*filters)).order_by(order)[params.offset:params.offset+params.limit]
-        else:
-            rows = db_session.query(GroupModel).filter(and_(*filters))[params.offset:params.offset+params.limit]
+        sort_statement = params.sort
+        order = desc(sort_statement) if params.order == "desc" else asc(sort_statement)
+        rows = db_session.query(GroupModel).filter(and_(*filters)).order_by(order)[params.offset:params.offset+params.limit]
 
         return list(map(lambda x: x.__dict__, rows))
