@@ -14,7 +14,8 @@ class ListItemsQueryParams:
         before: Optional[date] = Query(None, description="Limite superior de data"),
         after: Optional[date] = Query(None, description="Limite inferior de data"),
         description: Optional[str] = Query(None, min_length=3, description="Texto na descrição original do item"),
-        group: Optional[str] = Query(None, description="Nome do grupo do item")
+        group: Optional[str] = Query(None, description="Nome do grupo do item"),
+        first_token: Optional[str] = Query(None, description="Group first token")
     ):
         self.limit = limit
         self.offset = offset
@@ -26,3 +27,4 @@ class ListItemsQueryParams:
         self.after = after
         self.description = description
         self.group = group
+        self.first_token = first_token
