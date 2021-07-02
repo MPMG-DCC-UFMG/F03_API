@@ -13,18 +13,18 @@ class PricingRepository:
         if (not params.group) and (not params.description): # Talvez seja melhor explicitar esse requerimento em outro lugar (como na classe Params), ou com outra resposta.
             return []
         if params.year:
-            filters.append(ItemModel.ano.__eq__(params.year))
+            filters.append(ItemModel.ano.in_(params.year))
         if params.description:
             filters.append(ItemModel.original.ilike("%" + params.description + "%")) # TODO: Melhorar a busca por descrição.
         if params.group:
             filters.append(ItemModel.grupo.__eq__(params.group))
         if params.units_of_measure:
-            filters.append(ItemModel.dsc_unidade_medida.__eq__(params.units_of_measure))
+            filters.append(ItemModel.dsc_unidade_medida.in_(params.units_of_measure))
         filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
 
-        result = db_session.query(ItemModel.dsc_unidade_medida, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
+        result = db_session.query(ItemModel.dsc_unidade_medida, ItemModel.ano, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
             .filter(and_(*filters)) \
-            .group_by(ItemModel.dsc_unidade_medida) \
-            .order_by(desc('count'))[:10]
+            .group_by(ItemModel.dsc_unidade_medida, ItemModel.ano) \
+            .order_by(desc('count'))
 
         return [ row for row in result ]
