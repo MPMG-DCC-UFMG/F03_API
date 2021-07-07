@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Any
 from pydantic import BaseModel, Field
+
 
 class Group(BaseModel):
     grupo: str = Field(example="gasolina_0", title="Grupo de objetos de licitação")
@@ -10,8 +11,8 @@ class Group(BaseModel):
     max: float = Field(example=4.50, title="Valor unitário máximo dos itens do grupo")
     min: float = Field(example=3.60, title="Valor unitário mínimo dos itens do grupo")
     mediana: float = Field(example=4.0, title="Mediana dos valores unitários dos itens do grupo")
-    desvio_padrao: float = Field(example=0.1, title="Desvio padrão dos valores unitários dos itens do grupo")
-    var: float = Field(example=0.1, title="Variância dos valores unitários dos itens do grupo")
+    desvio_padrao: Any = Field(title="Desvio padrão dos valores unitários dos itens do grupo")
+    var: Any = Field(title="Variância dos valores unitários dos itens do grupo")
     quantil_1: float = Field(example=3.80, title="Primeiro quartil dos valores unitários dos itens do grupo")
     quantil_3: float = Field(example=4.20, title="Terceiro quartil dos valores unitários dos itens do grupo")
     primeiro_termo: str = Field(example="gasolina", title='Primeiro termo das descrições do grupo')
