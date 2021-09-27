@@ -13,4 +13,8 @@ nltk==3.5
 python-dotenv==0.17.1
 sasl==0.3
 thrift-sasl==0.4.3
-PyHive==0.6.4
+pyhive==0.6.4
+fastapi==0.65.1
+uvicorn==0.14.0
+sqlalchemy==1.4.7
+httptools==0.1
