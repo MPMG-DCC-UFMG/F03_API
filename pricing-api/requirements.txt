@@ -8,9 +8,10 @@ pandas
 scikit-learn
 nltk
 python-dotenv
-sasl
-thrift-sasl
 pyhive
+sasl==0.2.1
+thrift==0.10.0
+thrift-sasl==0.3.0
 fastapi
 uvicorn
 sqlalchemy
