@@ -1,16 +1,13 @@
 FROM python:3.9
 
-# RUN apt-get -y install openssh-client
-# RUN ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
-
-# RUN eval "$(ssh-agent -s)" && \
-#     ssh-add /root/.ssh/id_rsa && \
-
-# WORKDIR ~/.ssh
+COPY . /code
+RUN mkdir /root/.ssh
+COPY config /root/.ssh/
 WORKDIR /code
-COPY ./requirements.txt /code/requirements.txt
+
 RUN apt-get update && apt-get install libsasl2-dev
-RUN pip install --upgrade -r /code/requirements.txt
-COPY ./src /code/src
-# WORKDIR /home
-CMD ["uvicorn", "src.main:app", "--reload"]
+RUN pip install --upgrade pip && pip install -r /code/requirements.txt
+
+CMD ["ssh", "mpmg", "-At", "-L", "0.0.0.0:10000:hadoopmn-gsi-prod03.mpmg.mp.br:10000"]
+
+# CMD ["uvicorn", "src.main:app", "--reload", "--host", "0.0.0.0"]

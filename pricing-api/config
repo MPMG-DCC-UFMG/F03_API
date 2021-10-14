@@ -1,0 +1,21 @@
+Host mpmg
+   Compression yes
+   Hostname 177.190.215.24
+   Port 27834
+   User ufmg.f01dcc
+   ForwardX11 no
+   ForwardAgent yes
+   ProxyCommand ssh -C pedrobrum@login.dcc.ufmg.br nc %h %p
+
+
+Host mica
+   Hostname login.dcc.ufmg.br
+   User pedrobrum
+
+Host cerberus
+   Hostname cerberus.speed.dcc.ufmg.br
+   User pedrobrum
+
+Host speed
+   User pedrobrum
+   ProxyCommand ssh -q mica nc cerberus.speed.dcc.ufmg.br 22
