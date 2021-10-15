@@ -1,8 +1,6 @@
 FROM python:3.9
 
 COPY . /code
-RUN mkdir /root/.ssh
-COPY config /root/.ssh/
 WORKDIR /code
 
 RUN apt-get update && apt-get install libsasl2-dev
