@@ -1,0 +1,25 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: uvicorn src.main:app --reload
+    env_file:
+      - ./.env
+    volumes:
+      - .:/src
+    ports:
+      - 8008:8000
+    extra_hosts:
+      localhost: 177.190.215.24
+    volumes:
+      - ~/.ssh:/root/.ssh
+    environment:
+        TUNNEL_HOST: mpmg
+        REMOTE_HOST: 177.190.215.24
+        LOCAL_PORT: 27834
+        REMOTE_PORT: 27834
+    stdin_open: true # docker run -i
+    tty: true
