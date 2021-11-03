@@ -10,8 +10,8 @@ def get_params_values(params):
         filters.append(ItemModel.grupo.in_(group))
     if params.units_of_measure:
         filters.append(ItemModel.dsc_unidade_medida.in_(params.units_of_measure))
-    if params.county:
-        filters.append(ItemModel.municipio.__eq__(params.county))
+    if params.city:
+        filters.append(ItemModel.municipio.__eq__(params.city))
     if params.before:
         filters.append(ItemModel.data <= params.before)
     if params.after:

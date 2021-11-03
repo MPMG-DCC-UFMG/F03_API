@@ -9,7 +9,8 @@ class PricingQueryParams:
         offset: int = Query(15, description="Query offset"),
         sort: Optional[str] = Query("count", description="Atributo de ordenação"),
         order: Optional[str] = Query("desc", description="Critério de ordenação", regex="^asc|desc$"),
-        county: Optional[str] = Query(None, description="Município do órgão licitante"),
+        city: Optional[str] = Query(None, description="Município do órgão licitante"),
+        region: Optional[str] = Query(None, description="Região do licitante"),
         before: Optional[date] = Query(None, description="Limite superio de data"),
         after: Optional[date] = Query(None, description="Limite inferior de data"),
         description: Optional[List[str]] = Query(None, description="The item description"),
@@ -21,7 +22,8 @@ class PricingQueryParams:
         self.offset = offset
         self.sort = sort
         self.order = order
-        self.county = county
+        self.city = city
+        self.region = region
         self.before = before
         self.after = after
         self.description = description
