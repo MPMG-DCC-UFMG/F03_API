@@ -1,6 +1,8 @@
 from typing import List, Optional
 from fastapi import Query
 from datetime import date
+from .utils import get_params_values, check_params_values
+
 
 class PricingQueryParams:
     def __init__(
@@ -56,3 +58,9 @@ class PricingQueryParams:
         self.min_homolog_price = min_homolog_price
         self.max_homolog_price = max_homolog_price
         self.units_of_measure = units_of_measure
+
+        # check if all filter values are valid
+        check_params_values(self, )
+
+        # add filter conditions in a list
+        self.filters = get_params_values(self, )
