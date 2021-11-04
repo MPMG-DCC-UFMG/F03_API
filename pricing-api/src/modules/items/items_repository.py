@@ -49,14 +49,14 @@ class ItemsRepository:
             filters.append(ItemModel.nome_homologado.__eq__(params.bidder_name))
         if bool(params.bidder_document):
             filters.append(ItemModel.num_cpf_cnpj_homologado.__eq__(params.bidder_document))
-        
+
 
         # filtros de data
         if bool(params.year):
             filters.append(ItemModel.ano.in_(params.year))
         if bool(params.month):
             filters.append(ItemModel.mes.in_(params.month))
-        if bool(params.before): 
+        if bool(params.before):
             filters.append(ItemModel.data <= params.before)
         if bool(params.after):
             filters.append(ItemModel.data >= params.after)
