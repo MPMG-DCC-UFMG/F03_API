@@ -1,5 +1,7 @@
 from src.modules.items.items_operations import ListItemsQueryParams
 from src.modules.items.items_repository import ItemsRepository as repository
+from fastapi import FastAPI, HTTPException
+
 
 class ItemsService:
 
