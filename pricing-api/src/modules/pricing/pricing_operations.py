@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import Query
 from datetime import date
-from .utils import get_params_values, check_params_values
+from src.modules.utils.utils import get_params_values, check_params_values
 
 
 class PricingQueryParams:

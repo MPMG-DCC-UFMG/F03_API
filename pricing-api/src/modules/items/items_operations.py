@@ -1,8 +1,8 @@
 from typing import Optional, List
 from fastapi import Query
 from datetime import date
+from src.modules.utils.utils import get_params_values, check_params_values
 
-from .utils import check_params_values, get_params_values
 
 class ListItemsQueryParams:
     def __init__(
