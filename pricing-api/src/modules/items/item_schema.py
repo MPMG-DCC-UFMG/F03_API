@@ -18,7 +18,7 @@ class Item(BaseModel):
     qtde_item: int = Field(example=10, title='Quantidade de itens homologados')
     preco: float = Field(example=16.9, title="Valor do item licitado")
     cnpj_vencedor: str = Field(example="00874929000140", title='CPF/CNPJ do licitante vencedor')
-    flag_cpf_cnpj_valido: str = Field(example="[v]", title='Indica se CPF/CNPJ do vencedor é válido')
+    flag_cpf_cnpj_valido: bool = Field(example="[v]", title='Indica se CPF/CNPJ do vencedor é válido')
     nome_vencedor: str = Field(example="MED CENTER COMERCIAL LTDA", title='Nome do licitante vencedor')
     tipo_vencedor: str = Field(example="J", title='Tipo do licitante vencedor')
     orgao: str = Field(example="PREFEITURA MUNICIPAL DE ITANHANDU", title='Órgão responsável por iniciar o processo de licitação')

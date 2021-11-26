@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.sql.sqltypes import Date, Float
+from sqlalchemy.sql.sqltypes import Date, Float, Boolean
 from src.db.database import Base
 
 class ItemModel(Base):
@@ -20,7 +20,7 @@ class ItemModel(Base):
     qtde_item = Column(Float)
     preco = Column(Float)
     cnpj_vencedor = Column(String)
-    flag_cpf_cnpj_valido = Column(String)
+    flag_cpf_cnpj_valido = Column(Boolean)
     nome_vencedor = Column(String)
     tipo_vencedor = Column(String)
     orgao = Column(String)
