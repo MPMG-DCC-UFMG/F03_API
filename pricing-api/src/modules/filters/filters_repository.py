@@ -23,4 +23,4 @@ class FilterRepository:
             .offset(params.offset)\
             .limit(params.limit)
 
-        return [x[0] for x in query.all()]
+        return [x[0] for x in query.all() if x[0] != None]
