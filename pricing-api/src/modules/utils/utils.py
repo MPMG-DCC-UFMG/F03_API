@@ -8,9 +8,17 @@ def get_params_values(params):
 
     # filtros demográficos
     if bool(params.city):
-        filters.append(ItemModel.municipio.__eq__(params.city))
-    if bool(params.region):
-        filters.append(ItemModel.regiao.__eq__(params.region))
+        filters.append(ItemModel.municipio.in_(params.city))
+    if bool(params.microregion):
+        filters.append(ItemModel.microrregiao.in_(params.microregion))
+    if bool(params.mesoregion):
+        filters.append(ItemModel.mesorregiao.in_(params.mesoregion))
+    if bool(params.plan_region):
+        filters.append(ItemModel.regiao_planejamento.in_(params.plan_region))
+    if bool(params.imediate_region):
+        filters.append(ItemModel.regiao_imediata.in_(params.imediate_region))
+    if bool(params.inter_region):
+        filters.append(ItemModel.regiao_intermediaria.in_(params.inter_region))
 
     # filtros relacionados aos itens
     if bool(params.description):
@@ -18,33 +26,34 @@ def get_params_values(params):
             "%" + params.description + "%"))
     if bool(params.group):
         filters.append(ItemModel.grupo.__eq__(params.group))
-    if bool(params.body):
-        filters.append(ItemModel.orgao.__eq__(params.body))
+    if bool(params.object_nature):
+        filters.append(ItemModel.natureza_objeto.__eq__(params.object_nature))
+    if bool(params.max_amount):
+        filters.append(ItemModel.qtde_item <= params.max_amount)
+    if bool(params.min_amount):
+        filters.append(ItemModel.qtde_item >= params.min_amount)
+    if bool(params.max_homolog_price):
+        filters.append(ItemModel.preco <= params.max_homolog_price)
+    if bool(params.min_homolog_price):
+        filters.append(ItemModel.preco >= params.min_homolog_price)
+
+    # filtros relacionados à licitação
     if bool(params.modality):
         filters.append(ItemModel.modalidade.__eq__(params.modality))
-    if bool(params.payment_method):
-        filters.append(ItemModel.forma_pagamento.__eq__(params.payment_method))
-    if bool(params.max_amount):
-        filters.append(ItemModel.qtde_item_homologado <= params.max_amount)
-    if bool(params.min_amount):
-        filters.append(ItemModel.qtde_item_homologado >= params.min_amount)
-    if bool(params.max_price):
-        filters.append(ItemModel.vlr_unitario <= params.max_price)
-    if bool(params.min_price):
-        filters.append(ItemModel.vlr_unitario >= params.min_price)
-    if bool(params.max_homolog_price):
-        filters.append(ItemModel.vlr_unitario_cotado <=
-                       params.max_homolog_price)
-    if bool(params.min_homolog_price):
-        filters.append(ItemModel.vlr_unitario_cotado >=
-                       params.min_homolog_price)
+    if bool(params.procurement_type):
+        filters.append(ItemModel.tipo_licitacao.__eq__(params.procurement_type))
+    if bool(params.body):
+        filters.append(ItemModel.orgao.__eq__(params.body))
+    if bool(params.body_type):
+        filters.append(ItemModel.tipo_orgao.__eq__(params.body_type))
+    if bool(params.bidder_type):
+        filters.append(ItemModel.tipo_vencedor.__eq__(params.bidder_type))
 
     # filtros relacionados aos licitantes
     if bool(params.bidder_name):
-        filters.append(ItemModel.nome_homologado.__eq__(params.bidder_name))
+        filters.append(ItemModel.nome_vencedor.__eq__(params.bidder_name))
     if bool(params.bidder_document):
-        filters.append(ItemModel.num_cpf_cnpj_homologado.__eq__(
-            params.bidder_document))
+        filters.append(ItemModel.cnpj_vencedor.__eq__(params.bidder_document))
 
     # filtros de data
     if bool(params.year):
@@ -76,10 +85,6 @@ def check_params_values(params):
 
     if (bool(params.min_amount) and not bool(params.max_amount)) or (not bool(params.min_amount) and bool(params.max_amount)):
         raise HTTPException(status_code=422, detail="Ao buscar pela quantidade de itens cotados, é" +
-                            "necessário especificar um valor mínimo e máximo.")
-
-    if (bool(params.min_price) and not bool(params.max_price)) or (not bool(params.min_price) and bool(params.max_price)):
-        raise HTTPException(status_code=422, detail="Ao buscar pelo valor, é" +
                             "necessário especificar um valor mínimo e máximo.")
 
     if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (not bool(params.min_homolog_price) and bool(params.max_homolog_price)):

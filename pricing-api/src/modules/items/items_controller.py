@@ -10,6 +10,10 @@ items_router = APIRouter()
 async def list_items(params: ListItemsQueryParams = Depends()) -> List[dict]:
   return service.list(params)
 
+@items_router.get('/sample/', description='List items based on query params', )
+async def list_items_sample(params: ListItemsQueryParams = Depends()) -> List[dict]:
+  return service.list_sample(params)
+
 @items_router.get('/{id}', description='Find item by ID', )
 async def get_item(id: str):
   return service.find_by_id(id)
