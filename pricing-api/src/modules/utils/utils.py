@@ -21,9 +21,6 @@ def get_params_values(params):
         filters.append(ItemModel.regiao_intermediaria.in_(params.inter_region))
 
     # filtros relacionados aos itens
-    if bool(params.description):
-        filters.append(ItemModel.original.ilike(
-            "%" + params.description + "%"))
     if bool(params.group):
         filters.append(ItemModel.grupo.__eq__(params.group))
     if bool(params.object_nature):

@@ -1,6 +1,6 @@
 from src.modules.items.items_operations import ListItemsQueryParams
 from src.modules.items.item import ItemModel
-from src.db.database import db_session
+from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
 
@@ -13,6 +13,21 @@ class ItemsRepository:
     def list(params: ListItemsQueryParams):
         filters = params.filters
         filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
+
+        QUERY = {
+            "query": {
+                "bool": {
+                  "must": {
+                    "match": {
+                      "original": params.description
+                    }
+                  }
+                }
+            }
+        }
+        result = es.search(index="item", body=QUERY)
+        # TODO: retornar os ids dos itens
+        # TODO: buscar os itens na tabela do druid que possuem os id retornados pelo elasticsearch
 
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(ItemModel).filter(and_(*filters)).order_by(order)[params.offset:params.offset+params.limit]
