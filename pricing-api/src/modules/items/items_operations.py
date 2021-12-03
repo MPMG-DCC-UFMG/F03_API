@@ -72,3 +72,7 @@ class ListItemsQueryParams:
 
         # add filter conditions in a list
         self.filters = get_params_values(self, )
+
+    def reset_description(self):
+        self.description = Query(None) # reseta para o default e evitar filtrar duas
+                                       # vezes

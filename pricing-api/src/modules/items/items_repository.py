@@ -15,7 +15,7 @@ class ItemsRepository:
         filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
 
         QUERY = {
-            "fields": ["_id"],
+            "_source": False,
             "query": {
                 "bool": {
                   "must": {
@@ -26,13 +26,22 @@ class ItemsRepository:
                 }
             }
         }
-        result = es.search(index="item", body=QUERY)
-        print(result)
+
+        if params.description:
+            result = es.search(index="item", body=QUERY)
+            hits = result["hits"]["hits"]
+            ids = [int(d["_id"]) for d in hits]
+            filters.append(ItemModel.item_id.in_(ids))
+            params.reset_description() # para evitar de ser filtrado novamente
+
         # TODO: retornar os ids dos itens
-        # TODO: buscar os itens na tabela do druid que possuem os id retornados pelo elasticsearch
+
+        # TODO: buscar os itens na tabela do druid que possuem os id retornados
+        # pelo elasticsearch
 
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel).filter(and_(*filters)).order_by(order)[params.offset:params.offset+params.limit]
+        result = db_session.query(ItemModel).filter(and_(*filters)).order_by(order)
+        result = result[params.offset:params.offset+params.limit]
         return [ row.__dict__ for row in result ]
 
     def list_sample(params: ListItemsQueryParams):
