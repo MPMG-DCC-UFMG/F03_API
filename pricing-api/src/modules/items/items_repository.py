@@ -14,20 +14,21 @@ class ItemsRepository:
         filters = params.filters
         filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
 
-        QUERY = {
-            "fields": ["_id"],
-            "query": {
-                "bool": {
-                  "must": {
-                    "match": {
-                      "original": params.description
+        if params.description:
+            QUERY = {
+                "fields": ["_id"],
+                "query": {
+                    "bool": {
+                      "must": {
+                        "match": {
+                          "original": params.description
+                        }
+                      }
                     }
-                  }
                 }
             }
-        }
-        result = es.search(index="item", body=QUERY)
-        print(result)
+            result = es.search(index="item", body=QUERY)
+            print(result)
         # TODO: retornar os ids dos itens
         # TODO: buscar os itens na tabela do druid que possuem os id retornados pelo elasticsearch
 
