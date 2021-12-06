@@ -38,7 +38,8 @@ def get_params_values(params):
     if bool(params.modality):
         filters.append(ItemModel.modalidade.__eq__(params.modality))
     if bool(params.procurement_type):
-        filters.append(ItemModel.tipo_licitacao.__eq__(params.procurement_type))
+        filters.append(ItemModel.tipo_licitacao.__eq__(
+            params.procurement_type))
     if bool(params.body):
         filters.append(ItemModel.orgao.__eq__(params.body))
     if bool(params.body_type):
@@ -67,6 +68,24 @@ def get_params_values(params):
     # Recupera apenas os itens que não são ruído.
 
     return filters
+
+
+def get_elasticsearch_query(description):
+
+    QUERY = {
+        "_source": False,
+        "query": {
+            "bool": {
+                "must": {
+                    "match": {
+                        "original": description
+                    }
+                }
+            }
+        }
+    }
+
+    return QUERY
 
 
 def check_params_values(params):

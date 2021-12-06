@@ -1,5 +1,6 @@
 from src.modules.items.items_operations import ListItemsQueryParams
 from src.modules.items.item import ItemModel
+from src.modules.utils.utils import get_elasticsearch_query
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
@@ -17,18 +18,7 @@ class ItemsRepository:
         filters.append(ItemModel.item_ruido == 0)
 
         if params.description:
-            QUERY = {
-                "_source": False,
-                "query": {
-                    "bool": {
-                        "must": {
-                            "match": {
-                                "original": params.description
-                            }
-                        }
-                    }
-                }
-            }
+            QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="item", body=QUERY, from_=params.offset,
                                size=params.limit)
             hits = result["hits"]["hits"]
@@ -48,18 +38,7 @@ class ItemsRepository:
         filters.append(ItemModel.item_ruido == 0)
 
         if params.description:
-            QUERY = {
-                "_source": False,
-                "query": {
-                    "bool": {
-                        "must": {
-                            "match": {
-                                "original": params.description
-                            }
-                        }
-                    }
-                }
-            }
+            QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="item", body=QUERY, from_=params.offset,
                                size=params.limit)
             hits = result["hits"]["hits"]
