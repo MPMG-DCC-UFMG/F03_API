@@ -21,9 +21,6 @@ def get_params_values(params):
         filters.append(ItemModel.regiao_intermediaria.in_(params.inter_region))
 
     # filtros relacionados aos itens
-    if bool(params.description):
-        filters.append(ItemModel.original.ilike(
-            "%" + params.description + "%"))
     if bool(params.group):
         filters.append(ItemModel.grupo.__eq__(params.group))
     if bool(params.object_nature):
@@ -41,7 +38,8 @@ def get_params_values(params):
     if bool(params.modality):
         filters.append(ItemModel.modalidade.__eq__(params.modality))
     if bool(params.procurement_type):
-        filters.append(ItemModel.tipo_licitacao.__eq__(params.procurement_type))
+        filters.append(ItemModel.tipo_licitacao.__eq__(
+            params.procurement_type))
     if bool(params.body):
         filters.append(ItemModel.orgao.__eq__(params.body))
     if bool(params.body_type):
@@ -70,6 +68,24 @@ def get_params_values(params):
     # Recupera apenas os itens que não são ruído.
 
     return filters
+
+
+def get_elasticsearch_query(description):
+
+    QUERY = {
+        "_source": False,
+        "query": {
+            "bool": {
+                "must": {
+                    "match": {
+                        "original": description
+                    }
+                }
+            }
+        }
+    }
+
+    return QUERY
 
 
 def check_params_values(params):
