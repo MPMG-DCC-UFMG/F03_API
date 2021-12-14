@@ -76,7 +76,7 @@ def get_elasticsearch_query(description):
         "match": {
           "original": {
               "query": description,
-              "minimum_should_match": 2,
+              "minimum_should_match": "50%",
               "analyzer": "analyzer_plural_acentos"
             }
         }
