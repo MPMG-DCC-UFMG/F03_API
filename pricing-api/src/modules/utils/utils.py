@@ -73,19 +73,34 @@ def get_params_values(params):
 def get_elasticsearch_query(description):
 
     QUERY = {
-        "_source": False,
-        "query": {
-            "bool": {
-                "must": {
-                    "match": {
-                        "original": description
-                    }
-                }
+        "match": {
+          "original": {
+              "query": description,
+              "minimum_should_match": "50%",
+              "analyzer": "analyzer_plural_acentos"
             }
         }
     }
 
     return QUERY
+
+
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
+                         group_by_cluster):
+
+    columns = []
+
+    if group_by_description:
+        columns.append(ItemModel.original)
+    if group_by_unit_metric:
+        columns.append(ItemModel.dsc_unidade_medida)
+    if group_by_year:
+        columns.append(ItemModel.ano)
+    if group_by_cluster:
+        columns.append(ItemModel.grupo)
+
+    columns = tuple(columns)
+    return columns
 
 
 def check_params_values(params):

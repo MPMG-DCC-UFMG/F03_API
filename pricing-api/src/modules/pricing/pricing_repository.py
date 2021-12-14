@@ -16,58 +16,17 @@ class PricingRepository:
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
+            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
             filters.append(ItemModel.item_id.in_(ids))
 
+        columns = params.group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel.dsc_unidade_medida, ItemModel.ano, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
+        result = db_session.query(*columns, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
             .filter(and_(*filters)) \
-            .group_by(ItemModel.dsc_unidade_medida, ItemModel.ano) \
-            .order_by(order)
-
-        return [ row for row in result ]
-
-    def get_items(params: PricingQueryParams):
-        # TODO: Obter estatísticas para listas arbitrárias de itens
-        filters = params.filters
-        filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
-
-        if params.description:
-            QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._id'])
-            hits = result["hits"]["hits"]
-            ids = [d["_id"] for d in hits]
-            filters.append(ItemModel.item_id.in_(ids))
-
-        order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel.original_dsc, ItemModel.dsc_unidade_medida, ItemModel.ano, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
-            .filter(and_(*filters)) \
-            .group_by(ItemModel.original_dsc, ItemModel.dsc_unidade_medida, ItemModel.ano) \
-            .order_by(order)
-
-        return [ row for row in result ]
-
-    def get_groups(params: PricingQueryParams):
-        # TODO: Obter estatísticas para listas arbitrárias de itens
-        filters = params.filters
-        filters.append(ItemModel.item_ruido == 0) # Recupera apenas os itens que não são ruído.
-
-        if params.description:
-            QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._id'])
-            hits = result["hits"]["hits"]
-            ids = [d["_id"] for d in hits]
-            filters.append(ItemModel.item_id.in_(ids))
-
-        order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel.grupo, ItemModel.dsc_unidade_medida, ItemModel.ano, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
-            .filter(and_(*filters)) \
-            .group_by(ItemModel.grupo, ItemModel.dsc_unidade_medida, ItemModel.ano) \
+            .group_by(*columns) \
             .order_by(order)
 
         return [ row for row in result ]

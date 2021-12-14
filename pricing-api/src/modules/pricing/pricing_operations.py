@@ -1,12 +1,20 @@
 from typing import List, Optional
 from fastapi import Query
 from datetime import date
-from src.modules.utils.utils import get_params_values, check_params_values
+from src.modules.utils.utils import (
+    get_params_values,
+    check_params_values,
+    get_group_by_columns
+)
 
 
 class PricingQueryParams:
     def __init__(
         self,
+        group_by_description: bool = Query(None, description="Considerar as descrições para o agrupamento de dados."),
+        group_by_unit_metric: bool = Query(None, description="Considerar as unidades de medida para o agrupamento de dados."),
+        group_by_year: bool = Query(None, description="Considerar os anos das licitações para o agrupamento de dados."),
+        group_by_cluster: bool = Query(None, description="Considerar os grupos dos itens para o agrupamento de dados."),
         limit: int = Query(10, description="Query limit"),
         offset: int = Query(15, description="Query offset"),
         sort: Optional[str] = Query("count", description="Atributo de ordenação"),
@@ -71,6 +79,11 @@ class PricingQueryParams:
 
         # check if all filter values are valid
         check_params_values(self, )
+
+        self.group_by_columns = get_group_by_columns(group_by_description,
+                                                     group_by_unit_metric,
+                                                     group_by_year,
+                                                     group_by_cluster)
 
         # add filter conditions in a list
         self.filters = get_params_values(self, )
