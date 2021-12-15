@@ -99,6 +99,9 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
     if group_by_cluster:
         columns.append(ItemModel.grupo)
 
+    if len(columns) == 0:
+        columns.append(ItemModel.original)
+
     columns = tuple(columns)
     return columns
 

@@ -8,7 +8,7 @@ class ListItemsQueryParams:
     def __init__(
         self,
         limit: int = Query(10, description="Query limit"),
-        offset: int = Query(15, description="Query offset"),
+        offset: int = Query(0, description="Query offset"),
         sort: Optional[str] = Query(None, description="Atributo de ordenação"),
         order: Optional[str] = Query(
             "desc", description="Critério de ordenação", regex="^asc|desc$"),
