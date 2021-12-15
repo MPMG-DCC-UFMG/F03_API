@@ -73,14 +73,11 @@ def get_params_values(params):
 def get_elasticsearch_query(description):
 
     QUERY = {
-        "_source": False,
-        "query": {
-            "bool": {
-                "must": {
-                    "match": {
-                        "original": description
-                    }
-                }
+        "match": {
+          "original": {
+              "query": description,
+              "minimum_should_match": "50%",
+              "analyzer": "analyzer_plural_acentos"
             }
         }
     }

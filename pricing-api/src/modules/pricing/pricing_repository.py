@@ -16,7 +16,7 @@ class PricingRepository:
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
+            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
@@ -37,7 +37,7 @@ class PricingRepository:
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
+            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
@@ -58,7 +58,7 @@ class PricingRepository:
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="item", body=QUERY, from_=params.offset,
+            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
