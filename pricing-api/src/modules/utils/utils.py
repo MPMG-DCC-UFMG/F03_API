@@ -85,6 +85,27 @@ def get_elasticsearch_query(description):
     return QUERY
 
 
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
+                         group_by_cluster):
+
+    columns = []
+
+    if group_by_description:
+        columns.append(ItemModel.original)
+    if group_by_unit_metric:
+        columns.append(ItemModel.dsc_unidade_medida)
+    if group_by_year:
+        columns.append(ItemModel.ano)
+    if group_by_cluster:
+        columns.append(ItemModel.grupo)
+
+    if len(columns) == 0:
+        columns.append(ItemModel.original)
+
+    columns = tuple(columns)
+    return columns
+
+
 def check_params_values(params):
 
     if (bool(params.after) or bool(params.before)) and (bool(params.year) or bool(params.month)):
