@@ -1,6 +1,9 @@
 from src.modules.items.items_operations import ListItemsQueryParams
 from src.modules.items.item import ItemModel
-from src.modules.utils.utils import get_elasticsearch_query
+from src.modules.utils.utils import (
+    get_elasticsearch_query,
+    get_autocomplete_query
+)
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
@@ -12,6 +15,20 @@ class ItemsRepository:
         result = db_session.query(ItemModel).get(id)
         return result.__dict__
 
+    def autocomplete_description(desc: str):
+
+        QUERY = get_autocomplete_query(desc)
+        result = es.search(index="f03-itens", suggest=QUERY,
+                           filter_path=['suggest.suggest-exact'])
+
+        if "suggest" not in result:
+            return []
+
+        hits = result["suggest"]["suggest-exact"][0]['options']
+        descriptions = [d['text'] for d in hits]
+
+        return descriptions
+
     def list(params: ListItemsQueryParams):
         filters = params.filters
         # Recupera apenas os itens que não são ruído.
@@ -21,6 +38,10 @@ class ItemsRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
+
+            if "hits" not in result:
+                return []
+
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
             filters.append(ItemModel.item_id.in_(ids))
@@ -41,6 +62,10 @@ class ItemsRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
+
+            if "hits" not in result:
+                return []
+
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
             filters.append(ItemModel.item_id.in_(ids))

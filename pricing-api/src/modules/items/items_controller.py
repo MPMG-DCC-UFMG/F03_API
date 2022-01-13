@@ -17,3 +17,7 @@ async def list_items_sample(params: ListItemsQueryParams = Depends()) -> List[di
 @items_router.get('/{id}', description='Find item by ID', )
 async def get_item(id: str):
   return service.find_by_id(id)
+
+@items_router.get('/autocomplete/', description='Complete description', )
+async def get_descriptions(desc: str):
+  return service.autocomplete_description(desc)

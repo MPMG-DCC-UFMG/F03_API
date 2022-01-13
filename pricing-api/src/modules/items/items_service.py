@@ -16,3 +16,7 @@ class ItemsService:
     def find_by_id(id: str):
         item = repository.find_by_id(id)
         return item
+
+    def autocomplete_description(desc: str):
+        item = repository.autocomplete_description(desc)
+        return item

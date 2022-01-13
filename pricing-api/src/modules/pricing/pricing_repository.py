@@ -18,6 +18,10 @@ class PricingRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
                                size=params.limit, filter_path=['hits.hits._id'])
+
+            if "hits" not in result:
+                return []
+
             hits = result["hits"]["hits"]
             ids = [d["_id"] for d in hits]
             filters.append(ItemModel.item_id.in_(ids))
