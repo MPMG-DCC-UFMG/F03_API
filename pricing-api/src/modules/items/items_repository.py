@@ -7,7 +7,7 @@ from src.modules.utils.utils import (
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
-
+import time
 
 class ItemsRepository:
 
@@ -37,14 +37,15 @@ class ItemsRepository:
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._id'])
+                               size=params.limit, filter_path=['hits.hits._source.id_item'],
+                               request_timeout=10, ignore=[400, 404])
 
             if "hits" not in result:
                 return []
 
             hits = result["hits"]["hits"]
-            ids = [d["_id"] for d in hits]
-            filters.append(ItemModel.item_id.in_(ids))
+            ids = [d["_source"]["id_item"] for d in hits]
+            filters.append(ItemModel.id_item.in_(ids))
 
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(ItemModel)\
@@ -61,14 +62,15 @@ class ItemsRepository:
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._id'])
+                               size=params.limit, filter_path=['hits.hits._source.id_item'],
+                               request_timeout=10, ignore=[400, 404])
 
             if "hits" not in result:
                 return []
 
             hits = result["hits"]["hits"]
-            ids = [d["_id"] for d in hits]
-            filters.append(ItemModel.item_id.in_(ids))
+            ids = [d["_source"]["id_item"] for d in hits]
+            filters.append(ItemModel.id_item.in_(ids))
 
         fields = ['original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
