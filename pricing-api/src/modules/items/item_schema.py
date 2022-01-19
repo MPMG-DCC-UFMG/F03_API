@@ -2,15 +2,14 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 class Item(BaseModel):
-    item_id: str = Field(example="11442433", title='Identificador do item')
+    id_item: int = Field(example=11442433, title='Identificador do item')
     grupo: str = Field(example="gasolina_8", title="Grupo a qual o item faz parte")
-    grupo_id: str = Field(example="27294", title='ID do grupo')
+    id_grupo: int = Field(example=27294, title='ID do grupo')
     dsc_unidade_medida: str = Field(example="caixa", title="Unidade de medida do objeto na licitação correspondente")
     grupo_ruido: int = Field(example=0, title="Se o grupo a qual o item faz parte é um grupo de ruído")
     item_ruido: int = Field(example=0, title="Se o item corresponde a um ruído para o grupo em que faz parte")
     original: str = Field(example="GASOLINA COMUM 05 LITROS", title='Descrição do objeto na licitação correspondente')
-    licitacao: str = Field(example="354082", title='Identificador da licitaçao')
-    licitacao_item: str = Field(example="10019442", title='ID do item na licitação')
+    id_licitacao: int = Field(example=354082, title='Identificador da licitaçao')
     original_dsc: str = Field(example="gasolina comum 5 litros", title='Descrição padronizada do objeto na licitação correspondente')
     primeiro_termo: str = Field(example="gasolina", title='Primeiro termo da descrição do item')
     ano: int = Field(example=2015, title="Ano em que a licitação foi homologada")

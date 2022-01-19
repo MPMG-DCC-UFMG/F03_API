@@ -17,10 +17,15 @@ class PricingRepository:
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._id'])
+                               size=params.limit, filter_path=['hits.hits._source.id_item'],
+                               request_timeout=10, ignore=[400, 404])
+
+            if "hits" not in result:
+                return []
+
             hits = result["hits"]["hits"]
-            ids = [d["_id"] for d in hits]
-            filters.append(ItemModel.item_id.in_(ids))
+            ids = [d["_source"]["id_item"] for d in hits]
+            filters.append(ItemModel.id_item.in_(ids))
 
         columns = params.group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
