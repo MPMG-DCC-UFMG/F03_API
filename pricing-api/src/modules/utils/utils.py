@@ -89,7 +89,7 @@ def get_autocomplete_query(description):
 
     QUERY = {
         "suggest-exact": {
-            "prefix": "masc",
+            "prefix": description,
             "completion": {
                 "field": "original_prep",
                 "skip_duplicates": True,
