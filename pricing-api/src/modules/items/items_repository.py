@@ -17,8 +17,9 @@ class ItemsRepository:
     def autocomplete_description(desc: str):
 
         QUERY = get_autocomplete_query(desc)
-        result = es.search(index="f03-itens", suggest=QUERY,
-                           filter_path=['suggest.suggest-exact'])
+        result = es.search(index="f03-item", suggest=QUERY,
+                           filter_path=['suggest.suggest-exact'],
+                           request_timeout=20)
 
         if "suggest" not in result:
             return []
@@ -34,7 +35,7 @@ class ItemsRepository:
         # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-itens", query=QUERY,
+            result = es.search(index="f03-item", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
                                request_timeout=20, ignore=[400, 404], size=500)
 
@@ -60,7 +61,7 @@ class ItemsRepository:
         # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-itens", query=QUERY,
+            result = es.search(index="f03-item", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
                                request_timeout=20, ignore=[400, 404], size=500)
 

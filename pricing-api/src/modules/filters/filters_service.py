@@ -5,3 +5,7 @@ class FilterService:
     def list(params: ListFiltersQueryParams):
         filtered_values = repository.list(params)
         return filtered_values
+
+    def autocomplete_bidder_name(bidder_name: str):
+        item = repository.autocomplete_bidder_name(bidder_name)
+        return item
