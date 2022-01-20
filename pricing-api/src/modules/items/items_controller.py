@@ -14,6 +14,10 @@ async def list_items(params: ListItemsQueryParams = Depends()) -> List[dict]:
 async def list_items_sample(params: ListItemsQueryParams = Depends()) -> List[dict]:
   return service.list_sample(params)
 
+@items_router.get('/match/', description='List items based on query params (applying exact match)', response_model=List[ItemSchema])
+async def list_items_with_values(params: ListItemsQueryParams = Depends()) -> List[dict]:
+    return service.list_items_with_values(params)
+
 @items_router.get('/{id}', description='Find item by ID', )
 async def get_item(id: str):
   return service.find_by_id(id)

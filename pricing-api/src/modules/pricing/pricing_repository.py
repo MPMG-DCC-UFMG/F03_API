@@ -10,10 +10,8 @@ from sqlalchemy import and_, cast, desc, Float
 class PricingRepository:
 
     def get(params: PricingQueryParams):
-        # TODO: Obter estatísticas para listas arbitrárias de itens
         filters = params.filters
 
-        # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -27,6 +25,7 @@ class PricingRepository:
             ids = [d["_source"]["id_item"] for d in hits]
             filters.append(ItemModel.id_item.in_(ids))
 
+        # Recupera apenas os itens que não são ruído.
         if params.group_by_cluster:
             filters.append(ItemModel.item_ruido == 0)
 

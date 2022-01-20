@@ -13,6 +13,10 @@ class ItemsService:
         items = repository.list_sample(params)
         return items
 
+    def list_items_with_values(params: ListItemsQueryParams):
+        items = repository.list_items_with_values(params)
+        return items
+
     def find_by_id(id: str):
         item = repository.find_by_id(id)
         return item
