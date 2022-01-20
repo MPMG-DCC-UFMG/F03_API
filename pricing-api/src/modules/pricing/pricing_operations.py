@@ -45,7 +45,7 @@ class PricingQueryParams:
             None, description="Limite superior de data"),
         after: Optional[date] = Query(
             None, description="Limite inferior de data"),
-        description: Optional[str] = Query(
+        description: str = Query(
             None, min_length=3, description="Texto na descrição original do item"),
         group: Optional[str] = Query(
             None, description="Nome do grupo do item"),
@@ -107,6 +107,7 @@ class PricingQueryParams:
         self.body_type = body_type
         self.bidder_type = bidder_type
         self.object_nature = object_nature
+        self.group_by_cluster = group_by_cluster
 
         # check if all filter values are valid
         check_params_values(self, )

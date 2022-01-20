@@ -4,7 +4,6 @@ from src.modules.utils.utils import get_elasticsearch_query
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
-import time
 
 class ItemsRepository:
 
@@ -14,14 +13,13 @@ class ItemsRepository:
 
     def list(params: ListItemsQueryParams):
         filters = params.filters
-        # Recupera apenas os itens que não são ruído.
-        filters.append(ItemModel.item_ruido == 0)
 
+        # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._source.id_item'],
-                               request_timeout=10, ignore=[400, 404])
+            result = es.search(index="f03-itens", query=QUERY,
+                               filter_path=['hits.hits._source.id_item'],
+                               request_timeout=20, ignore=[400, 404], size=1000)
 
             if "hits" not in result:
                 return []
@@ -30,23 +28,25 @@ class ItemsRepository:
             ids = [d["_source"]["id_item"] for d in hits]
             filters.append(ItemModel.id_item.in_(ids))
 
+
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel)\
-                           .filter(and_(*filters))\
-                           .order_by(order)
+        result = db_session.query(ItemModel) \
+                           .filter(and_(*filters)) \
+                           .order_by(order) \
+                           .offset(params.offset) \
+                           .limit(params.limit)
 
         return [row.__dict__ for row in result]
 
     def list_sample(params: ListItemsQueryParams):
         filters = params.filters
-        # Recupera apenas os itens que não são ruído.
-        filters.append(ItemModel.item_ruido == 0)
 
+        # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-itens", query=QUERY, from_=params.offset,
-                               size=params.limit, filter_path=['hits.hits._source.id_item'],
-                               request_timeout=10, ignore=[400, 404])
+            result = es.search(index="f03-itens", query=QUERY,
+                               filter_path=['hits.hits._source.id_item'],
+                               request_timeout=20, ignore=[400, 404], size=1000)
 
             if "hits" not in result:
                 return []
@@ -59,9 +59,11 @@ class ItemsRepository:
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
                   'municipio', 'qtde_item', 'preco']
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel)\
-                           .filter(and_(*filters))\
-                           .options(load_only(*fields))\
-                           .order_by(order)
+        result = db_session.query(ItemModel) \
+                           .filter(and_(*filters)) \
+                           .options(load_only(*fields)) \
+                           .order_by(order) \
+                           .offset(params.offset) \
+                           .limit(params.limit)
 
         return [row.__dict__ for row in result]

@@ -15,12 +15,12 @@ class FilterRepository:
             contains = f"%{params.contains}%"
             filters.append(column.ilike(contains))
 
-        query = db_session\
-            .query(column)\
-            .distinct()\
-            .filter(and_(*filters))\
-            .order_by(desc(params.column))\
-            .offset(params.offset)\
+        query = db_session \
+            .query(column) \
+            .distinct() \
+            .filter(and_(*filters)) \
+            .order_by(desc(params.column)) \
+            .offset(params.offset) \
             .limit(params.limit)
 
         return [x[0] for x in query.all() if x[0] != None]

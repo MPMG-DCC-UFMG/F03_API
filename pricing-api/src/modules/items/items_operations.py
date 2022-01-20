@@ -32,7 +32,7 @@ class ListItemsQueryParams:
             None, description="Limite superior de data"),
         after: Optional[date] = Query(
             None, description="Limite inferior de data"),
-        description: Optional[str] = Query(
+        description: str = Query(
             None, min_length=3, description="Texto na descrição original do item"),
         group: Optional[str] = Query(
             None, description="Nome do grupo do item"),
