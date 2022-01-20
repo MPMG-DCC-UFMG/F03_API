@@ -34,6 +34,8 @@ class ListItemsQueryParams:
             None, description="Limite inferior de data"),
         description: str = Query(
             None, min_length=3, description="Texto na descrição original do item"),
+        unit_measure: Optional[str] = Query(
+            None, min_length=1, description="Unidade de medida do item"),
         group: Optional[str] = Query(
             None, description="Nome do grupo do item"),
         first_token: Optional[str] = Query(
@@ -77,6 +79,7 @@ class ListItemsQueryParams:
         self.before = before
         self.after = after
         self.description = description
+        self.unit_measure = unit_measure
         self.group = group
         self.first_token = first_token
         self.body = body

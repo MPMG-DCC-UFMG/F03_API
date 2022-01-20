@@ -32,7 +32,6 @@ class ItemsRepository:
     def list(params: ListItemsQueryParams):
         filters = params.filters
 
-        # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -58,7 +57,6 @@ class ItemsRepository:
     def list_sample(params: ListItemsQueryParams):
         filters = params.filters
 
-        # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -80,6 +78,20 @@ class ItemsRepository:
                            .filter(and_(*filters)) \
                            .options(load_only(*fields)) \
                            .order_by(order) \
+                           .offset(params.offset) \
+                           .limit(params.limit)
+
+        return [row.__dict__ for row in result]
+
+
+    def list_items_with_values(params: ListItemsQueryParams):
+        filters = params.filters
+
+        if params.description:
+            filters.append(ItemModel.original.__eq__(params.description))
+
+        result = db_session.query(ItemModel) \
+                           .filter(and_(*filters)) \
                            .offset(params.offset) \
                            .limit(params.limit)
 
