@@ -18,7 +18,7 @@ class PricingRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=10, ignore=[400, 404], size=40000)
+                               request_timeout=10, ignore=[400, 404], size=10000)
 
             if "hits" not in result:
                 return []

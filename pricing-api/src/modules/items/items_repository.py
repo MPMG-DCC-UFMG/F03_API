@@ -19,7 +19,7 @@ class ItemsRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=20, ignore=[400, 404], size=1000)
+                               request_timeout=20, ignore=[400, 404], size=500)
 
             if "hits" not in result:
                 return []
@@ -27,7 +27,6 @@ class ItemsRepository:
             hits = result["hits"]["hits"]
             ids = [d["_source"]["id_item"] for d in hits]
             filters.append(ItemModel.id_item.in_(ids))
-
 
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(ItemModel) \
@@ -46,7 +45,7 @@ class ItemsRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=20, ignore=[400, 404], size=1000)
+                               request_timeout=20, ignore=[400, 404], size=500)
 
             if "hits" not in result:
                 return []
