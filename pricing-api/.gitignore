@@ -284,4 +284,7 @@ pip-selfcheck.json
 # Ignore all local history of files
 .history
 
+# Ignore Emacs backup files
+*~
+
 # End of .gitignore

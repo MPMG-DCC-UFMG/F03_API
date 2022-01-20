@@ -1,6 +1,6 @@
 ### Executando o projeto
 ```
-uvicorn main:app --reload
+uvicorn src.main:app --reload
 ```
 
 #### Estrutura do projeto
