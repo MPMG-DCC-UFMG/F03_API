@@ -16,7 +16,7 @@ class PricingRepository:
         # Recupera apenas os itens que não são ruído.
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-itens", query=QUERY,
+            result = es.search(index="f03-item", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
                                request_timeout=60, ignore=[400, 404], size=10000)
 
