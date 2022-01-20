@@ -85,6 +85,22 @@ def get_elasticsearch_query(description):
     return QUERY
 
 
+def get_autocomplete_query(description):
+
+    QUERY = {
+        "suggest-exact": {
+            "prefix": description,
+            "completion": {
+                "field": "original_prep",
+                "skip_duplicates": True,
+                "size": 5
+            }
+        }
+    }
+
+    return QUERY
+
+
 def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
                          group_by_cluster):
 
