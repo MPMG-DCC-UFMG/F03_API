@@ -18,7 +18,7 @@ class PricingRepository:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-itens", query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=10, ignore=[400, 404], size=10000)
+                               request_timeout=60, ignore=[400, 404], size=10000)
 
             if "hits" not in result:
                 return []
@@ -32,7 +32,11 @@ class PricingRepository:
 
         columns = params.group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(*columns, func.avg(cast(ItemModel.preco, Float)).label('mean'), func.max(cast(ItemModel.preco, Float)).label('max'), func.min(cast(ItemModel.preco, Float)).label('min'), func.count().label('count')) \
+        result = db_session.query(*columns,
+                                 func.avg(cast(ItemModel.preco, Float)).label('mean'),
+                                 func.max(cast(ItemModel.preco, Float)).label('max'),
+                                 func.min(cast(ItemModel.preco, Float)).label('min'),
+                                 func.count().label('count')) \
             .filter(and_(*filters)) \
             .group_by(*columns) \
             .order_by(order) \
