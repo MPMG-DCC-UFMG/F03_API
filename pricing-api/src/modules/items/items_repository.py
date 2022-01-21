@@ -90,6 +90,9 @@ class ItemsRepository:
         if params.description:
             filters.append(ItemModel.original.__eq__(params.description))
 
+        if params.unit_measure:
+            filters.append(ItemModel.dsc_unidade_medida.__eq__(params.unit_measure))
+
         result = db_session.query(ItemModel) \
                            .filter(and_(*filters)) \
                            .offset(params.offset) \
