@@ -19,6 +19,9 @@ class GroupsRepository:
         if (bool(params.unit)):
             filters.append(GroupModel.dsc_unidade_medida.__eq__(params.unit))
 
+        if not params.noise:
+            filters.append(GroupModel.ruido == 0)
+
         sort_statement = params.sort
         order = desc(sort_statement) if params.order == "desc" else asc(sort_statement)
         rows = db_session.query(GroupModel) \

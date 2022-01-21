@@ -11,6 +11,7 @@ class ListGroupsQueryParams:
         name: Optional[str] = Query(None, description="Nome do grupo"),
         first_token: Optional[str] = Query(None, description="Primeiro termo"),
         unit:  Optional[str] = Query(None, description="Unidade de medida"),
+        noise: Optional[bool] = Query(False, description="Apresentar grupos de ruídos"),
     ):
         self.limit = limit
         self.offset = offset
@@ -19,6 +20,7 @@ class ListGroupsQueryParams:
         self.name = name
         self.first_token = first_token
         self.unit = unit
+        self.noise = noise
 
 class GetGroupByFirstToken:
     def __init__(
