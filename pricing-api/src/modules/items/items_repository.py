@@ -26,8 +26,11 @@ class ItemsRepository:
 
         hits = result["suggest"]["suggest-exact"][0]['options']
         descriptions = [d['text'] for d in hits]
+        
+        n = len(descriptions)
+        res = [{'desc': descriptions[idx]} for idx in range(0, n)]      
 
-        return descriptions
+        return res
 
     def list(params: ListItemsQueryParams):
         filters = params.filters
