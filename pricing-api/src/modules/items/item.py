@@ -3,7 +3,7 @@ from sqlalchemy.sql.sqltypes import Date, Float, Boolean
 from src.db.database import Base
 
 class ItemModel(Base):
-    __tablename__ = 'f03_banco_precos_itens'
+    __tablename__ = 'banco_precos_itens'
     id_item = Column(BigInteger, primary_key=True)
     grupo = Column(String) # Talvez incluir a relação já no ORM, para retornar as informações do grupo já na consulta ao item
     id_grupo = Column(BigInteger)
