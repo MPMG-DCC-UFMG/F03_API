@@ -47,4 +47,7 @@ class FilterRepository:
         hits = result["suggest"]["suggest-exact"][0]['options']
         descriptions = [d['text'] for d in hits]
 
-        return descriptions
+        n = len(descriptions)
+        res = [{'bidder_name': descriptions[idx]} for idx in range(0, n)]
+        
+        return res
