@@ -26,8 +26,8 @@ class GroupsRepository:
         order = desc(sort_statement) if params.order == "desc" else asc(sort_statement)
         rows = db_session.query(GroupModel) \
                          .filter(and_(*filters)) \
-                         .order_by(order) \
                          .offset(params.offset) \
                          .limit(params.limit)
+                        #  .order_by(order) \
 
         return list(map(lambda x: x.__dict__, rows))

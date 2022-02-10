@@ -51,9 +51,9 @@ class ItemsRepository:
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(ItemModel) \
                            .filter(and_(*filters)) \
-                           .order_by(order) \
                            .offset(params.offset) \
                            .limit(params.limit)
+                        #    .order_by(order) \
 
         return [row.__dict__ for row in result]
 
@@ -80,9 +80,9 @@ class ItemsRepository:
         result = db_session.query(ItemModel) \
                            .filter(and_(*filters)) \
                            .options(load_only(*fields)) \
-                           .order_by(order) \
                            .offset(params.offset) \
                            .limit(params.limit)
+                        #    .order_by(order) \
 
         return [row.__dict__ for row in result]
 
