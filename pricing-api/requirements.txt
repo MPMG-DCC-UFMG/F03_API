@@ -17,4 +17,4 @@ fastapi
 uvicorn
 sqlalchemy
 httptools
-elasticsearch==7.10.0
+elasticsearch==7.17.0
