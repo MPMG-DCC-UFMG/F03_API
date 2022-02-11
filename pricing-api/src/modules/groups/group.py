@@ -1,23 +1,19 @@
-from sqlalchemy import Column, Integer, String, Float
-from typing import Any, List
+from sqlalchemy import Column, BigInteger, String, Float
 from src.db.database import Base
 
 class GroupModel(Base):
-    __tablename__ = 'f03_banco_precos_grupos'
-    grupo_id = Column(String, primary_key=True)
-    grupo = Column(String)
-    dsc_unidade_medida =  Column(String)
-    media =  Column(String)
-    qtd =  Column(Integer)
-    max =  Column(Integer)
-    min =  Column(Integer)
-    mediana =  Column(Float)
+    __tablename__ = 'banco_precos_grupos'
     desvio_padrao =  Column(Float)
-    var =  Column(String)
+    dsc_unidade_medida =  Column(String)
+    grupo = Column(String)
+    grupo_id = Column(BigInteger, primary_key=True)
+    max =  Column(Float)
+    media =  Column(Float)
+    mediana =  Column(Float)
+    min =  Column(Float)
+    primeiro_termo =  Column(String)
+    qtd = Column(BigInteger)
     quantil_1 =  Column(Float)
     quantil_3 =  Column(Float)
-    primeiro_termo =  Column(String)
-    ruido =  Column(Integer)
-    metadata_trilha_versao =  Column(String)
-    metadata_trilha_data_execucao =  Column(String)
-    metadata_nome_trilha =  Column(String)
+    ruido = Column(BigInteger)
+    var = Column(Float)

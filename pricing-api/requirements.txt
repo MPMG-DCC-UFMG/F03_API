@@ -9,6 +9,7 @@ scikit-learn
 nltk
 python-dotenv
 pyhive
+pydruid
 sasl
 thrift
 thrift-sasl
