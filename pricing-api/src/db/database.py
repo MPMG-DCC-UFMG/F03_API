@@ -18,7 +18,7 @@ es_port = os.environ.get('ES_PORT')
 engine = create_engine(
     f'druid://{host}:{port}/druid/v2/sql?header=true', pool_pre_ping=True)
 
-es = Elasticsearch(es_host, port=es_port,
+es = Elasticsearch(f"http://{es_host}:{es_port}",
                    http_auth=(es_username, es_password))
 
 db_session = scoped_session(sessionmaker(autocommit=False,
