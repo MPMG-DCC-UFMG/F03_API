@@ -2,7 +2,8 @@ from src.modules.items.items_operations import ListItemsQueryParams
 from src.modules.items.item import ItemModel
 from src.modules.utils.utils import (
     get_elasticsearch_query,
-    get_autocomplete_query
+    get_autocomplete_query, 
+    generate_random_date
 )
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
@@ -100,5 +101,12 @@ class ItemsRepository:
                            .filter(and_(*filters)) \
                            .offset(params.offset) \
                            .limit(params.limit)
-
-        return [row.__dict__ for row in result]
+        
+        res = [row.__dict__ for row in result]
+        
+        ''' TEMPORÁRIO, ATÉ NÃO ARRUMAREM A COLUNA 'DATA' NO DRUID '''     
+        for item in res:
+            item['data'] = generate_random_date()
+        ''''''
+        
+        return res
