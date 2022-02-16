@@ -2,8 +2,9 @@ from src.modules.items.item import ItemModel
 from fastapi import FastAPI, HTTPException
 
 
-import random
 import datetime
+import random
+import locale
 
 def get_params_values(params):
 
@@ -144,13 +145,13 @@ def check_params_values(params):
         raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
                             "necessário especificar um valor mínimo e máximo.")
 
-def generate_random_date():
+def generate_random_date(month, year):
     
-    start_date = datetime.date(2014, 1, 1)
-    end_date = datetime.date(2021, 12, 31)
+    start_date = datetime.date(year, month, 1)
+    end_date = datetime.date(year, month, 28)
     
     time_between_dates = end_date - start_date
     days_between_dates = time_between_dates.days
     random_number_of_days = random.randrange(days_between_dates)
-    random_date = str(start_date + datetime.timedelta(days=random_number_of_days))    
-    return random_date
+    random_date = start_date + datetime.timedelta(days=random_number_of_days)   
+    return random_date.strftime('%d/%m/%Y')

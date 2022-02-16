@@ -54,9 +54,17 @@ class ItemsRepository:
                            .filter(and_(*filters)) \
                            .offset(params.offset) \
                            .limit(params.limit)
-                        #    .order_by(order) \
+        #    .order_by(order) \
 
-        return [row.__dict__ for row in result]
+        ''' TEMPORÁRIO, ATÉ NÃO ARRUMAREM A COLUNA 'DATA' NO DRUID '''
+        res = [row.__dict__ for row in result]
+        for item in res:
+            item['data'] = generate_random_date(
+                int(item['mes']), int(item['ano']))
+            item['preco'] = round(item['preco'], 2)
+        ''''''
+
+        return res
 
     def list_sample(params: ListItemsQueryParams):
         filters = params.filters
@@ -83,9 +91,17 @@ class ItemsRepository:
                            .options(load_only(*fields)) \
                            .offset(params.offset) \
                            .limit(params.limit)
-                        #    .order_by(order) \
+        #    .order_by(order) \
 
-        return [row.__dict__ for row in result]
+        ''' TEMPORÁRIO, ATÉ NÃO ARRUMAREM A COLUNA 'DATA' NO DRUID '''
+        res = [row.__dict__ for row in result]
+        for item in res:
+            item['data'] = generate_random_date(
+                int(item['mes']), int(item['ano']))
+            item['preco'] = round(item['preco'], 2)
+        ''''''
+
+        return res
 
 
     def list_items_with_values(params: ListItemsQueryParams):
@@ -102,11 +118,12 @@ class ItemsRepository:
                            .offset(params.offset) \
                            .limit(params.limit)
         
-        res = [row.__dict__ for row in result]
-        
         ''' TEMPORÁRIO, ATÉ NÃO ARRUMAREM A COLUNA 'DATA' NO DRUID '''     
+        res = [row.__dict__ for row in result]
         for item in res:
-            item['data'] = generate_random_date()
+            item['data'] = generate_random_date(
+                int(item['mes']), int(item['ano']))
+            item['preco'] = round(item['preco'], 2)
         ''''''
         
         return res
