@@ -54,8 +54,12 @@ class ItemsRepository:
                            .offset(params.offset) \
                            .limit(params.limit)
                         #    .order_by(order) \
-
-        return [row.__dict__ for row in result]
+          
+        res = [row.__dict__ for row in result]
+        for item in res:
+            item['preco'] = round(item['preco'], 2)
+        
+        return res
 
     def list_sample(params: ListItemsQueryParams):
         filters = params.filters
@@ -83,8 +87,12 @@ class ItemsRepository:
                            .offset(params.offset) \
                            .limit(params.limit)
                         #    .order_by(order) \
-
-        return [row.__dict__ for row in result]
+          
+        res = [row.__dict__ for row in result]
+        for item in res:
+            item['preco'] = round(item['preco'], 2)
+        
+        return res
 
 
     def list_items_with_values(params: ListItemsQueryParams):
@@ -101,4 +109,8 @@ class ItemsRepository:
                            .offset(params.offset) \
                            .limit(params.limit)
 
-        return [row.__dict__ for row in result]
+        res = [row.__dict__ for row in result]
+        for item in res:
+            item['preco'] = round(item['preco'], 2)
+
+        return res

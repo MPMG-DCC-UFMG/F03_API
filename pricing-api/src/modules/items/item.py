@@ -7,7 +7,7 @@ class ItemModel(Base):
     ano = Column(String)
     cnpj_vencedor = Column(String)
     count = Column(BigInteger)
-    data = Column(BigInteger)
+    data = Column(String)
     dsc_unidade_medida = Column(String)
     flag_cpf_cnpj_valido = Column(BigInteger)
     grupo = Column(String)

@@ -32,14 +32,14 @@ class PricingRepository:
         columns = params.group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(*columns,
-                                 func.avg(cast(ItemModel.preco, Float)).label('mean'),
-                                 func.max(cast(ItemModel.preco, Float)).label('max'),
-                                 func.min(cast(ItemModel.preco, Float)).label('min'),
+                                 func.round(func.avg(cast(ItemModel.preco, Float)),2).label('mean'),
+                                 func.round(func.max(cast(ItemModel.preco, Float)),2).label('max'),
+                                 func.round(func.min(cast(ItemModel.preco, Float)),2).label('min'),
                                  func.count().label('count')) \
             .filter(and_(*filters)) \
             .group_by(*columns) \
             .order_by(order) \
             .offset(params.offset) \
             .limit(params.limit)
-
+        
         return [ row for row in result ]
