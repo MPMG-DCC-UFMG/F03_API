@@ -10,3 +10,6 @@ class Charts(BaseModel):
         example=20.50, title="Média do preço do item, agrupado por data")
     median: float = Field(
         example=20.50, title="Mediana do preço do item, agrupado por data")
+    mes: int = Field(example=3, title="Mês em que a licitação foi homologada")
+    ano: int = Field(
+        example=2015, title="Ano em que a licitação foi homologada")
