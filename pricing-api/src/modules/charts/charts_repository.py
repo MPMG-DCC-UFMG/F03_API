@@ -33,8 +33,5 @@ class ChartsRepository:
         
         dict_x = [{'data': k, 'qtde_item': sum(values)} for k, values in pivot.items()]
         dict_y = [{'data': k, 'mean_preco': round(np.mean(values), 2), 'median_preco': round(np.median(values),2)} for k, values in pivot2.items()]
-        res_dict = []
-        for dx, dy in zip(dict_x, dict_y):
-            res_dict.append({**dx, **dy})
             
-        return res_dict
+        return [{**dx, **dy} for dx, dy in zip(dict_x, dict_y)]
