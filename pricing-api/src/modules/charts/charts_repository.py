@@ -40,6 +40,7 @@ class ChartsRepository:
         for item in res:
             data = datetime.strptime(item['data'], '%d/%m/%Y')
             item['mes'] = data.month
-            item['ano'] = data.year        
+            item['ano'] = data.year 
         
-        return res
+        # print(sorted(res, key=lambda d: datetime.strptime(d['data'], '%d/%m/%Y')))
+        return sorted(res, key=lambda d: datetime.strptime(d['data'], '%d/%m/%Y'))
