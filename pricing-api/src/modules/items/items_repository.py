@@ -1,4 +1,4 @@
-from src.modules.items.items_operations import ListItemsQueryParams
+from src.modules.items.items_operations import ListItemsQuery
 from src.modules.items.item import ItemModel
 from src.modules.utils.utils import (
     get_elasticsearch_query,
@@ -32,8 +32,8 @@ class ItemsRepository:
 
         return res
 
-    def list(params: ListItemsQueryParams):
-        filters = params.filters
+    def list(params: ListItemsQuery):
+        filters = []#params.filters
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
@@ -61,9 +61,7 @@ class ItemsRepository:
         
         return res
 
-    def list_sample(params: ListItemsQueryParams):
-        filters = params.filters
-
+    def list_sample(params: ListItemsQuery, filters):
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -95,7 +93,7 @@ class ItemsRepository:
         return res
 
 
-    def list_items_with_values(params: ListItemsQueryParams):
+    def list_items_with_values(params: ListItemsQuery):
         filters = params.filters
 
         if params.description:

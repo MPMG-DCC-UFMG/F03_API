@@ -1,5 +1,5 @@
 from sqlalchemy.sql.functions import count
-from src.modules.pricing.pricing_operations import PricingQueryParams
+from src.modules.pricing.pricing_operations import PricingQuery
 from src.modules.items.item import ItemModel
 from src.modules.utils.utils import get_elasticsearch_query
 from src.db.database import db_session, es
@@ -9,9 +9,7 @@ from sqlalchemy import and_, cast, desc, Float
 
 class PricingRepository:
 
-    def get(params: PricingQueryParams):
-        filters = params.filters
-
+    def get(params: PricingQuery, filters, group_by_columns):
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -29,7 +27,7 @@ class PricingRepository:
         if params.group_by_cluster:
             filters.append(ItemModel.item_ruido == 0)
 
-        columns = params.group_by_columns
+        columns = group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
         result = db_session.query(*columns,
                                  func.round(func.avg(cast(ItemModel.preco, Float)),2).label('mean'),
