@@ -93,9 +93,7 @@ class ItemsRepository:
         return res
 
 
-    def list_items_with_values(params: ListItemsQuery):
-        filters = params.filters
-
+    def list_items_with_values(params: ListItemsQuery, filters):
         if params.description:
             filters.append(ItemModel.original.__eq__(params.description))
 

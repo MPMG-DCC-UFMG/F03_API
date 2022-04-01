@@ -17,7 +17,7 @@ async def list_items_sample(params: ListItemsQuery) -> List[dict]:
   filters = get_params_values(params)
   return service.list_sample(params, filters)
 
-@items_router.get('/match/', description='List items based on query params (applying exact match)', response_model=List[ItemSchema])
+@items_router.post('/match/', description='List items based on query params (applying exact match)', response_model=List[ItemSchema])
 async def list_items_with_values(params: ListItemsQuery) -> List[dict]:
   filters = get_params_values(params)
   return service.list_items_with_values(params, filters)
