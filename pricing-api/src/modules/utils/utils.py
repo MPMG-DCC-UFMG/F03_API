@@ -129,9 +129,9 @@ def check_params_values(params):
                             "ano/mês de exercício definidos. Favor especificar apenas um período ou ano/mês" +
                             "de exercício desejado.")
 
-    if (bool(params.month) and not bool(params.year)):
-        raise HTTPException(status_code=422, detail="Necessário especificar o ano de exercício para " +
-                            "realizar a consulta")
+    # if (bool(params.month) and not bool(params.year)):
+    #     raise HTTPException(status_code=422, detail="Necessário especificar o ano de exercício para " +
+    #                         "realizar a consulta")
 
     if (bool(params.min_amount) and not bool(params.max_amount)) or (not bool(params.min_amount) and bool(params.max_amount)):
         raise HTTPException(status_code=422, detail="Ao buscar pela quantidade de itens cotados, é" +
