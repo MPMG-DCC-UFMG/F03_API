@@ -1,4 +1,4 @@
-from src.modules.groups.groups_operations import ListGroupsQueryParams
+from src.modules.groups.groups_operations import ListGroupsQuery
 from src.modules.groups.group import GroupModel
 from src.db.database import db_session
 from sqlalchemy import and_, desc, asc
@@ -9,7 +9,7 @@ class GroupsRepository:
         result = db_session.query(GroupModel).get(id)
         return result.__dict__
 
-    def list(params: ListGroupsQueryParams):
+    def list(params: ListGroupsQuery):
         filters = []
 
         if (bool(params.name)):

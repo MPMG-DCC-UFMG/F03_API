@@ -20,7 +20,7 @@ def get_params_values(params):
     if bool(params.inter_region):
         filters.append(ItemModel.regiao_intermediaria.in_(params.inter_region))
 
-    # filtros relacionados aos itens
+    # # filtros relacionados aos itens
     if bool(params.group):
         filters.append(ItemModel.grupo.__eq__(params.group))
     if bool(params.object_nature):
@@ -34,7 +34,7 @@ def get_params_values(params):
     if bool(params.min_homolog_price):
         filters.append(ItemModel.preco >= params.min_homolog_price)
 
-    # filtros relacionados à licitação
+    # # filtros relacionados à licitação
     if bool(params.modality):
         filters.append(ItemModel.modalidade.__eq__(params.modality))
     if bool(params.procurement_type):
@@ -53,15 +53,15 @@ def get_params_values(params):
     if bool(params.bidder_document):
         filters.append(ItemModel.cnpj_vencedor.__eq__(params.bidder_document))
 
-    # filtros de data
+    # # filtros de data
     if bool(params.year):
         filters.append(ItemModel.ano.in_(params.year))
     if bool(params.month):
         filters.append(ItemModel.mes.in_(params.month))
     if bool(params.before):
-        filters.append(ItemModel.data <= params.before)
+        filters.append(ItemModel.data <= str(params.before))
     if bool(params.after):
-        filters.append(ItemModel.data >= params.after)
+        filters.append(ItemModel.data >= str(params.after))
     if bool(params.first_token):
         filters.append(ItemModel.primeiro_termo.__eq__(params.first_token))
 

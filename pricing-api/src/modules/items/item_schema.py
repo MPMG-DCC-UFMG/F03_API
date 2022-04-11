@@ -32,3 +32,5 @@ class Item(BaseModel):
     tipo_licitacao: str = Field(example="MENOR PRECO", title='Tipo da licitação')
     natureza_objeto: str = Field(example="COMPRAS E OUTROS SERVICOS", title='Natureza do objeto da licitação')
     data: str = Field(example="02/03/2015", title='Data em que a licitação foi homologada')
+
+    
