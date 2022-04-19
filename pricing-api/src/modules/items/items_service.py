@@ -1,12 +1,12 @@
 from src.modules.items.items_operations import ListItemsQuery
 from src.modules.items.items_repository import ItemsRepository as repository
-from fastapi import FastAPI, HTTPException
+from src.modules.utils.utils import Pageable
 
 
 class ItemsService:
 
-    def list(params: ListItemsQuery, filters):
-        items = repository.list(params, filters)
+    def list(params: ListItemsQuery, filters, pageable: Pageable):
+        items = repository.list(params, filters, pageable)
         return items
 
     def list_sample(params: ListItemsQuery, filters):

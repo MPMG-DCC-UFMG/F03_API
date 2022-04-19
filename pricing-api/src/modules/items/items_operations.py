@@ -5,10 +5,6 @@ from src.modules.utils.utils import get_params_values, check_params_values
 from pydantic import BaseModel
 
 class ListItemsQuery(BaseModel):
-    limit: int =                           Query(10, description="Query limit")
-    offset: int =                          Query(0, description="Query offset")
-    sort: Optional[str] =                  Query(None, description="Atributo de ordenação")
-    order: Optional[str] =                 Query("desc", description="Critério de ordenação", regex="^asc|desc$")
     city: Optional[List[str]] =            Query(None, description="Município do órgão licitante")
     microregion: Optional[List[str]] =     Query(None, description="Microrregião do licitante")
     mesoregion: Optional[List[str]] =      Query(None, description="Mesorregião do licitante")

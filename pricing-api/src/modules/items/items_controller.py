@@ -3,14 +3,15 @@ from src.modules.items.items_operations import ListItemsQuery
 from src.modules.items.items_service import ItemsService as service
 from .item_schema import Item as ItemSchema
 from typing import List
-from src.modules.utils.utils import get_params_values, check_params_values
+from src.modules.utils.utils import get_params_values, check_params_values, Pageable
 
 items_router = APIRouter()
 
 @items_router.post('/', description='List items based on query params', response_model=List[ItemSchema])
-async def list_items(params: ListItemsQuery) -> List[dict]:
+async def list_items(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id", order: str = "desc") -> List[dict]:
   filters = get_params_values(params)
-  return service.list(params, filters)
+  pageable = Pageable(page, size, sort, order)
+  return service.list(params, filters, pageable)
 
 @items_router.post('/sample/', description='List items based on query params', )
 async def list_items_sample(params: ListItemsQuery) -> List[dict]:

@@ -80,6 +80,8 @@ def get_elasticsearch_query(description):
               "analyzer": "analyzer_plural_acentos"
             }
         }
+    } if description else{
+        "match_all": {}
     }
 
     return QUERY
@@ -140,3 +142,31 @@ def check_params_values(params):
     if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
         raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
                             "necessário especificar um valor mínimo e máximo.")
+
+
+class Pageable:
+    def __init__(self, page: int, size: int, sort: str, order: str):
+        self._page = page
+        self._size = size
+        self._sort = sort
+        self._order = order
+
+    def get_page(self):
+        return self._page
+
+    def get_size(self):
+        return self._size
+
+    def get_sort(self):
+        return self._sort
+
+    def get_order(self):
+        return self._order
+
+    def __str__(self):
+        return str({
+            "page": self._page,
+            "size": self._size,
+            "sort": self._sort,
+            "order": self._order
+        })

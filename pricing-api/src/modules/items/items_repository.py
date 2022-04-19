@@ -2,7 +2,8 @@ from src.modules.items.items_operations import ListItemsQuery
 from src.modules.items.item import ItemModel
 from src.modules.utils.utils import (
     get_elasticsearch_query,
-    get_autocomplete_query
+    get_autocomplete_query,
+    Pageable
 )
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
@@ -32,15 +33,20 @@ class ItemsRepository:
 
         return res
 
-    def list(params: ListItemsQuery):
-        filters = []#params.filters
-
-        if params.description:
+    def list(params: ListItemsQuery, filters, pageable: Pageable):
+        if params.description or True:
             QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-item", query=QUERY,
+            print(pageable)
+            result = es.search(index="f03-item",
+                               query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=20, ignore=[400, 404], size=500)
+                               from_= pageable.get_page() * pageable.get_size(),
+                               size= pageable.get_size(),
+                               sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
+                               request_timeout=20,
+                               ignore=[400, 404])
 
+            print(len(result["hits"]["hits"]))
             if "hits" not in result:
                 return []
 
@@ -48,17 +54,8 @@ class ItemsRepository:
             ids = [d["_source"]["id_item"] for d in hits]
             filters.append(ItemModel.id_item.in_(ids))
 
-        order = desc(params.sort) if params.order == "desc" else asc(params.sort)
-        result = db_session.query(ItemModel) \
-                           .filter(and_(*filters)) \
-                           .offset(params.offset) \
-                           .limit(params.limit)
-                        #    .order_by(order) \
-          
+        result = db_session.query(ItemModel).filter(and_(*filters))
         res = [row.__dict__ for row in result]
-        for item in res:
-            item['preco'] = round(item['preco'], 2)
-        
         return res
 
     def list_sample(params: ListItemsQuery, filters):
