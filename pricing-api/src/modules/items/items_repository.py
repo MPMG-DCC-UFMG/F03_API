@@ -8,6 +8,12 @@ from src.modules.utils.utils import (
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 from sqlalchemy.orm import load_only
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+ES_INDEX_ITEM = os.environ.get('ES_INDEX_ITEM')
 
 class ItemsRepository:
 
@@ -18,7 +24,8 @@ class ItemsRepository:
     def autocomplete_description(desc: str):
 
         QUERY = get_autocomplete_query(desc)
-        result = es.search(index="f03-item", suggest=QUERY,
+        result = es.search(index=ES_INDEX_ITEM,
+                           suggest=QUERY,
                            filter_path=['suggest.suggest-exact'],
                            request_timeout=20)
 
@@ -34,29 +41,23 @@ class ItemsRepository:
         return res
 
     def list(params: ListItemsQuery, filters, pageable: Pageable):
-        if params.description or True:
-            QUERY = get_elasticsearch_query(params.description)
-            print(pageable)
-            result = es.search(index="f03-item",
-                               query=QUERY,
-                               filter_path=['hits.hits._source.id_item'],
-                               from_= pageable.get_page() * pageable.get_size(),
-                               size= pageable.get_size(),
-                               sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
-                               request_timeout=20,
-                               ignore=[400, 404])
+        QUERY = get_elasticsearch_query(params.description)
 
-            print(len(result["hits"]["hits"]))
-            if "hits" not in result:
-                return []
+        result = es.search(index=ES_INDEX_ITEM,
+                           query=QUERY,
+                           #filter_path=['hits.hits._source.id_item'],
+                           from_= pageable.get_page() * pageable.get_size(),
+                           size= pageable.get_size(),
+                           sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
+                           request_timeout=20,
+                           ignore=[400, 404])
 
-            hits = result["hits"]["hits"]
-            ids = [d["_source"]["id_item"] for d in hits]
-            filters.append(ItemModel.id_item.in_(ids))
+        if "hits" not in result:
+            return []
 
-        result = db_session.query(ItemModel).filter(and_(*filters))
-        res = [row.__dict__ for row in result]
-        return res
+        hits = result["hits"]["hits"]
+        items = [item["_source"] for item in hits]
+        return items
 
     def list_sample(params: ListItemsQuery, filters):
         if params.description:
@@ -68,6 +69,7 @@ class ItemsRepository:
             if "hits" not in result:
                 return []
 
+            print(result)
             hits = result["hits"]["hits"]
             ids = [d["_source"]["id_item"] for d in hits]
             filters.append(ItemModel.id_item.in_(ids))

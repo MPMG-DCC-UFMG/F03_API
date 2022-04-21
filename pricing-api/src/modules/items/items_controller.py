@@ -8,7 +8,7 @@ from src.modules.utils.utils import get_params_values, check_params_values, Page
 items_router = APIRouter()
 
 @items_router.post('/', description='List items based on query params', response_model=List[ItemSchema])
-async def list_items(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id", order: str = "desc") -> List[dict]:
+async def list_items(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc") -> List[dict]:
   filters = get_params_values(params)
   pageable = Pageable(page, size, sort, order)
   return service.list(params, filters, pageable)
