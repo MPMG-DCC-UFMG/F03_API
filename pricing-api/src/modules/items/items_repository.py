@@ -41,7 +41,7 @@ class ItemsRepository:
         return res
 
     def list(params: ListItemsQuery, filters, pageable: Pageable):
-        QUERY = get_elasticsearch_query(params.description)
+        QUERY = get_elasticsearch_query(params.dict())
 
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
@@ -52,6 +52,7 @@ class ItemsRepository:
                            request_timeout=20,
                            ignore=[400, 404])
 
+        #print(result)
         if "hits" not in result:
             return []
 

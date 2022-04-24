@@ -1,6 +1,10 @@
+import datetime
+
+from pydantic import BaseModel
+from sqlalchemy import Date
+
 from src.modules.items.item import ItemModel
 from fastapi import FastAPI, HTTPException
-
 
 def get_params_values(params):
 
@@ -69,21 +73,78 @@ def get_params_values(params):
 
     return filters
 
+def get_range(params, min_field, max_field):
+    l = {}
+    if params[min_field]:
+        l["gte"] = params[min_field]
+    if params[max_field]:
+        l["lte"] = params[max_field]
+    return l
 
-def get_elasticsearch_query(description):
+def get_elasticsearch_query(params: dict):
+    print(params)
+    terms_filters = []
+    term_filters = []
+    range_filters = []
+
+    if params["city"]:
+        terms_filters.append({"terms": {"municipio": params["city"]}})
+    if params["microregion"]:
+        terms_filters.append({"terms": {"microrregiao": params["microregion"]}})
+    if params["mesoregion"]:
+        terms_filters.append({"terms": {"microrregiao": params["mesoregion"]}})
+    if params["plan_region"]:
+        terms_filters.append({"terms": {"regiao_planejamento": params["plan_region"]}})
+    if params["imediate_region"]:
+        terms_filters.append({"terms": {"regiao_imediata": params["imediate_region"]}})
+    if params["inter_region"]:
+        terms_filters.append({"terms": {"regiao_intermediaria": params["inter_region"]}})
+    if params["year"]:
+        terms_filters.append({"terms": {"ano": params["year"]}})
+    if params["month"]:
+        terms_filters.append({"terms": {"mes": params["month"]}})
+    if params["before"]:
+        pass
+    if params["after"]:
+        pass
+    if params["description"]:
+        term_filters.append({"term": {"original": params["description"]}})
+    if params["unit_measure"]:
+        term_filters.append({"term": {"dsc_unidade_medida": params["unit_measure"]}})
+    if params["group"]:
+        term_filters.append({"term": {"grupo": params["group"]}})
+    if params["first_token"]:
+        term_filters.append({"term": {"primeiro_termo": params["first_token"]}})
+    if params["body"]:
+        term_filters.append({"term": {"orgao": params["body"]}})
+    if params["body_type"]:
+        term_filters.append({"term": {"tipo_orgao": params["body_type"]}})
+    if params["modality"]:
+        term_filters.append({"term": {"original": params["modality"]}})
+    if params["procurement_type"]:
+        term_filters.append({"term": {"tipo_licitacao": params["procurement_type"]}})
+    if params["bidder_name"]:
+        term_filters.append({"term": {"nome_vencedor": params["bidder_name"]}})
+    if params["bidder_type"]:
+        term_filters.append({"term": {"tipo_vencedor": params["bidder_type"]}})
+    if params["bidder_document"]:
+        term_filters.append({"term": {"tipo_licitacao": params["bidder_document"]}})
+    if params["min_amount"] or params["max_amount"]:
+        l = get_range(params, min_field="min_amount", max_field="max_amount")
+        range_filters.append({"range": {"qtde_item": l}})
+    if params["min_homolog_price"] or params["max_homolog_price"]:
+        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
+        range_filters.append({"range": {"preco": l}})
+    if params["object_nature"]:
+        term_filters.append({"term": {"natureza_objeto": params["object_nature"]}})
 
     QUERY = {
-        "match": {
-          "original": {
-              "query": description,
-              "minimum_should_match": "50%",
-              "analyzer": "analyzer_plural_acentos"
-            }
+        "bool": {
+            "must": [*terms_filters, *range_filters],
         }
-    } if description else{
-        "match_all": {}
     }
 
+    print(QUERY)
     return QUERY
 
 

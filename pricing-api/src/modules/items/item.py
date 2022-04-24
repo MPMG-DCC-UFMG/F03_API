@@ -1,5 +1,9 @@
-from sqlalchemy import Column, BigInteger, String, Float
+import datetime
+
+from sqlalchemy import Column, BigInteger, String, Float, Date
 from src.db.database import Base
+from pydantic.dataclasses import dataclass
+
 
 class ItemModel(Base):
     __tablename__ = 'banco_precos_itens'
@@ -7,7 +11,7 @@ class ItemModel(Base):
     ano = Column(String)
     cnpj_vencedor = Column(String)
     count = Column(BigInteger)
-    data = Column(String)
+    data = Column(Date)
     dsc_unidade_medida = Column(String)
     flag_cpf_cnpj_valido = Column(BigInteger)
     grupo = Column(String)
@@ -37,3 +41,6 @@ class ItemModel(Base):
     tipo_licitacao = Column(String)
     tipo_orgao = Column(String)
     tipo_vencedor = Column(String)
+
+    class Config:
+        arbitrary_types_allowed = True
