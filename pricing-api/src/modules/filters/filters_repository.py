@@ -37,6 +37,7 @@ class FilterRepository:
                 }
             }
         }
+
         result = es.search(index="f03-item", suggest=QUERY,
                            filter_path=['suggest.suggest-exact'],
                            request_timeout=20)

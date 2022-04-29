@@ -1,7 +1,7 @@
 from sqlalchemy.sql.functions import count
 from src.modules.pricing.pricing_operations import PricingQuery
 from src.modules.items.item import ItemModel
-from src.modules.utils.utils import get_elasticsearch_query
+from src.modules.utils.utils import get_item_query
 from src.db.database import db_session, es
 from sqlalchemy.sql import func
 from sqlalchemy import and_, cast, desc, Float
@@ -11,10 +11,14 @@ class PricingRepository:
 
     def get(params: PricingQuery, filters, group_by_columns):
         if params.description:
-            QUERY = get_elasticsearch_query(params.description)
-            result = es.search(index="f03-item", query=QUERY,
+            QUERY = get_item_query(params.description)
+
+            result = es.search(index="f03-item",
+                               query=QUERY,
                                filter_path=['hits.hits._source.id_item'],
-                               request_timeout=60, ignore=[400, 404], size=10000)
+                               request_timeout=60,
+                               ignore=[400, 404],
+                               size=10000)
 
             if "hits" not in result:
                 return []

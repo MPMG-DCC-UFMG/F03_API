@@ -6,8 +6,8 @@ from sqlalchemy import Date
 from src.modules.items.item import ItemModel
 from fastapi import FastAPI, HTTPException
 
-def get_params_values(params):
 
+def get_params_values(params):
     filters = []
 
     # filtros demográficos
@@ -73,6 +73,7 @@ def get_params_values(params):
 
     return filters
 
+
 def get_range(params, min_field, max_field):
     l = {}
     if params[min_field]:
@@ -81,75 +82,70 @@ def get_range(params, min_field, max_field):
         l["lte"] = params[max_field]
     return l
 
-def get_elasticsearch_query(params: dict):
-    print(params)
-    terms_filters = []
-    term_filters = []
-    range_filters = []
 
-    if params["city"]:
-        terms_filters.append({"terms": {"municipio": params["city"]}})
-    if params["microregion"]:
-        terms_filters.append({"terms": {"microrregiao": params["microregion"]}})
-    if params["mesoregion"]:
-        terms_filters.append({"terms": {"microrregiao": params["mesoregion"]}})
-    if params["plan_region"]:
-        terms_filters.append({"terms": {"regiao_planejamento": params["plan_region"]}})
-    if params["imediate_region"]:
-        terms_filters.append({"terms": {"regiao_imediata": params["imediate_region"]}})
-    if params["inter_region"]:
-        terms_filters.append({"terms": {"regiao_intermediaria": params["inter_region"]}})
-    if params["year"]:
-        terms_filters.append({"terms": {"ano": params["year"]}})
-    if params["month"]:
-        terms_filters.append({"terms": {"mes": params["month"]}})
+terms_translation = {
+    "city": "municipio",
+    "microregion": "microrregiao",
+    "mesoregion": "mesoregion",
+    "plan_region": "regiao_planejamento",
+    "imediate_region": "regiao_imediata",
+    "inter_region": "regiao_intermediaria",
+    "year": "ano",
+    "month": "mes",
+}
+
+term_translation = {
+    "description": "original",
+    "unit_measure": "dsc_unidade_medida",
+    "group": "grupo",
+    "first_token": "primeiro_termo",
+    "body": "orgao",
+    "body_type": "tipo_orgao",
+    "modality": "original",
+    "procurement_type": "tipo_licitacao",
+    "bidder_name": "nome_vencedor",
+    "bidder_type": "tipo_vencedor",
+    "bidder_document": "tipo_licitacao",
+    "object_nature": "natureza_objeto"
+}
+
+
+def get_item_query(params: dict):
+    print(params)
+    filters = []
+    for param in params:
+        value = params[param]
+        if not value:
+            continue
+        if param in terms_translation:
+            portuguese_name = terms_translation[param]
+            filters.append({"terms": {portuguese_name: value}})
+        elif param in term_translation:
+            portuguese_name = term_translation[param]
+            filters.append({"term": {portuguese_name: value}})
+
     if params["before"]:
         pass
     if params["after"]:
         pass
-    if params["description"]:
-        term_filters.append({"term": {"original": params["description"]}})
-    if params["unit_measure"]:
-        term_filters.append({"term": {"dsc_unidade_medida": params["unit_measure"]}})
-    if params["group"]:
-        term_filters.append({"term": {"grupo": params["group"]}})
-    if params["first_token"]:
-        term_filters.append({"term": {"primeiro_termo": params["first_token"]}})
-    if params["body"]:
-        term_filters.append({"term": {"orgao": params["body"]}})
-    if params["body_type"]:
-        term_filters.append({"term": {"tipo_orgao": params["body_type"]}})
-    if params["modality"]:
-        term_filters.append({"term": {"original": params["modality"]}})
-    if params["procurement_type"]:
-        term_filters.append({"term": {"tipo_licitacao": params["procurement_type"]}})
-    if params["bidder_name"]:
-        term_filters.append({"term": {"nome_vencedor": params["bidder_name"]}})
-    if params["bidder_type"]:
-        term_filters.append({"term": {"tipo_vencedor": params["bidder_type"]}})
-    if params["bidder_document"]:
-        term_filters.append({"term": {"tipo_licitacao": params["bidder_document"]}})
+
     if params["min_amount"] or params["max_amount"]:
         l = get_range(params, min_field="min_amount", max_field="max_amount")
-        range_filters.append({"range": {"qtde_item": l}})
+        filters.append({"range": {"qtde_item": l}})
     if params["min_homolog_price"] or params["max_homolog_price"]:
         l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
-        range_filters.append({"range": {"preco": l}})
-    if params["object_nature"]:
-        term_filters.append({"term": {"natureza_objeto": params["object_nature"]}})
+        filters.append({"range": {"preco": l}})
 
     QUERY = {
         "bool": {
-            "must": [*terms_filters, *range_filters],
+            "must": [*filters],
         }
     }
 
-    print(QUERY)
     return QUERY
 
 
 def get_autocomplete_query(description):
-
     QUERY = {
         "suggest-exact": {
             "prefix": description,
@@ -164,9 +160,30 @@ def get_autocomplete_query(description):
     return QUERY
 
 
+def get_id_query(id: str):
+    QUERY = {
+        "bool": {
+            "must": [
+                {"term": {"id_item": id}}
+            ]
+        }
+    }
+
+    return QUERY
+
+
+def get_group_query(params):
+    query = {
+        "query": {
+            "match_none": {}
+        }
+    }
+
+    return query
+
+
 def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
                          group_by_cluster):
-
     columns = []
 
     if group_by_description:
@@ -186,23 +203,24 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
 
 
 def check_params_values(params):
-
     if (bool(params.after) or bool(params.before)) and (bool(params.year) or bool(params.month)):
         raise HTTPException(status_code=422, detail="Não é possível realizar consultas com período e " +
-                            "ano/mês de exercício definidos. Favor especificar apenas um período ou ano/mês" +
-                            "de exercício desejado.")
+                                                    "ano/mês de exercício definidos. Favor especificar apenas um período ou ano/mês" +
+                                                    "de exercício desejado.")
 
     # if (bool(params.month) and not bool(params.year)):
     #     raise HTTPException(status_code=422, detail="Necessário especificar o ano de exercício para " +
     #                         "realizar a consulta")
 
-    if (bool(params.min_amount) and not bool(params.max_amount)) or (not bool(params.min_amount) and bool(params.max_amount)):
+    if (bool(params.min_amount) and not bool(params.max_amount)) or (
+            not bool(params.min_amount) and bool(params.max_amount)):
         raise HTTPException(status_code=422, detail="Ao buscar pela quantidade de itens cotados, é" +
-                            "necessário especificar um valor mínimo e máximo.")
+                                                    "necessário especificar um valor mínimo e máximo.")
 
-    if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
+    if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (
+            not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
         raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
-                            "necessário especificar um valor mínimo e máximo.")
+                                                    "necessário especificar um valor mínimo e máximo.")
 
 
 class Pageable:

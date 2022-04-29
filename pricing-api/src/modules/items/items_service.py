@@ -4,17 +4,16 @@ from src.modules.utils.utils import Pageable
 
 
 class ItemsService:
-
-    def list(params: ListItemsQuery, filters, pageable: Pageable):
-        items = repository.list(params, filters, pageable)
+    def list(params: ListItemsQuery, pageable: Pageable):
+        items = repository.list(params, pageable)
         return items
 
-    def list_sample(params: ListItemsQuery, filters):
-        items = repository.list_sample(params, filters)
+    def list_sample(params: ListItemsQuery, pageable: Pageable):
+        items = repository.list_sample(params, pageable)
         return items
 
-    def list_items_with_values(params: ListItemsQuery, filters):
-        items = repository.list_items_with_values(params, filters)
+    def list_items_with_values(params: ListItemsQuery):
+        items = repository.list_items_with_values(params)
         return items
 
     def find_by_id(id: str):

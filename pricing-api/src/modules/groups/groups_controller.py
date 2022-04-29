@@ -6,7 +6,7 @@ from typing import List
 
 groups_router = APIRouter()
 
-@groups_router.post('/', description='List all created groups based on query params', response_model=List[GroupSchema])
+@groups_router.post('/', description='List all created groups based on query params')
 async def list_groups(params: ListGroupsQuery) -> List[dict]:
   return service.list(params)
 
