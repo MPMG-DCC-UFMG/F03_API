@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends
+from typing import List
+
+from fastapi import APIRouter
+
 from src.modules.items.items_operations import ListItemsQuery
 from src.modules.items.items_service import ItemsService as service
+from src.modules.utils.utils import Pageable
 from .item_schema import Item as ItemSchema
-from typing import List
-from src.modules.utils.utils import get_params_values, check_params_values, Pageable
 
 items_router = APIRouter()
 

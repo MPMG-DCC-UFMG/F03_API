@@ -1,10 +1,6 @@
-import datetime
-
-from pydantic import BaseModel
-from sqlalchemy import Date
+from fastapi import HTTPException
 
 from src.modules.items.item import ItemModel
-from fastapi import FastAPI, HTTPException
 
 
 def get_params_values(params):
@@ -83,7 +79,7 @@ def get_range(params, min_field, max_field):
     return l
 
 
-terms_translation = {
+item_terms_translation = {
     "city": "municipio",
     "microregion": "microrregiao",
     "mesoregion": "mesoregion",
@@ -94,7 +90,7 @@ terms_translation = {
     "month": "mes",
 }
 
-term_translation = {
+item_term_translation = {
     "description": "original",
     "unit_measure": "dsc_unidade_medida",
     "group": "grupo",
@@ -109,26 +105,42 @@ term_translation = {
     "object_nature": "natureza_objeto"
 }
 
+pricing_translate = {
+    "group_by_description": "original",
+    "group_by_unit_metric": "dsc_unidade_medida",
+    "group_by_year": "ano",
+    "group_by_cluster": "grupo",
+}
 
-def get_item_query(params: dict):
-    print(params)
+
+def get_filter(params):
+    """
+    Gera os filtros do ElasticSearch
+    """
     filters = []
     for param in params:
         value = params[param]
         if not value:
             continue
-        if param in terms_translation:
-            portuguese_name = terms_translation[param]
-            filters.append({"terms": {portuguese_name: value}})
-        elif param in term_translation:
-            portuguese_name = term_translation[param]
-            filters.append({"term": {portuguese_name: value}})
+        if param in item_terms_translation:
+            portuguese_name = item_terms_translation[param]
+            filters.append({"terms": {f"{portuguese_name}.keywork": value}})
+        elif param in item_term_translation:
+            portuguese_name = item_term_translation[param]
+            filters.append({"term": {f"{portuguese_name}.keywork": value}})
+    return filters
+
+
+def get_item_query(params: dict):
+    """
+    Gera a query para a listagem de items
+    """
+    filters = get_filter(params)
 
     if params["before"]:
         pass
     if params["after"]:
         pass
-
     if params["min_amount"] or params["max_amount"]:
         l = get_range(params, min_field="min_amount", max_field="max_amount")
         filters.append({"range": {"qtde_item": l}})
@@ -146,6 +158,9 @@ def get_item_query(params: dict):
 
 
 def get_autocomplete_query(description):
+    """
+    Gera a query do autocomple
+    """
     QUERY = {
         "suggest-exact": {
             "prefix": description,
@@ -161,6 +176,9 @@ def get_autocomplete_query(description):
 
 
 def get_id_query(id: str):
+    """
+    Gera a query para a busca por id
+    """
     QUERY = {
         "bool": {
             "must": [
@@ -171,15 +189,79 @@ def get_id_query(id: str):
 
     return QUERY
 
+#############
+# WARNING Equipe vai usar o druid para os grupos
+group_terms_translation = {
+    "first_token": "primeiro_termo"
+}
+
 
 def get_group_query(params):
+    filters = []
+
+    for filter in group_terms_translation:
+        if filter in params and params[filter]:
+            portuguese = group_terms_translation[filter]
+            filters.append({"term": {portuguese: params[filter]}})
+
     query = {
         "query": {
-            "match_none": {}
-        }
+            "bool": {
+                "must": [*filters]
+            }
+        },
+
+    }
+    return query
+#########
+
+def get_groupby(columns):
+    """
+    Monta a parte do agrupamento da consulta com agregação
+    """
+    aggs = []
+    for column in columns:
+        aggs.append({
+            f"{column}-agg": {
+                "terms": {
+                    "field": f"{pricing_translate[column]}.keyword"
+                }
+            }
+        })
+
+    # Constroi a parte aninhada do agrupamento para uma quantidade arbitrária de colunas de agrupamento
+    if len(aggs) > 1:
+        main, end = aggs[0], list(aggs[0].values())[0]
+        for f in aggs[1:]:
+            end["aggs"] = f
+            end = list(f.values())[0]
+    else:
+        main, end = aggs[0], aggs[0]
+
+    end["aggs"] = {
+        "max_preco": {"max": {"field": "preco"}}
+    }
+    return main
+
+
+def get_princing_query(params, columns):
+    """
+    Gera a query para a precificação
+    """
+    filters = get_filter(params)
+    groupby = get_groupby(columns)
+
+    body = {
+        'query': {
+            'bool': {
+                'must': [*filters]
+            }
+        },
+        "aggs": groupby,
+
     }
 
-    return query
+    return body
 
 
 def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
@@ -187,16 +269,16 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
     columns = []
 
     if group_by_description:
-        columns.append(ItemModel.original)
+        columns.append("group_by_description")
     if group_by_unit_metric:
-        columns.append(ItemModel.dsc_unidade_medida)
+        columns.append("group_by_unit_metric")
     if group_by_year:
-        columns.append(ItemModel.ano)
+        columns.append("group_by_year")
     if group_by_cluster:
-        columns.append(ItemModel.grupo)
+        columns.append("group_by_cluster")
 
     if len(columns) == 0:
-        columns.append(ItemModel.original)
+        columns.append("group_by_description")
 
     columns = tuple(columns)
     return columns

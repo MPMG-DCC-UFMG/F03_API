@@ -13,7 +13,6 @@ from src.modules.utils.utils import (
 )
 
 load_dotenv()
-
 ES_INDEX_ITEM = os.environ.get('ES_INDEX_ITEM')
 
 class ItemsRepository:
