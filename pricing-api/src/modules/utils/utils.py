@@ -101,8 +101,8 @@ def get_autocomplete_query(description):
     return QUERY
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
-                         group_by_cluster):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):#,
+                        #  group_by_cluster):
 
     columns = []
 
@@ -112,8 +112,8 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append(ItemModel.dsc_unidade_medida)
     if group_by_year:
         columns.append(ItemModel.ano)
-    if group_by_cluster:
-        columns.append(ItemModel.grupo)
+    # if group_by_cluster:
+    #     columns.append(ItemModel.grupo)
 
     if len(columns) == 0:
         columns.append(ItemModel.original)

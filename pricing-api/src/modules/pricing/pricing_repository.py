@@ -26,8 +26,8 @@ class PricingRepository:
             filters.append(ItemModel.id_item.in_(ids))
 
         # Recupera apenas os itens que não são ruído.
-        if params.group_by_cluster:
-            filters.append(ItemModel.item_ruido == 0)
+        # if params.group_by_cluster:
+        #     filters.append(ItemModel.item_ruido == 0)
 
         columns = group_by_columns
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
