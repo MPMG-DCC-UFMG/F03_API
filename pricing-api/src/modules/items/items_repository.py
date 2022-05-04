@@ -32,8 +32,8 @@ class ItemsRepository:
 
         return res
 
-    def list(params: ListItemsQuery):
-        filters = []#params.filters
+    def list(params: ListItemsQuery, filters):
+        filters = [] #params.filters
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
