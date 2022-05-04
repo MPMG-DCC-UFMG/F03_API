@@ -62,7 +62,7 @@ class PricingQuery(BaseModel):
         None, description="Valor mínimo dos itens homologados")
     max_homolog_price: Optional[float] = Query(
         None, description="Valor máximo dos itens homologados")
-    object_nature: Optional[float] = Query(
+    object_nature: Optional[str] = Query(
         None, description="Natureza do item")
     units_of_measure: Optional[List[str]] = Query(
         None, description="Selected units of measure")
