@@ -62,6 +62,8 @@ class ItemsRepository:
         return res
 
     def list_sample(params: ListItemsQuery, filters):
+        filters = []  # params.filters
+        
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
@@ -94,6 +96,8 @@ class ItemsRepository:
 
 
     def list_items_with_values(params: ListItemsQuery, filters):
+        filters = [] #params.filters
+        
         if params.description:
             filters.append(ItemModel.original.__eq__(params.description))
 
