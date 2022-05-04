@@ -10,6 +10,8 @@ from sqlalchemy import and_, cast, desc, Float
 class PricingRepository:
 
     def get(params: PricingQuery, filters, group_by_columns):
+        filters = []  # params.filters
+        
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
             result = es.search(index="f03-item", query=QUERY,
