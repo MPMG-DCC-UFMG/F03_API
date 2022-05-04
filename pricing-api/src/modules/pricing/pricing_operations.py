@@ -12,7 +12,7 @@ class PricingQuery(BaseModel):
     group_by_description: bool = Query(None, description="Considerar as descrições para o agrupamento de dados.")
     group_by_unit_metric: bool = Query(None, description="Considerar as unidades de medida para o agrupamento de dados.")
     group_by_year: bool = Query(None, description="Considerar os anos das licitações para o agrupamento de dados.")
-    group_by_cluster: bool = Query(None, description="Considerar os grupos dos itens para o agrupamento de dados.")
+    # group_by_cluster: bool = Query(None, description="Considerar os grupos dos itens para o agrupamento de dados.")
     limit: int = Query(10, description="Query limit")
     offset: int = Query(0, description="Query offset")
     sort: Optional[str] = Query("count", description="Atributo de ordenação")

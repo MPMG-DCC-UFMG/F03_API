@@ -17,6 +17,6 @@ async def get_pricing(params: PricingQuery) -> List[dict]:
   filters = get_params_values(params)
   group_by_columns = get_group_by_columns(params.group_by_description,
                                           params.group_by_unit_metric,
-                                          params.group_by_year,
-                                          params.group_by_cluster)
+                                          params.group_by_year)#,
+                                          #params.group_by_cluster)
   return service.get(params, filters, group_by_columns)
