@@ -33,7 +33,7 @@ class ItemsRepository:
         return res
 
     def list(params: ListItemsQuery, filters):
-        filters = [] #params.filters
+        filters = filters  # params.filters
 
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
@@ -62,7 +62,7 @@ class ItemsRepository:
         return res
 
     def list_sample(params: ListItemsQuery, filters):
-        filters = []  # params.filters
+        filters = filters  # params.filters
         
         if params.description:
             QUERY = get_elasticsearch_query(params.description)
@@ -81,6 +81,8 @@ class ItemsRepository:
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
                   'municipio', 'qtde_item', 'preco']
         order = desc(params.sort) if params.order == "desc" else asc(params.sort)
+        
+        print(*filters)
         result = db_session.query(ItemModel) \
                            .filter(and_(*filters)) \
                            .options(load_only(*fields)) \
@@ -96,7 +98,7 @@ class ItemsRepository:
 
 
     def list_items_with_values(params: ListItemsQuery, filters):
-        filters = [] #params.filters
+        filters = filters  # params.filters
         
         if params.description:
             filters.append(ItemModel.original.__eq__(params.description))
