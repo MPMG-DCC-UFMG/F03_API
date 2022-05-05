@@ -29,9 +29,7 @@ class ChartsRepository:
         pivot = defaultdict(list)
         pivot2 = defaultdict(list)
         for item in dict_list:
-            data = datetime.strptime(item['data'], '%d/%m/%Y')
-            item['data'] = data.strftime('%m') + '/' + data.strftime('%Y')
-            
+            item['data'] = item['mes'] + '/' + item['ano']          
             pivot2[item['data']].append(item['preco'])
             pivot[item['data']].append(item['qtde_item'])
         
@@ -39,10 +37,4 @@ class ChartsRepository:
         dict_y = [{'data': k, 'mean_preco': round(np.mean(values), 2), 'median_preco': round(np.median(values),2)} for k, values in pivot2.items()]
         
         res = [{**dx, **dy} for dx, dy in zip(dict_x, dict_y)]
-        
-        for item in res:
-            data = datetime.strptime(item['data'], '%m/%Y')
-            item['mes'] = data.strftime('%m')
-            item['ano'] = data.strftime('%Y')
-        
         return sorted(res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
