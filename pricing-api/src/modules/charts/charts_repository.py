@@ -37,4 +37,9 @@ class ChartsRepository:
         dict_y = [{'data': k, 'mean_preco': round(np.mean(values), 2), 'median_preco': round(np.median(values),2)} for k, values in pivot2.items()]
         
         res = [{**dx, **dy} for dx, dy in zip(dict_x, dict_y)]
+        for item in res:
+            data = datetime.strptime(item['data'], '%m/%Y')
+            item['mes'] = data.strftime('%m')
+            item['ano'] = data.strftime('%Y')
+        
         return sorted(res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
