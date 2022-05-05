@@ -101,8 +101,7 @@ def get_autocomplete_query(description):
     return QUERY
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):#,
-                        #  group_by_cluster):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):#, group_by_cluster):
 
     columns = []
 

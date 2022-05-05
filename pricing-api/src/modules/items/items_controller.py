@@ -9,16 +9,19 @@ items_router = APIRouter()
 
 @items_router.post('/', description='List items based on query params', response_model=List[ItemSchema])
 async def list_items(params: ListItemsQuery) -> List[dict]:
+  check_params_values(params)
   filters = get_params_values(params)
   return service.list(params, filters)
 
 @items_router.post('/sample/', description='List items based on query params', )
 async def list_items_sample(params: ListItemsQuery) -> List[dict]:
+  check_params_values(params)
   filters = get_params_values(params)
   return service.list_sample(params, filters)
 
 @items_router.post('/match/', description='List items based on query params (applying exact match)', response_model=List[ItemSchema])
 async def list_items_with_values(params: ListItemsQuery) -> List[dict]:
+  check_params_values(params)
   filters = get_params_values(params)
   return service.list_items_with_values(params, filters)
 
