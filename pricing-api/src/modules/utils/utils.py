@@ -91,17 +91,17 @@ item_terms_translation = {
 }
 
 item_term_translation = {
-    "description": "original",
+    "description": "original_dsc",
     "unit_measure": "dsc_unidade_medida",
     "group": "grupo",
     "first_token": "primeiro_termo",
     "body": "orgao",
     "body_type": "tipo_orgao",
-    "modality": "original",
+    "modality": "modalidade",
     "procurement_type": "tipo_licitacao",
     "bidder_name": "nome_vencedor",
     "bidder_type": "tipo_vencedor",
-    "bidder_document": "tipo_licitacao",
+    "bidder_document": "cnpj_vencedor",
     "object_nature": "natureza_objeto"
 }
 
@@ -124,10 +124,10 @@ def get_filter(params):
             continue
         if param in item_terms_translation:
             portuguese_name = item_terms_translation[param]
-            filters.append({"terms": {f"{portuguese_name}.keywork": value}})
+            filters.append({"terms": {f"{portuguese_name}.keyword": value}})
         elif param in item_term_translation:
             portuguese_name = item_term_translation[param]
-            filters.append({"term": {f"{portuguese_name}.keywork": value}})
+            filters.append({"term": {f"{portuguese_name}.keyword": value}})
     return filters
 
 
@@ -239,7 +239,9 @@ def get_groupby(columns):
         main, end = aggs[0], aggs[0]
 
     end["aggs"] = {
-        "max_preco": {"max": {"field": "preco"}}
+        "max_preco": {"max": {"field": "preco"}},
+        "min_preco": {"min": {"field": "preco"}},
+        "avg_preco": {"avg": {"field": "preco"}}
     }
     return main
 
@@ -264,8 +266,7 @@ def get_princing_query(params, columns):
     return body
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year,
-                         group_by_cluster):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):#, group_by_cluster):
     columns = []
 
     if group_by_description:
@@ -274,8 +275,8 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append("group_by_unit_metric")
     if group_by_year:
         columns.append("group_by_year")
-    if group_by_cluster:
-        columns.append("group_by_cluster")
+    # if group_by_cluster:
+    #     columns.append("group_by_cluster")
 
     if len(columns) == 0:
         columns.append("group_by_description")

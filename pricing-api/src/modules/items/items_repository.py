@@ -27,13 +27,12 @@ class ItemsRepository:
             return []
 
         hits = result["hits"]["hits"]
-        items = [item["_source"] for item in hits]
-        return items[0]
+        return [item['_source'] for item in hits]
 
     def autocomplete_description(desc: str):
 
         QUERY = get_autocomplete_query(desc)
-        result = es.search(index="f03-itens_complete",
+        result = es.search(index=ES_INDEX_ITEM,
                            suggest=QUERY,
                            filter_path=['suggest.suggest-exact'],
                            request_timeout=20)
@@ -56,6 +55,7 @@ class ItemsRepository:
                            from_= pageable.get_page() * pageable.get_size(),
                            size= pageable.get_size(),
                            sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
+                           filter_path='hits.hits._source',
                            request_timeout=20,
                            ignore=[400, 404])
 
@@ -63,17 +63,16 @@ class ItemsRepository:
             return []
 
         hits = result["hits"]["hits"]
-        items = [item["_source"] for item in hits]
-        return items
+        return [item['_source'] for item in hits]
 
     def list_sample(params: ListItemsQuery, pageable: Pageable):
-        # Faz uma projeção da tabela itens
         QUERY = get_item_query(params.dict())
-
+        
         prefix = 'hits.hits._source'
-        fields = ['original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
+        fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
                   'municipio', 'qtde_item', 'preco']
+        
         prefix_fields = [f"{prefix}.{field}" for field in fields]
 
         result = es.search(index=ES_INDEX_ITEM,
@@ -89,8 +88,7 @@ class ItemsRepository:
             return []
 
         hits = result["hits"]["hits"]
-        
-        return hits
+        return [item['_source'] for item in hits]
 
 
     def list_items_with_values(params: ListItemsQuery):
