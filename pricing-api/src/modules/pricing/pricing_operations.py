@@ -9,7 +9,6 @@ class PricingQuery(BaseModel):
     group_by_description: bool = Query(None, description="Considerar as descrições para o agrupamento de dados.")
     group_by_unit_metric: bool = Query(None, description="Considerar as unidades de medida para o agrupamento de dados.")
     group_by_year: bool = Query(None, description="Considerar os anos das licitações para o agrupamento de dados.")
-    # group_by_cluster: bool = Query(None, description="Considerar os grupos dos itens para o agrupamento de dados.")
     city: Optional[List[str]] = Query(None, description="Município do órgão licitante")
     microregion: Optional[List[str]] = Query(None, description="Microrregião do licitante")
     mesoregion: Optional[List[str]] = Query(None, description="Mesorregião do licitante")

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from src.modules.items.item import ItemModel
-
+from warnings import warn
 
 def get_params_values(params):
     filters = []
@@ -227,8 +227,7 @@ def get_groupby(columns):
                     "field": f"{pricing_translate[column]}.keyword"
                 }
             }
-        })
-        
+        })        
 
     # Constroi a parte aninhada do agrupamento para uma quantidade arbitrária de colunas de agrupamento
     if len(aggs) >= 1:
@@ -247,7 +246,7 @@ def get_groupby(columns):
     return main
 
 
-def get_princing_query(params, columns):
+def get_princing_query(params, columns, pageable):
     """
     Gera a query para a precificação
     """
@@ -255,19 +254,22 @@ def get_princing_query(params, columns):
     groupby = get_groupby(columns)
 
     body = {
+        'from': pageable.get_page() * pageable.get_size(),
+        'size': pageable.get_size(),
+        'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
         'query': {
             'bool': {
                 'must': [*filters]
             }
         },
-        "aggs": groupby,
+        'aggs': groupby,
 
     }
 
     return body
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):#, group_by_cluster):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):
     columns = []
 
     if group_by_description:
@@ -276,8 +278,6 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append("group_by_unit_metric")
     if group_by_year:
         columns.append("group_by_year")
-    # if group_by_cluster:
-    #     columns.append("group_by_cluster")
 
     if len(columns) == 0:
         columns.append("group_by_description")
@@ -287,24 +287,25 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
 
 
 def check_params_values(params):
-    if (bool(params.after) or bool(params.before)) and (bool(params.year) or bool(params.month)):
-        raise HTTPException(status_code=422, detail="Não é possível realizar consultas com período e " +
-                                                    "ano/mês de exercício definidos. Favor especificar apenas um período ou ano/mês" +
-                                                    "de exercício desejado.")
+    warn('This service is deprecated.', DeprecationWarning, stacklevel=1)
+    # if (bool(params.after) or bool(params.before)) and (bool(params.year) or bool(params.month)):
+    #     raise HTTPException(status_code=422, detail="Não é possível realizar consultas com período e " +
+    #                                                 "ano/mês de exercício definidos. Favor especificar apenas um período ou ano/mês" +
+    #                                                 "de exercício desejado.")
 
     # if (bool(params.month) and not bool(params.year)):
     #     raise HTTPException(status_code=422, detail="Necessário especificar o ano de exercício para " +
     #                         "realizar a consulta")
 
-    if (bool(params.min_amount) and not bool(params.max_amount)) or (
-            not bool(params.min_amount) and bool(params.max_amount)):
-        raise HTTPException(status_code=422, detail="Ao buscar pela quantidade de itens cotados, é" +
-                                                    "necessário especificar um valor mínimo e máximo.")
+    # if (bool(params.min_amount) and not bool(params.max_amount)) or (
+    #         not bool(params.min_amount) and bool(params.max_amount)):
+    #     raise HTTPException(status_code=422, detail="Ao buscar pela quantidade de itens cotados, é" +
+    #                                                 "necessário especificar um valor mínimo e máximo.")
 
-    if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (
-            not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
-        raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
-                                                    "necessário especificar um valor mínimo e máximo.")
+    # if (bool(params.min_homolog_price) and not bool(params.max_homolog_price)) or (
+    #         not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
+    #     raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
+    #                                                 "necessário especificar um valor mínimo e máximo.")
 
 
 class Pageable:
