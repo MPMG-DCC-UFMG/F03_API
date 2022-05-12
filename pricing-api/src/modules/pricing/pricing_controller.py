@@ -20,6 +20,6 @@ async def get_pricing(params: PricingQuery, page: int = 0, size: int = 10, sort:
     # filters = get_params_values(params)
     group_by_columns = get_group_by_columns(params.group_by_description,
                                             params.group_by_unit_metric,
-                                            params.group_by_year,
-                                            params.group_by_cluster)
+                                            params.group_by_year)# ,
+                                            #params.group_by_cluster)
     return service.get(params, group_by_columns, pageable)

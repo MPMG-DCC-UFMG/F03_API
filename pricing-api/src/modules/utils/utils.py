@@ -82,7 +82,7 @@ def get_range(params, min_field, max_field):
 item_terms_translation = {
     "city": "municipio",
     "microregion": "microrregiao",
-    "mesoregion": "mesoregion",
+    "mesoregion": "mesorregiao",
     "plan_region": "regiao_planejamento",
     "imediate_region": "regiao_imediata",
     "inter_region": "regiao_intermediaria",
@@ -106,7 +106,7 @@ item_term_translation = {
 }
 
 pricing_translate = {
-    "group_by_description": "original",
+    "group_by_description": "original_dsc",
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
     "group_by_cluster": "grupo",
@@ -228,16 +228,17 @@ def get_groupby(columns):
                 }
             }
         })
+        
 
     # Constroi a parte aninhada do agrupamento para uma quantidade arbitrária de colunas de agrupamento
-    if len(aggs) > 1:
+    if len(aggs) >= 1:
         main, end = aggs[0], list(aggs[0].values())[0]
         for f in aggs[1:]:
             end["aggs"] = f
             end = list(f.values())[0]
     else:
         main, end = aggs[0], aggs[0]
-
+    
     end["aggs"] = {
         "max_preco": {"max": {"field": "preco"}},
         "min_preco": {"min": {"field": "preco"}},
