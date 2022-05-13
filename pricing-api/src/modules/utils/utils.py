@@ -150,7 +150,18 @@ def get_item_query(params: dict):
 
     QUERY = {
         "bool": {
-            "must": [*filters],
+            "must": [
+                *filters,
+                {
+                    "match": {
+                        "original": {
+                            "query": params["description"],
+                            "minimum_should_match": "50%",
+                            "analyzer": "analyzer_plural_acentos"
+                        }
+                    }
+                }
+            ],
         }
     }
 
@@ -224,7 +235,8 @@ def get_groupby(columns):
         aggs.append({
             f"{column}-agg": {
                 "terms": {
-                    "field": f"{pricing_translate[column]}.keyword"
+                    "field": f"{pricing_translate[column]}.keyword",
+                    "order": {"_term": "asc"}
                 }
             }
         })        
@@ -259,7 +271,18 @@ def get_princing_query(params, columns, pageable):
         'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
         'query': {
             'bool': {
-                'must': [*filters]
+                'must': [
+                    *filters,
+                    {
+                        "match": {
+                            "original": {
+                                "query": params["description"],
+                                "minimum_should_match": "50%",
+                                "analyzer": "analyzer_plural_acentos"
+                            }
+                        }
+                    }
+                ]
             }
         },
         'aggs': groupby,
