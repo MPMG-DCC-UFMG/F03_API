@@ -20,27 +20,44 @@ class PricingRepository:
                            body=QUERY,
                         #    filter_path=['hits.hits._source.id_item'],
                            request_timeout=60,
+                           size=0,
                            ignore=[400, 404])
 
         if "aggregations" not in result:
             return []
         
-        # if len(group_by_columns) == 1:
-        #     first_key = result["aggregations"][group_by_columns[0] +
-        #                                        "-agg"]["buckets"][0]["key"]
-        # elif len(group_by_columns) == 2:
-        #     first_key = result["aggregations"][group_by_columns[0] +
-        #                                        "-agg"]["buckets"][0]["key"]
-        #     second_key = result["aggregations"][group_by_columns[0] +
-        #                                         "-agg"]["buckets"][0][group_by_columns[1]+"-agg"]["buckets"][0]["key"]
-        # elif len(group_by_columns) == 3:
-        #     first_key = result["aggregations"][group_by_columns[0] +
-        #                                        "-agg"]['buckets'][0]["key"]
-        #     second_key = result["aggregations"][group_by_columns[0] +
-        #                                         "-agg"]["buckets"][0][group_by_columns[1]+"-agg"]["buckets"][0]["key"]
-        #     third_key = result["aggregations"][group_by_columns[0] +
-        #                                        "-agg"]['buckets'][0][group_by_columns[1]+"-agg"]["buckets"][0][group_by_columns[2]+"-agg"]["buckets"][0]["key"]
-        
-        # print(first_key, second_key, third_key)
-        hits = result["aggregations"][group_by_columns[0]+"-agg"]['buckets']
-        return hits
+        res = []
+        if len(group_by_columns) == 1:
+            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
+                res.append({
+                    group_by_columns[0]: a['key'],
+                    'max_preco': a['max_preco']['value'],
+                    'min_preco': a['min_preco']['value'],
+                    'avg_preco': a['avg_preco']['value'],
+                    'sum_qtde_item': a['sum_qtde_item']['value']                    
+                })
+        elif len(group_by_columns) == 2:
+            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
+                for b in a[group_by_columns[1] + '-agg']['buckets']:
+                    res.append({
+                        group_by_columns[0]: a['key'],
+                        group_by_columns[1]: b['key'],
+                        'max_preco': b['max_preco']['value'],
+                        'min_preco': b['min_preco']['value'],
+                        'avg_preco': b['avg_preco']['value'],
+                        'sum_qtde_item': b['sum_qtde_item']['value']                    
+                    })
+        elif len(group_by_columns) == 3:
+            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
+                for b in a[group_by_columns[1] + '-agg']['buckets']:
+                    for c in b[group_by_columns[2] + '-agg']['buckets']:
+                        res.append({
+                            group_by_columns[0]: a['key'],
+                            group_by_columns[1]: b['key'],
+                            group_by_columns[2]: c['key'],
+                            'max_preco': c['max_preco']['value'],
+                            'min_preco': c['min_preco']['value'],
+                            'avg_preco': c['avg_preco']['value'],
+                            'sum_qtde_item': c['sum_qtde_item']['value']
+                        })
+        return res

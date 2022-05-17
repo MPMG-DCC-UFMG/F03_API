@@ -91,7 +91,7 @@ item_terms_translation = {
 }
 
 item_term_translation = {
-    "description": "original_dsc",
+    # "description": "original_dsc",
     "unit_measure": "dsc_unidade_medida",
     "group": "grupo",
     "first_token": "primeiro_termo",
@@ -106,7 +106,7 @@ item_term_translation = {
 }
 
 pricing_translate = {
-    "group_by_description": "original_dsc",
+    "group_by_description": "original_dsc",    
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
     "group_by_cluster": "grupo",
@@ -156,7 +156,7 @@ def get_item_query(params: dict):
                     "match": {
                         "original": {
                             "query": params["description"],
-                            "minimum_should_match": "50%",
+                            "minimum_should_match": "70%",
                             "analyzer": "analyzer_plural_acentos"
                         }
                     }
@@ -236,7 +236,7 @@ def get_groupby(columns):
             f"{column}-agg": {
                 "terms": {
                     "field": f"{pricing_translate[column]}.keyword",
-                    "order": {"_term": "asc"}
+                    "order": {"_key": "asc"}
                 }
             }
         })        
@@ -253,7 +253,8 @@ def get_groupby(columns):
     end["aggs"] = {
         "max_preco": {"max": {"field": "preco"}},
         "min_preco": {"min": {"field": "preco"}},
-        "avg_preco": {"avg": {"field": "preco"}}
+        "avg_preco": {"avg": {"field": "preco"}},
+        "sum_qtde_item": {"sum": {"field": "qtde_item"}},
     }
     return main
 
@@ -266,9 +267,9 @@ def get_princing_query(params, columns, pageable):
     groupby = get_groupby(columns)
 
     body = {
-        'from': pageable.get_page() * pageable.get_size(),
-        'size': pageable.get_size(),
-        'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
+        # 'from': pageable.get_page() * pageable.get_size(),
+        # 'size': pageable.get_size(),
+        # 'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
         'query': {
             'bool': {
                 'must': [
@@ -277,7 +278,7 @@ def get_princing_query(params, columns, pageable):
                         "match": {
                             "original": {
                                 "query": params["description"],
-                                "minimum_should_match": "50%",
+                                "minimum_should_match": "70%",
                                 "analyzer": "analyzer_plural_acentos"
                             }
                         }
