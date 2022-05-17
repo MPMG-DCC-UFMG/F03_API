@@ -19,11 +19,6 @@ async def list_items_sample(params: ListItemsQuery, page: int = 0, size: int = 1
   pageable = Pageable(page, size, sort, order)
   return service.list_sample(params, pageable)
 
-# @items_router.post('/match/', description='List items based on query params (applying exact match)', response_model=List[ItemSchema])
-# async def list_items_with_values(params: ListItemsQuery) -> List[dict]:
-#   filters = get_params_values(params)
-#   return service.list_items_with_values(params, filters)
-
 @items_router.get('/{id}', description='Find item by ID', )
 async def get_item(id: str):
   return service.find_by_id(id)

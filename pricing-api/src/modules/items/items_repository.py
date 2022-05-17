@@ -30,7 +30,6 @@ class ItemsRepository:
         return [item['_source'] for item in hits]
 
     def autocomplete_description(desc: str):
-
         QUERY = get_autocomplete_query(desc)
         result = es.search(index=ES_INDEX_ITEM,
                            suggest=QUERY,
