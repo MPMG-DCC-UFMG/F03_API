@@ -67,27 +67,31 @@ class ItemsRepository:
     def list_sample(params: ListItemsQuery, pageable: Pageable):
         QUERY = get_item_query(params.dict())
         
-        prefix = 'hits.hits._source'
         fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
                   'municipio', 'qtde_item', 'preco']
-        
-        prefix_fields = [f"{prefix}.{field}" for field in fields]
-
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
                            from_=pageable.get_page() * pageable.get_size(),
                            size=pageable.get_size(),
                            sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
-                           filter_path=prefix_fields,
+                           _source_includes=fields,
+                           filter_path='hits',
+                           track_total_hits=True,
                            request_timeout=20,
                            ignore=[400, 404])
 
         if "hits" not in result:
-            return []
+            return {}
 
-        hits = result["hits"]["hits"]
-        return [item['_source'] for item in hits]
+        hits = result["hits"]["hits"]        
+        res = {
+            "total": result["hits"]["total"]["value"],  # total de itens
+            "pageSize": pageable.get_size(),  # qtd de itens por página
+            "currentPage": pageable.get_page(),  # página atual
+            "data": [item['_source'] for item in hits]  # dados
+        }        
+        return res
 
 
     def list_items_with_values(params: ListItemsQuery):

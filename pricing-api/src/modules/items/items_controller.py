@@ -14,8 +14,8 @@ async def list_items(params: ListItemsQuery, page: int = 0, size: int = 10, sort
   pageable = Pageable(page, size, sort, order)
   return service.list(params, pageable)
 
-@items_router.post('/sample/', description='List items based on query params', )
-async def list_items_sample(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc") -> List[dict]:
+@items_router.post('/sample/', description='List items based on query params')
+async def list_items_sample(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc"):
   pageable = Pageable(page, size, sort, order)
   return service.list_sample(params, pageable)
 

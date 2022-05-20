@@ -270,6 +270,7 @@ def get_princing_query(params, columns, pageable):
         # 'from': pageable.get_page() * pageable.get_size(),
         # 'size': pageable.get_size(),
         # 'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
+        # "track_total_hits": True,
         'query': {
             'bool': {
                 'must': [

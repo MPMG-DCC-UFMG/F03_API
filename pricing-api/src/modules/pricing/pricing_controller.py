@@ -13,7 +13,7 @@ pricing_router = APIRouter()
 
 
 @pricing_router.post('/', description='Get the price according query params', )
-async def get_pricing(params: PricingQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc") -> List[dict]:
+async def get_pricing(params: PricingQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc"):
     pageable = Pageable(page, size, sort, order)
     group_by_columns = get_group_by_columns(params.group_by_description,
                                             params.group_by_unit_metric,

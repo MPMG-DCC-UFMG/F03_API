@@ -26,10 +26,10 @@ class PricingRepository:
         if "aggregations" not in result:
             return []
         
-        res = []
+        data = []
         if len(group_by_columns) == 1:
             for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
-                res.append({
+                data.append({
                     group_by_columns[0]: a['key'],
                     'max_preco': a['max_preco']['value'],
                     'min_preco': a['min_preco']['value'],
@@ -39,7 +39,7 @@ class PricingRepository:
         elif len(group_by_columns) == 2:
             for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
                 for b in a[group_by_columns[1] + '-agg']['buckets']:
-                    res.append({
+                    data.append({
                         group_by_columns[0]: a['key'],
                         group_by_columns[1]: b['key'],
                         'max_preco': b['max_preco']['value'],
@@ -51,7 +51,7 @@ class PricingRepository:
             for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
                 for b in a[group_by_columns[1] + '-agg']['buckets']:
                     for c in b[group_by_columns[2] + '-agg']['buckets']:
-                        res.append({
+                        data.append({
                             group_by_columns[0]: a['key'],
                             group_by_columns[1]: b['key'],
                             group_by_columns[2]: c['key'],
@@ -60,4 +60,10 @@ class PricingRepository:
                             'avg_preco': c['avg_preco']['value'],
                             'sum_qtde_item': c['sum_qtde_item']['value']
                         })
+        res = {
+            "total": len(data),  # total de itens
+            "pageSize": pageable.get_size(),  # qtd de itens por página
+            "currentPage": pageable.get_page(),  # página atual
+            "data": data  # dados
+        }
         return res
