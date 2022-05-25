@@ -106,7 +106,7 @@ item_term_translation = {
 }
 
 pricing_translate = {
-    "group_by_description": "original_dsc",    
+    "group_by_description": "original_raw",
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
     "group_by_cluster": "grupo",
@@ -226,7 +226,7 @@ def get_group_query(params):
     return query
 #########
 
-def get_groupby(columns):
+def get_groupby(columns, from_value, size_value):
     """
     Monta a parte do agrupamento da consulta com agregação
     """
@@ -236,7 +236,8 @@ def get_groupby(columns):
             f"{column}-agg": {
                 "terms": {
                     "field": f"{pricing_translate[column]}.keyword",
-                    "order": {"_key": "asc"}
+                    "size": size_value
+                    # "order": {"_key": "asc"}
                 }
             }
         })        
@@ -255,6 +256,15 @@ def get_groupby(columns):
         "min_preco": {"min": {"field": "preco"}},
         "avg_preco": {"avg": {"field": "preco"}},
         "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+        "agg_bucket_sort": {
+            "bucket_sort": {
+                "sort": [
+                    {"sum_qtde_item": {"order": "desc"}}
+                ],
+                "from": from_value,
+                "size": size_value
+            }
+        }
     }
     return main
 
@@ -264,13 +274,12 @@ def get_princing_query(params, columns, pageable):
     Gera a query para a precificação
     """
     filters = get_filter(params)
-    groupby = get_groupby(columns)
+    groupby = get_groupby(columns, pageable.get_page() * pageable.get_size(), pageable.get_size())
 
     body = {
-        # 'from': pageable.get_page() * pageable.get_size(),
-        # 'size': pageable.get_size(),
         # 'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
         # "track_total_hits": True,
+        "size": 0,
         'query': {
             'bool': {
                 'must': [

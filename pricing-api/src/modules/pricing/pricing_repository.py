@@ -20,12 +20,12 @@ class PricingRepository:
                            body=QUERY,
                         #    filter_path=['hits.hits._source.id_item'],
                            request_timeout=60,
-                           size=0,
                            ignore=[400, 404])
 
         if "aggregations" not in result:
             return []
         
+        # print(result)
         data = []
         if len(group_by_columns) == 1:
             for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
