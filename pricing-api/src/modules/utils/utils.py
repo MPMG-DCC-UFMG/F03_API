@@ -226,47 +226,99 @@ def get_group_query(params):
     return query
 #########
 
+
+def get_groupby_single(column, from_value, size_value):
+    """
+    Monta a parte do agrupamento da consulta com agregação
+    """
+    
+    order_by = {}
+    max_score = {"max": {"field": "_score"}}
+    if column[0] == 'group_by_description':
+        order_by = {"max_score": "desc"}
+        max_score = {"max": {"script": "_score"}}
+    else:
+        order_by = {"_key": "asc"}
+    
+    aggs = {
+        "group_by_script": {
+            "terms": {
+                "field": f"{pricing_translate[column[0]]}.keyword",
+                "size": 999999,
+                "order": order_by
+            },
+            "aggs": {
+                "max_preco": {"max": {"field": "preco"}},
+                "min_preco": {"min": {"field": "preco"}},
+                "avg_preco": {"avg": {"field": "preco"}},
+                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+                "max_score": max_score,
+                "commits_bucket_sort": {
+                    "bucket_sort": {
+                        "from": from_value,
+                        "size": size_value
+                    }
+                }
+                
+            }
+        },
+        # "all_buckets": {
+        #     "stats_bucket": {
+        #         "buckets_path": "group_by_script._count"
+        #     }
+        # }
+    }
+
+    return aggs
+
 def get_groupby(columns, from_value, size_value):
     """
     Monta a parte do agrupamento da consulta com agregação
     """
-    aggs = []
-    for column in columns:
-        aggs.append({
-            f"{column}-agg": {
-                "terms": {
-                    "field": f"{pricing_translate[column]}.keyword",
-                    "size": size_value
-                    # "order": {"_key": "asc"}
+    h = ""
+    order_by = {}
+    max_score = {"max": {"field": "_score"}}
+    if any(x == 'group_by_description' for x in columns):
+        order_by = {"max_score": "desc"}
+        max_score = {"max": {"script": "_score"}}
+        h +=  "def original = '';if (doc.containsKey('original_raw.keyword') && !doc['original_dsc.keyword'].empty) {original = doc['original_dsc.keyword'].value;} return original"
+        
+        if len(columns) > 1:
+            for c in columns[1:]:
+                h += " + '__!@#$%__' + doc['" + f"{pricing_translate[c]}.keyword" + "'].value"
+        h += ';'
+    else:
+        order_by = {"_key": "asc"}
+        h += "return doc['"+ f"{pricing_translate[columns[0]]}.keyword" + "'].value" + [';', " + '__!@#$%__' + doc['" + f"{pricing_translate[columns[1]]}.keyword" + "'].value;"][len(columns) == 2]
+    
+    aggs = {
+        "group_by_script": {
+            "terms": {
+                "script": h,
+                "size": 999999,
+                "order": order_by
+            },
+            "aggs": {
+                "max_preco": {"max": {"field": "preco"}},
+                "min_preco": {"min": {"field": "preco"}},
+                "avg_preco": {"avg": {"field": "preco"}},
+                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+                "max_score": max_score,
+                "commits_bucket_sort": {
+                    "bucket_sort": {
+                        "from": from_value,
+                        "size": size_value
+                    }
                 }
             }
-        })        
-
-    # Constroi a parte aninhada do agrupamento para uma quantidade arbitrária de colunas de agrupamento
-    if len(aggs) >= 1:
-        main, end = aggs[0], list(aggs[0].values())[0]
-        for f in aggs[1:]:
-            end["aggs"] = f
-            end = list(f.values())[0]
-    else:
-        main, end = aggs[0], aggs[0]
-    
-    end["aggs"] = {
-        "max_preco": {"max": {"field": "preco"}},
-        "min_preco": {"min": {"field": "preco"}},
-        "avg_preco": {"avg": {"field": "preco"}},
-        "sum_qtde_item": {"sum": {"field": "qtde_item"}},
-        "agg_bucket_sort": {
-            "bucket_sort": {
-                "sort": [
-                    {"sum_qtde_item": {"order": "desc"}}
-                ],
-                "from": from_value,
-                "size": size_value
-            }
-        }
+        }, 
+        # "all_buckets": {
+        #     "stats_bucket": {
+        #         "buckets_path": "group_by_script._count"
+        #     }
+        # }
     }
-    return main
+    return aggs
 
 
 def get_princing_query(params, columns, pageable):
@@ -274,10 +326,13 @@ def get_princing_query(params, columns, pageable):
     Gera a query para a precificação
     """
     filters = get_filter(params)
-    groupby = get_groupby(columns, pageable.get_page() * pageable.get_size(), pageable.get_size())
+    if len(columns) == 1:
+        groupby = get_groupby_single(columns, pageable.get_page()
+                              * pageable.get_size(), pageable.get_size())        
+    else:
+        groupby = get_groupby(columns, pageable.get_page() * pageable.get_size(), pageable.get_size())
 
     body = {
-        # 'sort': [{pageable.get_sort(): pageable.get_order()}, "_score"],
         # "track_total_hits": True,
         "size": 0,
         'query': {

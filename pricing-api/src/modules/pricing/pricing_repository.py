@@ -25,43 +25,24 @@ class PricingRepository:
         if "aggregations" not in result:
             return []
         
-        # print(result)
+
+        arr = result['aggregations']['group_by_script']['buckets']
         data = []
-        if len(group_by_columns) == 1:
-            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
-                data.append({
-                    group_by_columns[0]: a['key'],
-                    'max_preco': a['max_preco']['value'],
-                    'min_preco': a['min_preco']['value'],
-                    'avg_preco': a['avg_preco']['value'],
-                    'sum_qtde_item': a['sum_qtde_item']['value']                    
-                })
-        elif len(group_by_columns) == 2:
-            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
-                for b in a[group_by_columns[1] + '-agg']['buckets']:
-                    data.append({
-                        group_by_columns[0]: a['key'],
-                        group_by_columns[1]: b['key'],
-                        'max_preco': b['max_preco']['value'],
-                        'min_preco': b['min_preco']['value'],
-                        'avg_preco': b['avg_preco']['value'],
-                        'sum_qtde_item': b['sum_qtde_item']['value']                    
-                    })
-        elif len(group_by_columns) == 3:
-            for a in result['aggregations'][group_by_columns[0] + '-agg']['buckets']:
-                for b in a[group_by_columns[1] + '-agg']['buckets']:
-                    for c in b[group_by_columns[2] + '-agg']['buckets']:
-                        data.append({
-                            group_by_columns[0]: a['key'],
-                            group_by_columns[1]: b['key'],
-                            group_by_columns[2]: c['key'],
-                            'max_preco': c['max_preco']['value'],
-                            'min_preco': c['min_preco']['value'],
-                            'avg_preco': c['avg_preco']['value'],
-                            'sum_qtde_item': c['sum_qtde_item']['value']
-                        })
+        for a in arr:
+            a_split = a['key'].split('__!@#$%__')
+            bucket = {}
+            for i, gc in enumerate(group_by_columns):
+                bucket[gc] = a_split[i]
+            
+            bucket['max_preco'] = a['max_preco']['value']
+            bucket['min_preco'] = a['min_preco']['value']
+            bucket['avg_preco'] = a['avg_preco']['value']
+            bucket['sum_qtde_item'] = a['sum_qtde_item']['value']
+            data.append(bucket)
+            
         res = {
-            "total": len(data),  # total de itens
+            # total de itens
+            # "total": result['aggregations']['all_buckets']['count'],
             "pageSize": pageable.get_size(),  # qtd de itens por página
             "currentPage": pageable.get_page(),  # página atual
             "data": data  # dados
