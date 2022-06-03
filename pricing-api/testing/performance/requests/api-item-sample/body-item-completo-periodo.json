@@ -1,0 +1,26 @@
+{
+  "city": [
+    "RIO POMBA"
+  ],
+  "microregion": [
+    "UBA"
+  ],
+  "mesoregion": [
+    "ZONA DA MATA"
+  ],
+  "before": "2014-01-01",
+  "after": "2022-05-04",
+  "description": "clips",
+  "body": "PREFEITURA MUNICIPAL DE RIO POMBA",
+  "body_type": "PREFEITURA MUNICIPAL",
+  "modality": "PREGAO PRESENCIAL",
+  "procurement_type": "MENOR PRECO",
+  "bidder_name": "SEVEN COPY COMERCIAL LTDA",
+  "bidder_type": "J",
+  "bidder_document": "07416432000127",
+  "min_amount": 10,
+  "max_amount": 220,
+  "min_homolog_price": 1.0,
+  "max_homolog_price": 5.7,
+  "object_nature": "COMPRAS E OUTROS SERVICOS"
+}
