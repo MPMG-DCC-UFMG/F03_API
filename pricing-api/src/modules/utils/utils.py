@@ -281,7 +281,7 @@ def get_groupby(columns, from_value, size_value):
     if any(x == 'group_by_description' for x in columns):
         order_by = {"max_score": "desc"}
         max_score = {"max": {"script": "_score"}}
-        h +=  "def original = '';if (doc.containsKey('original_raw.keyword') && !doc['original_dsc.keyword'].empty) {original = doc['original_dsc.keyword'].value;} return original"
+        h +=  "def original = '';if (doc.containsKey('original_raw.keyword') && !doc['original_raw.keyword'].empty) {original = doc['original_raw.keyword'].value;} return original"
         
         if len(columns) > 1:
             for c in columns[1:]:
