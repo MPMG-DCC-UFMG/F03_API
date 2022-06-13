@@ -6,6 +6,7 @@ from sqlalchemy import and_
 from collections import defaultdict
 from datetime import datetime
 import numpy as np
+import random
 
 
 class ChartsRepository:
@@ -45,7 +46,7 @@ class ChartsRepository:
         #     item['mes'] = data.strftime('%m')
         #     item['ano'] = data.strftime('%Y')
         
-        return [
+        data = [
             {
                 "data": "01/2014",
                 "qtde_item": 17516173,
@@ -767,4 +768,11 @@ class ChartsRepository:
                 "ano": "2021"
             }
         ]
+        
+        for item in data:
+            item['qtde_item'] = random.randint(100000, 10500000)
+            item['mean_preco'] = random.uniform(2.5, 5.5)
+            item['median_preco'] = round(item['mean_preco'])
+            
+        return data
         # return sorted(res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
