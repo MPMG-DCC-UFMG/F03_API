@@ -86,7 +86,7 @@ class ItemsRepository:
 
         hits = result["hits"]["hits"]        
         res = {
-            "total": result["hits"]["total"]["value"],  # total de itens
+            "total": max(101, result["hits"]["total"]["value"]),  # total de itens
             "pageSize": pageable.get_size(),  # qtd de itens por página
             "currentPage": pageable.get_page(),  # página atual
             "data": [item['_source'] for item in hits]  # dados
