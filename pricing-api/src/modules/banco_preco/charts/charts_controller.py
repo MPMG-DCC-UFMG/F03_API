@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from src.modules.charts.charts_operations import ChartsQueryParams
-from src.modules.charts.charts_service import ChartsService as service
+from src.modules.banco_preco.charts.charts_operations import ChartsQueryParams
+from src.modules.banco_preco.charts.charts_service import ChartsService as service
 from .charts import Charts
 from typing import List
 

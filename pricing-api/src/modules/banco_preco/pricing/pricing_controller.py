@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter
 
-from src.modules.pricing.pricing_operations import PricingQuery
-from src.modules.pricing.pricing_service import PricingsService as service
-from src.modules.utils.utils import (
+from src.modules.banco_preco.pricing.pricing_operations import PricingQuery
+from src.modules.banco_preco.pricing.pricing_service import PricingsService as service
+from src.modules.banco_preco.utils.utils import (
     get_group_by_columns,
     Pageable
 )

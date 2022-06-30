@@ -1,6 +1,6 @@
-from src.modules.items.items_operations import ListItemsQuery
-from src.modules.items.items_repository import ItemsRepository as repository
-from src.modules.utils.utils import Pageable
+from src.modules.banco_preco.items.items_operations import ListItemsQuery
+from src.modules.banco_preco.items.items_repository import ItemsRepository as repository
+from src.modules.banco_preco.utils.utils import Pageable
 
 
 class ItemsService:

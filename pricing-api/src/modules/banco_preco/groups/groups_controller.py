@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from src.modules.groups.groups_operations import ListGroupsQuery
-from src.modules.groups.groups_service import GroupsService as service
+from src.modules.banco_preco.groups.groups_operations import ListGroupsQuery
+from src.modules.banco_preco.groups.groups_service import GroupsService as service
 from .group_schema import Group as GroupSchema
 from typing import List
 

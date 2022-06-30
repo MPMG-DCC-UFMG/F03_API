@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter
 
-from src.modules.items.items_operations import ListItemsQuery
-from src.modules.items.items_service import ItemsService as service
-from src.modules.utils.utils import Pageable
+from src.modules.banco_preco.items.items_operations import ListItemsQuery
+from src.modules.banco_preco.items.items_service import ItemsService as service
+from src.modules.banco_preco.utils.utils import Pageable
 from .item_schema import Item as ItemSchema
 
 items_router = APIRouter()

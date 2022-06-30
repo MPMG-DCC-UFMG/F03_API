@@ -1,5 +1,5 @@
-from src.modules.groups.groups_operations import ListGroupsQuery
-from src.modules.groups.groups_repository import GroupsRepository as repository
+from src.modules.banco_preco.groups.groups_operations import ListGroupsQuery
+from src.modules.banco_preco.groups.groups_repository import GroupsRepository as repository
 
 class GroupsService:
 

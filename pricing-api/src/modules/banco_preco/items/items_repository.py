@@ -4,8 +4,8 @@ from warnings import warn
 from dotenv import load_dotenv
 
 from src.db.database import es
-from src.modules.items.items_operations import ListItemsQuery
-from src.modules.utils.utils import (
+from src.modules.banco_preco.items.items_operations import ListItemsQuery
+from src.modules.banco_preco.utils.utils import (
     get_item_query,
     get_autocomplete_query,
     get_id_query,

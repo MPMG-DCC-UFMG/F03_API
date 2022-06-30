@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 
-from src.modules.items.item import ItemModel
+from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
 
 def get_params_values(params):

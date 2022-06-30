@@ -1,5 +1,6 @@
-from src.modules.groups.groups_operations import ListGroupsQuery
-from src.modules.groups.group import GroupModel
+from src.modules.banco_preco.utils.utils import get_group_query
+from src.modules.banco_preco.groups.groups_operations import ListGroupsQuery
+from src.modules.banco_preco.groups.group import GroupModel
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
 
@@ -11,7 +12,6 @@ load_dotenv()
 ES_INDEX_ITEM = os.environ.get('ES_INDEX_ITEM')
 
 
-from src.modules.utils.utils import get_group_query
 
 class GroupsRepository:
 

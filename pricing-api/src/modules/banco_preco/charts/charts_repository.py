@@ -1,5 +1,5 @@
-from src.modules.charts.charts_operations import ChartsQueryParams
-from src.modules.items.item import ItemModel
+from src.modules.banco_preco.charts.charts_operations import ChartsQueryParams
+from src.modules.banco_preco.items.item import ItemModel
 from src.db.database import db_session
 
 from sqlalchemy import and_

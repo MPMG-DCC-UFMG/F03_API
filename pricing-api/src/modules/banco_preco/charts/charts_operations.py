@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import Query
 from datetime import date
-from src.modules.utils.utils import (
+from src.modules.banco_preco.utils.utils import (
     get_params_values,
     check_params_values
 )

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from src.modules.filters.filters_operations import ListFiltersQueryParams
-from src.modules.filters.filters_service import FilterService as service
+from src.modules.banco_preco.filters.filters_operations import ListFiltersQueryParams
+from src.modules.banco_preco.filters.filters_service import FilterService as service
 from .filter_schema import Filter as FilterSchema
 from typing import List
 
