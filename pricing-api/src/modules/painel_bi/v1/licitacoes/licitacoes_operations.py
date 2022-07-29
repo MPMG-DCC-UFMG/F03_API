@@ -22,24 +22,24 @@ class LicitacaoQuery:
         self.valor = valor
 
         # add filter conditions in a list
-        filters = []
-        if bool(params.municipios):
-            filters.append(LicitacaoModel.nom_entidade.in_(params.municipios))
-        if bool(params.microrregiao):
-            filters.append(LicitacaoModel.nom_micro_regiao.in_(params.microrregiao))
-        if bool(params.mesorregiao):
-            filters.append(LicitacaoModel.nom_meso_regiao.in_(params.mesorregiao))
-        if bool(params.comarca):
-            filters.append(LicitacaoModel.nom_comarca.in_(params.comarca))
-        if bool(params.modalidades):
-            filters.append(LicitacaoModel.nom_modalidade.in_(params.modalidades))
+        self.filters = []
+        if bool(self.municipios):
+            self.filters.append(LicitacaoModel.nom_entidade.in_(self.municipios))
+        if bool(self.microrregiao):
+            self.filters.append(LicitacaoModel.nom_micro_regiao.in_(self.microrregiao))
+        if bool(self.mesorregiao):
+            self.filters.append(LicitacaoModel.nom_meso_regiao.in_(self.mesorregiao))
+        if bool(self.comarca):
+            self.filters.append(LicitacaoModel.nom_comarca.in_(self.comarca))
+        if bool(self.modalidades):
+            self.filters.append(LicitacaoModel.nom_modalidade.in_(self.modalidades))
 
-        if bool(params.ano):
-            filters.append(LicitacaoModel.num_exercicio <= params.ano[0])
-        if bool(params.ano):
-            filters.append(LicitacaoModel.num_exercicio >= params.ano[1])
+        if bool(self.ano):
+            self.filters.append(LicitacaoModel.num_exercicio <= self.ano[0])
+        if bool(self.ano):
+            self.filters.append(LicitacaoModel.num_exercicio >= self.ano[1])
 
-        if bool(params.valor):
-            filters.append(LicitacaoModel.vlr_licitacao <= params.valor[0])
-        if bool(params.valor):
-            filters.append(LicitacaoModel.vlr_licitacao >= params.valor[1])
+        if bool(self.valor):
+            self.filters.append(LicitacaoModel.vlr_licitacao <= self.valor[0])
+        if bool(self.valor):
+            self.filters.append(LicitacaoModel.vlr_licitacao >= self.valor[1])
