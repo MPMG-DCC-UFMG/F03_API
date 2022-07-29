@@ -45,11 +45,17 @@ class LicitanteRepository:
             for g in dict_infoGerais:
                 if g['seq_dim_licitacao'] == l['seq_dim_licitacao']:
                     geral = g
-
-            l['vlr_latitude'] = geral['vlr_latitude']
-            l['vlr_longitude'] = geral['vlr_longitude']
-            l['nom_entidade'] = geral['nom_entidade']
-            l['ranking_irregularidades'] = geral['ranking_irregularidades']
+            
+            if geral is not None:
+                l['vlr_latitude'] = geral['vlr_latitude']
+                l['vlr_longitude'] = geral['vlr_longitude']
+                l['nom_entidade'] = geral['nom_entidade']
+                l['ranking_irregularidades'] = geral['ranking_irregularidades']
+            else:
+                l['vlr_latitude'] = None
+                l['vlr_longitude'] = None
+                l['nom_entidade'] = None
+                l['ranking_irregularidades'] = None
 
         socios = []
         if((len(licitacoes)>0) and (licitacoes[0]['nome_socio'])):
