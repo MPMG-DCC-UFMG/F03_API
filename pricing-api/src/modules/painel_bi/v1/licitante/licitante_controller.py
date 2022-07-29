@@ -8,8 +8,8 @@ licitante_router = APIRouter()
 
 
 @licitante_router.get('/{id}', description='Buscar licitante por ID', )
-async def get_licitante(id_licitante: str):
-  return service.find_by_id(id_licitante)
+async def get_licitante(id: str):
+  return service.find_by_id(id)
   
 @licitante_router.get('/', description='Buscar licitante por ID', )
 async def search(params: LicitanteQueryParams = Depends()) -> str:
