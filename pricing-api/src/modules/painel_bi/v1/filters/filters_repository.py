@@ -6,7 +6,7 @@ from src.db.database import db_session
 
 from sqlalchemy import func
 
-class FilterRepository:
+class FiltersRepository:
 
 
 

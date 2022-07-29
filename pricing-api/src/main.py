@@ -8,7 +8,7 @@ from src import router
 app = FastAPI(title="Pricing API", version="1.0.0")
 app.include_router(router, prefix='/api')
 
-origins = ["*"]
+origins = ["http://localhost"]
 
 app.add_middleware(
     CORSMiddleware,
