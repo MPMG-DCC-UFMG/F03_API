@@ -119,7 +119,6 @@ class LicitacaoRepository:
         dict_licitantes = [row.__dict__ for row in licitantes]
 
         for licitante in dict_licitantes:
-            print(licitante)
             filters_det_lictacao = []
             filters_det_lictacao.append(DetalhamentoLicitacaoModel.seq_dim_licitacao == id_licitacao)
             filters_det_lictacao.append(DetalhamentoLicitacaoModel.num_documento == licitante['num_documento'])

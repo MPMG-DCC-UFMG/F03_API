@@ -20,6 +20,6 @@ async def get_licitacoes(params: LicitacaoQuery = Depends(), page: int = 1, per_
 
 
 @licitacao_router.get('/{id}', description='Buscar licitação por ID', )
-async def get_licitacao(id_licitacao: str):
-  return service.find_by_id(id_licitacao)
+async def get_licitacao(id: str):
+  return service.find_by_id(id)
 
