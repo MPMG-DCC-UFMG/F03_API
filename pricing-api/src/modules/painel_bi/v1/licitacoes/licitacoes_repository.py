@@ -29,25 +29,41 @@ class LicitacaoRepository:
         result = db_session.query(
             LicitacaoModel.seq_dim_licitacao,\
             LicitacaoModel.nom_entidade,\
-            LicitacaoModel.nom_micro_regiao,\
-            LicitacaoModel.nom_meso_regiao,\
-            LicitacaoModel.nom_comarca,\
             LicitacaoModel.nom_modalidade,\
-            LicitacaoModel.num_exercicio,\
             LicitacaoModel.vlr_licitacao,\
-            LicitacaoModel.ranking_irregularidades \
+            LicitacaoModel.ranking_irregularidades, \
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
+            LicitacaoModel.qtd_lograd_nro_comum,\
+            LicitacaoModel.dsc_objeto,\
+            LicitacaoModel.flag_socios_comum,\
+            LicitacaoModel.qtde_licitantes_nao_ativos,\
+            LicitacaoModel.qtde_licitantes_nao_ativos_vencedores,\
+            LicitacaoModel.flag_lict_unic_com_venc,\
+            LicitacaoModel.num_exercicio_licitacao,\
+            LicitacaoModel.nom_fonte_recurso,\
+            LicitacaoModel.cod_modalidade,\
+            LicitacaoModel.qtd_lograd_nro_compl_comum
             )\
            .filter(and_(*filters)) \
            .group_by( \
             LicitacaoModel.seq_dim_licitacao,\
             LicitacaoModel.nom_entidade,\
-            LicitacaoModel.nom_micro_regiao,\
-            LicitacaoModel.nom_meso_regiao,\
-            LicitacaoModel.nom_comarca,\
             LicitacaoModel.nom_modalidade,\
-            LicitacaoModel.num_exercicio,\
             LicitacaoModel.vlr_licitacao,\
-            LicitacaoModel.ranking_irregularidades)\
+            LicitacaoModel.ranking_irregularidades, \
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
+            LicitacaoModel.qtd_lograd_nro_comum,\
+            LicitacaoModel.dsc_objeto,\
+            LicitacaoModel.flag_socios_comum,\
+            LicitacaoModel.qtde_licitantes_nao_ativos,\
+            LicitacaoModel.qtde_licitantes_nao_ativos_vencedores,\
+            LicitacaoModel.flag_lict_unic_com_venc,\
+            LicitacaoModel.num_exercicio_licitacao,\
+            LicitacaoModel.nom_fonte_recurso,\
+            LicitacaoModel.cod_modalidade,\
+            LicitacaoModel.qtd_lograd_nro_compl_comum)\
            .order_by(LicitacaoModel.ranking_irregularidades.desc())\
            .offset(offset) \
            .limit(limit)
@@ -63,7 +79,25 @@ class LicitacaoRepository:
                 "nom_modalidade":row[5],
                 "num_exercicio":row[6],
                 "vlr_licitacao":row[7],
-                "ranking_irregularidades":row[8]
+                "ranking_irregularidades":row[8],
+                
+            "seq_dim_licitacao":row[0],
+            "nom_entidade":row[1],
+            "nom_modalidade":row[2],
+            "vlr_licitacao":row[3],
+            "ranking_irregularidades":row[4],
+            "qtde_de_cnpjs_envolvidos_emails":row[5],
+            "qtde_de_cnpjs_envolvidos_tels":row[6],
+            "qtd_lograd_nro_comum":row[7],
+            "dsc_objeto":row[8],
+            "flag_socios_comum":row[9],
+            "qtde_licitantes_nao_ativos":row[10],
+            "qtde_licitantes_nao_ativos_vencedores":row[11],
+            "flag_lict_unic_com_venc":row[12],
+            "num_exercicio_licitacao":row[13],
+            "nom_fonte_recurso":row[14],
+            "cod_modalidade":row[15],
+            "qtd_lograd_nro_compl_comum":row[16]
             })
 
         heatmap_aggregations  = db_session.query( \
