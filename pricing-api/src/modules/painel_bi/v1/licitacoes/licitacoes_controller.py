@@ -10,11 +10,11 @@ from src.modules.painel_bi.v1.utils.utils import (
 
 licitacao_router = APIRouter()
 
-
 @licitacao_router.post('/', description='Buscar licitações de acordo com os parametros', )
-async def get_licitacoes(params: LicitacaoQuery = Depends(), page: int = 1, per_page: int = 250):
-    if page <= 0:
-        page = 1
+async def get_licitacoes(params: LicitacaoQuery, page: int = 0, per_page: int = 250):
+    if page < 0:
+        page = 0
+    print(page, per_page, "lucas")
     pageable = Pageable(page, per_page)
     return service.get_licitacoes(params, pageable)
 

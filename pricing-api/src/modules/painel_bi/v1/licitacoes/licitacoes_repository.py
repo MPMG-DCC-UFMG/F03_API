@@ -1,6 +1,7 @@
 import os
 
 from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import LicitacaoQuery
+from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import get_params_values
 from src.modules.painel_bi.v1.model.licitacao import LicitacaoModel
 from src.modules.painel_bi.v1.model.licitante import LicitanteModel
 from src.modules.painel_bi.v1.model.detalhamento_cnpj import DetalhamentoCnpjModel
@@ -18,7 +19,7 @@ class LicitacaoRepository:
 
 
     def get_licitacoes(params: LicitacaoQuery, pageable: Pageable):
-        filters = params.filters
+        filters = get_params_values(params)
         limit = pageable.get_limit()
         offset = pageable.get_offset()
 
@@ -117,7 +118,6 @@ class LicitacaoRepository:
 
         irregularities  = db_session.query(func.count(LicitacaoModel.ranking_irregularidades).label('ranking_irregularidades'), func.sum(LicitacaoModel.ranking_irregularidades).label('sum_ranking_irregularidades')) \
                                     .filter(and_(*filters))
-
         res = {
           "current_page": pageable.get_page(),
           "last_page": math.ceil(count/pageable.get_per_page()),

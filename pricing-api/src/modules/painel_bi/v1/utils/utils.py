@@ -17,7 +17,7 @@ class Pageable:
         return self._per_page
 
     def get_offset(self):
-        return (self._page-1)*self._per_page
+        return (self._page)*self._per_page
 
 
     def __str__(self):
