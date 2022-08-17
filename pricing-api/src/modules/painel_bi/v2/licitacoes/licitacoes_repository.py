@@ -111,117 +111,212 @@ class LicitacaoRepository:
               "funcoes": "EDUCACAO",
               "nom_micro_regiao": "Diamantina",
               "nom_modalidade": "PREGAO PRESENCIAL",
+              "grafos":[],
               "trilhas": {
                 "T01":{
+                    "descricao":"Licitantes únicos",
                     "flag_possui_irregularidade":0,
                     "qtde_licitantes_envolvidos":0,
                     "qtde_irregularidades":0,
                     "info":{
                         "flag_lict_unic_com_venc":0,
-                        "flag_lict_unic_sem_venc":0
+                        "flag_lict_unic_sem_venc":0,
+                        "licitantes":""
                     }
                 },
                 "T02":{
+                    "descricao": "Licitantes com CNPJ inativo",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
-                        "licitantes_nao_ativo":["15416313000100"]
+                        "licitantes":["15416313000100"]
                     }
                 },
                 "T03":{
+                    "descricao": "Licitantes com e-mails em comum",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":2,
                     "qtde_irregularidades":1,
                     "info":{
-                        "emails":[
+                        "qtd_grupos":1,
+                        "licitantes":[
                             {
-                                "valor":"baracho@citel1.com.br",
-                                "envolvidos":["15416313000100","16499349000150"]
+                                "cpf_cnpj":"15416313000100",
+                                "emails":[
+                                    {
+                                        "email":"baracho@citel1.com.br",
+                                        "grupo":1
+                                    }
+                                ]
+                            },
+                            {
+                                "cpf_cnpj":"16499349000150",
+                                "emails":[
+                                    {
+                                        "email":"baracho@citel1.com.br",
+                                        "grupo":1
+                                    }
+                                ]
                             }
                         ]
                     }
                 },
                 "T04":{
+                    "descricao": "Licitantes com telefones em comum",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":2,
                     "qtde_irregularidades":2,
                     "info":{
-                        "telefones":[
+                        "qtd_grupos":2,
+                        "licitantes":[
                             {
-                                "valor":"3835311296",
-                                "envolvidos":["15416313000100","16499349000150"]
+                                "cpf_cnpj":"15416313000100",
+                                "telefones":[
+                                    {
+                                        "telefone":"3835311296",
+                                        "grupo":1
+                                    },
+                                    {
+                                        "telefone":"3888130405",
+                                        "grupo":2
+                                    }
+                                ]
                             },
                             {
-                                "valor":"3888130405",
-                                "envolvidos":["15416313000100","16499349000150"]
-                            },
+                                "cpf_cnpj":"16499349000150",
+                                "telefones":[
+                                    {
+                                        "telefone":"3835311296",
+                                        "grupo":1
+                                    },
+                                    {
+                                        "telefone":"3888130405",
+                                        "grupo":2
+                                    }
+                                ]
+                            }
                         ]
                     }
                 },
                 "T05":{
+                    "descricao": "Licitantes com endereços em comum",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":2,
                     "qtde_irregularidades":1,
                     "info":{
-                        "enderecos":[
+                        "qtd_grupos":1,
+                        "licitantes":[
                             {
-                                "valor":"RUA FRANCISCO CANUTO 100 CENTRO FELICIO DOS SANTOS MG",
-                                "envolvidos":["15416313000100","16499349000150"]
+                                "cpf_cnpj":"15416313000100",
+                                "enderecos":[
+                                    {
+                                        "endereco":"RUA FRANCISCO CANUTO 100 CENTRO FELICIO DOS SANTOS MG",
+                                        "grupo":1
+                                    }
+                                ]
+                            },
+                            {
+                                "cpf_cnpj":"16499349000150",
+                                "enderecos":[
+                                    {
+                                        "endereco":"RUA FRANCISCO CANUTO 100 CENTRO FELICIO DOS SANTOS MG",
+                                        "grupo":1
+                                    }
+                                ]
                             }
                         ]
                     }
                 },
                 "T06":{
+                    "descricao": "Licitantes com representantes legal não-sócios em comum",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":2,
                     "qtde_irregularidades":1,
                     "info":{
-                        "nao_socios":[
+                        "qtd_grupos":1,
+                        "licitantes":[
                             {
-                                "valor":"41499891687",
-                                "envolvidos":["15416313000100","16499349000150"]
+                                "cpf_cnpj":"15416313000100",
+                                "representantes_nao_socio":[
+                                    {
+                                        "cpf_cnpj":"41499891687",
+                                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
+                                        "grupo":1
+                                    }
+                                ]
+                            },
+                            {
+                                "cpf_cnpj":"16499349000150",
+                                "representantes_nao_socio":[
+                                    {
+                                        "cpf_cnpj":"41499891687",
+                                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
+                                        "grupo":1
+                                    }
+                                ]
                             }
                         ]
                     }
                 },
                 "T07":{
+                    "descricao": "Licitantes com representantes sócios em comum",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":2,
                     "qtde_irregularidades":1,
                     "info":{
-                        "socios":[
+                        "qtd_grupos":1,
+                        "licitantes":[
                             {
-                                "valor":"11057443611",
-                                "envolvidos":["15416313000100","16499349000150"]
+                                "cpf_cnpj":"15416313000100",
+                                "representantes_socio":[
+                                    {
+                                        "cpf_cnpj":"11057443611",
+                                        "qualificacao_representante":"SÓCIO",
+                                        "grupo":1
+                                    }
+                                ]
+                            },
+                            {
+                                "cpf_cnpj":"16499349000150",
+                                "representantes_socio":[
+                                    {
+                                        "cpf_cnpj":"11057443611",
+                                        "qualificacao_representante":"SÓCIO",
+                                        "grupo":1
+                                    }
+                                ]
                             }
                         ]
                     }
                 },
                 "T08":{
+                    "descricao": "Licitantes vencedores frequentes",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
-                        "vencedores_frequente":["15416313000100"]
+                        "licitantes":["15416313000100"]
                     }
                 },
                 "T09":{
+                    "descricao": "Licitantes perdedores frequentes",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
-                        "perdedores_frequente":["16499349000150"]
+                        "licitantes":["16499349000150"]
                     }
                 },
                 "T10":{
+                    "descricao": "Licitantes com CNAE incongruente",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
-                        "cnae_incongruente":[
+                        "licitantes":[
                             {
-                                "num_documento":"15416313000100" ,
+                                "cpf_cnpj":"15416313000100",
                                 "cnaes":[
                                     {
                                         "codigo":"4921301",
@@ -234,27 +329,30 @@ class LicitacaoRepository:
                     }
                 },
                 "T11":{
+                    "descricao": "Licitantes antes do início das atividades",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
-                        "licitantes_antes_atividade":[
+                        "licitantes":[
                             {
-                                "num_documento":"15416313000100" ,
-                                "data_inicio_atividade": "2022-04-23"
+                                "cpf_cnpj":"15416313000100",
+                                "data_inicio_atividade": "2022-04-23",
+                                "data_licitacao": "2017-03-15"
                             }
                         ]
                     }
                 },
                 "T12":{
+                    "descricao": "Licitantes com restrição no CEIS",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":2,
                     "info":{
-                        "licitante_sancao_ceis":[
+                        "licitantes":[
                             {
-                                "num_documento":"15416313000100" ,
-                                "sancao_ceis":[
+                                "cpf_cnpj":"15416313000100",
+                                "sancoes_ceis":[
                                     {
                                         "tipo_sancao":"Suspensão - Legislação Estadual",
                                         "nome_orgao_sancionador":"Governo do Estado da Bahia",
@@ -277,14 +375,15 @@ class LicitacaoRepository:
                     }
                 },
                 "T13":{
+                    "descricao": "Licitantes cujos sócios são ou têm vínculo com servidores públicos",
                     "flag_possui_irregularidade":1,
                     "qtde_licitantes_envolvidos":1,
                     "qtde_irregularidades":1,
                     "info":{
                         "licitantes": [
                             {
-                                "num_documento":"15416313000100" ,
-                                "representante_servidor":[
+                                "cpf_cnpj":"15416313000100" ,
+                                "representantes_servidor":[
                                     {
                                         "cpf_cnpj":"03555398610",
                                         "vinculo":"SERVIDOR"
