@@ -407,47 +407,8 @@ class LicitacaoRepository:
               "soma_recurso_alocado": 39204,
               "detalhes": [
                 {
-                  "representante_legal":[
-                    {
-                        "cpf_cnpj":"41499891687",
-                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
-                        "flag_socio":0
-                    },
-                    {
-                        "cpf_cnpj":"03555398610",
-                        "qualificacao_representante":"SÓCIO-ADMINISTRADOR",
-                        "flag_socio":1
-                    },
-                    {
-                        "cpf_cnpj":"11057443611",
-                        "qualificacao_representante":"SÓCIO",
-                        "flag_socio":1
-                    },
-                  ],
-                  "representante_servidor":[
-                    {
-                        "cpf_cnpj":"03555398610",
-                        "vinculo":"SERVIDOR"
-                    }
-                  ],
-                  "sancao_ceis":[
-                    {
-                        "tipo_sancao":"Suspensão - Legislação Estadual",
-                        "nome_orgao_sancionador":"Governo do Estado da Bahia",
-                        "cod_fundamentacao_legal":"Art. 186, inciso II, Lei 9433/2005",
-                        "desc_fundamentacao_legal":"Ao candidato a cadastramento, ao licitante e ao contratado, que incorram nas faltas previstas nesta Lei, aplicam-se, segundo a natureza e a gravidade da falta, assegurada a defesa prévia, as seguintes sanções: II- suspensão temporária de participação em li",
-                        "data_inicio_sancao_show":"16/09/2014",
-                        "data_final_sancao_show":"27/01/2024"
-                    },
-                    {
-                        "tipo_sancao":"Suspensão - Legislação Estadual",
-                        "nome_orgao_sancionador":"Governo do Estado da Bahia",
-                        "cod_fundamentacao_legal":"Art. 186, inciso II, Lei 9433/2005",
-                        "desc_fundamentacao_legal":"Ao candidato a cadastramento, ao licitante e ao contratado, que incorram nas faltas previstas nesta Lei, aplicam-se, segundo a natureza e a gravidade da falta, assegurada a defesa prévia, as seguintes sanções: II- suspensão temporária de participação em li",
-                        "data_inicio_sancao_show":"23/01/2014",
-                        "data_final_sancao_show":"23/10/2030"
-                    }
-                  ],
+                  "nome_socio": "TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL;SÓCIO-ADMINISTRADOR;SÓCIO",                
+                  "cpf_cnpj_socio": "41499891687;03555398610;11057443611",             
                   "num_documento": "15416313000100",
                   "descricao_logradouro_numero_soundex": "r000f652100   ",
                   "descricao_logradouro_soundex": "r000f652",
@@ -499,20 +460,8 @@ class LicitacaoRepository:
               "soma_recurso_alocado": 84068.16,
               "detalhes": [
                 {
-                  "representante_legal":[
-                    {
-                        "cpf_cnpj":"41499891687",
-                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
-                        "flag_socio":0
-                    },
-                    {
-                        "cpf_cnpj":"11057443611",
-                        "qualificacao_representante":"SÓCIO",
-                        "flag_socio":1
-                    },
-                  ],
-                  "representante_servidor":[],
-                  "sancao_ceis":[],
+                  "nome_socio": "TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL;SÓCIO",                
+                  "cpf_cnpj_socio": "41499891687;11057443611",
                   "num_documento": "16499349000150",
                   "descricao_logradouro_numero_soundex": "r000s532238   ",
                   "descricao_logradouro_soundex": "r000s532",
