@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import LicitacaoQuery
+from src.modules.painel_bi.v2.licitacoes.licitacoes_operations import LicitacaoQuery
 from src.modules.painel_bi.v2.licitacoes.licitacoes_service import LicitacaoService as service
-from src.modules.painel_bi.v1.utils.utils import (
+from src.modules.painel_bi.v2.utils.utils import (
     Pageable
 )
 

@@ -1,11 +1,14 @@
 import os
 
-from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import LicitacaoQuery
-from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import get_params_values
-from src.modules.painel_bi.v1.model.licitacao import LicitacaoModel
-from src.modules.painel_bi.v1.model.licitante import LicitanteModel
-from src.modules.painel_bi.v1.model.detalhamento_cnpj import DetalhamentoCnpjModel
-from src.modules.painel_bi.v1.model.detalhamento_licitacao import DetalhamentoLicitacaoModel
+from src.modules.painel_bi.v2.licitacoes.licitacoes_operations import LicitacaoQuery
+from src.modules.painel_bi.v2.licitacoes.licitacoes_operations import get_params_values
+from src.modules.painel_bi.v2.model.licitacao import LicitacaoModel
+from src.modules.painel_bi.v2.model.licitante import LicitanteModel
+from src.modules.painel_bi.v2.model.detalhamento_cnpj import DetalhamentoCnpjModel
+from src.modules.painel_bi.v2.model.detalhamento_licitacao import DetalhamentoLicitacaoModel
+from src.modules.painel_bi.v2.model.representante_legal import RepresentanteLegalModel
+from src.modules.painel_bi.v2.model.representante_servidor import RepresentanteServidorModel
+from src.modules.painel_bi.v2.model.sancoes_ceis import SancoesCeisModel
 
 from src.modules.painel_bi.v1.utils.utils import Pageable
 
@@ -19,495 +22,6 @@ class LicitacaoRepository:
 
 
     def get_licitacoes(params: LicitacaoQuery, pageable: Pageable):
-        return {
-          "current_page": 0,
-          "last_page": 1,
-          "total": {
-            "ranking_irregularidades": 12,
-            "sum_ranking_irregularidades": 13,
-            "count": 2
-          },
-          "heatmap_numbers": {
-            "count": 2,
-            "ranking_irregularidades": 12,
-            "T01":0,
-            "T06":1,
-            "T10":1,
-            "T05":1,
-            "T09":1,
-            "T11":1,
-            "T02":1,
-            "T03":1,
-            "T04":1,
-            "T07":1,
-            "T08":1,
-            "T12":2,
-            "T13":1
-          },
-          "data": [
-            {
-              "seq_dim_licitacao": "88142",
-              "nom_entidade": "Felício dos Santos",
-              "nom_micro_regiao": "PREGAO PRESENCIAL",
-              "nom_meso_regiao": 1430299.596,
-              "nom_comarca": 6,
-              "nom_modalidade": "PREGAO PRESENCIAL",
-              "num_exercicio": 2,
-              "vlr_licitacao": 1430299.596,
-              "ranking_irregularidades": 12,
-              "dsc_objeto": "CONTRATACAO DE PESSOA JURIDICA E/OU FISICA PARA PRESTACAO DE SERVICO DE TRANSPORTE ESCOLAR NO MUNICIPIO DE FELICIO DOS SAN",
-              "num_exercicio_licitacao": 2017,
-              "nom_fonte_recurso": "RECEITAS DE IMPOSTOS E DE TRANSFERENCIAS DE IMPOSTOS VINCULADOS A EDUCACAO, TRANSFERENCIAS DE RECURSOS DO FNDE REFERENTES AO PROGRAMA NACIONAL DE APOIO AO TRANSPORTE ESCOLAR (PNATE), TRANSFERENCIAS DO FUNDEB PARA APLICACAO EM OUTRAS DESPESAS DA EDUCACAO BASICA",
-              "cod_modalidade": 5,
-              "T01":0,
-              "T06":1,
-              "T10":1,
-              "T05":1,
-              "T09":1,
-              "T11":1,
-              "T02":1,
-              "T03":1,
-              "T04":1,
-              "T07":1,
-              "T08":1,
-              "T12":2,
-              "T13":1
-              
-            }
-          ]
-        }
-        
-    def find_by_id(id_licitacao: str):
-        return {
-          "licitacao": [
-            {
-              "seq_dim_licitacao": "88142",
-              "dat_publicacao_edital_veiculo_2": "",
-              "ind_esfera": "M",
-              "nom_reg_patrimonio_publico": "DIAMANTINA",
-              "cod_micro_regiao": 31010,
-              "dat_recebimento_doc": "2017-03-31",
-              "nom_comarca": "DIAMANTINA",
-              "num_exercicio": 2017,
-              "vlr_latitude": -18.07,
-              "cod_modalidade": 5,
-              "dsc_objeto": "CONTRATACAO DE PESSOA JURIDICA E/OU FISICA PARA PRESTACAO DE SERVICO DE TRANSPORTE ESCOLAR NO MUNICIPIO DE FELICIO DOS SAN",
-              "num_exercicio_licitacao": 2017,
-              "num_modalidade": 22,
-              "vlr_licitacao": 1430299.596,
-              "dat_abertura": "2017-03-15",
-              "dsc_objeto_busca": "CONTRATACAO DE PESSOA JURIDICA E/OU FISICA PARA PRESTACAO DE SERVICO DE TRANSPORTE ESCOLAR NO MUNICIPIO DE FELICIO DOS SAN",
-              "nom_entidade": "Felício dos Santos",
-              "num_processo_licitatorio": "33",
-              "vlr_longitude": -43.24,
-              "dat_edital_convite": "2017-03-15",
-              "nom_fonte_recurso": "RECEITAS DE IMPOSTOS E DE TRANSFERENCIAS DE IMPOSTOS VINCULADOS A EDUCACAO, TRANSFERENCIAS DE RECURSOS DO FNDE REFERENTES AO PROGRAMA NACIONAL DE APOIO AO TRANSPORTE ESCOLAR (PNATE), TRANSFERENCIAS DO FUNDEB PARA APLICACAO EM OUTRAS DESPESAS DA EDUCACAO BASICA",
-              "ranking_irregularidades": 12,
-              "dat_publicacao_edital_do": "2017-03-18",
-              "nom_meso_regiao": "Jequitinhonha",
-              "seq_dim_entidade": 3125408,
-              "cod_meso_regiao": 3103,
-              "dat_publicacao_edital_veiculo_1": "2017-03-18",
-              "funcoes": "EDUCACAO",
-              "nom_micro_regiao": "Diamantina",
-              "nom_modalidade": "PREGAO PRESENCIAL",
-              "grafos":[],
-              "trilhas": {
-                "T01":{
-                    "descricao":"Licitantes únicos",
-                    "flag_possui_irregularidade":0,
-                    "qtde_licitantes_envolvidos":0,
-                    "qtde_irregularidades":0,
-                    "info":{
-                        "flag_lict_unic_com_venc":0,
-                        "flag_lict_unic_sem_venc":0,
-                        "licitantes":""
-                    }
-                },
-                "T02":{
-                    "descricao": "Licitantes com CNPJ inativo",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes":["15416313000100"]
-                    }
-                },
-                "T03":{
-                    "descricao": "Licitantes com e-mails em comum",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":2,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "qtd_grupos":1,
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "emails":[
-                                    {
-                                        "email":"baracho@citel1.com.br",
-                                        "grupo":1
-                                    }
-                                ]
-                            },
-                            {
-                                "cpf_cnpj":"16499349000150",
-                                "emails":[
-                                    {
-                                        "email":"baracho@citel1.com.br",
-                                        "grupo":1
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T04":{
-                    "descricao": "Licitantes com telefones em comum",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":2,
-                    "qtde_irregularidades":2,
-                    "info":{
-                        "qtd_grupos":2,
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "telefones":[
-                                    {
-                                        "telefone":"3835311296",
-                                        "grupo":1
-                                    },
-                                    {
-                                        "telefone":"3888130405",
-                                        "grupo":2
-                                    }
-                                ]
-                            },
-                            {
-                                "cpf_cnpj":"16499349000150",
-                                "telefones":[
-                                    {
-                                        "telefone":"3835311296",
-                                        "grupo":1
-                                    },
-                                    {
-                                        "telefone":"3888130405",
-                                        "grupo":2
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T05":{
-                    "descricao": "Licitantes com endereços em comum",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":2,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "qtd_grupos":1,
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "enderecos":[
-                                    {
-                                        "endereco":"RUA FRANCISCO CANUTO 100 CENTRO FELICIO DOS SANTOS MG",
-                                        "grupo":1
-                                    }
-                                ]
-                            },
-                            {
-                                "cpf_cnpj":"16499349000150",
-                                "enderecos":[
-                                    {
-                                        "endereco":"RUA FRANCISCO CANUTO 100 CENTRO FELICIO DOS SANTOS MG",
-                                        "grupo":1
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T06":{
-                    "descricao": "Licitantes com representantes legal não-sócios em comum",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":2,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "qtd_grupos":1,
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "representantes_nao_socio":[
-                                    {
-                                        "cpf_cnpj":"41499891687",
-                                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
-                                        "grupo":1
-                                    }
-                                ]
-                            },
-                            {
-                                "cpf_cnpj":"16499349000150",
-                                "representantes_nao_socio":[
-                                    {
-                                        "cpf_cnpj":"41499891687",
-                                        "qualificacao_representante":"TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL",
-                                        "grupo":1
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T07":{
-                    "descricao": "Licitantes com representantes sócios em comum",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":2,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "qtd_grupos":1,
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "representantes_socio":[
-                                    {
-                                        "cpf_cnpj":"11057443611",
-                                        "qualificacao_representante":"SÓCIO",
-                                        "grupo":1
-                                    }
-                                ]
-                            },
-                            {
-                                "cpf_cnpj":"16499349000150",
-                                "representantes_socio":[
-                                    {
-                                        "cpf_cnpj":"11057443611",
-                                        "qualificacao_representante":"SÓCIO",
-                                        "grupo":1
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T08":{
-                    "descricao": "Licitantes vencedores frequentes",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes":["15416313000100"]
-                    }
-                },
-                "T09":{
-                    "descricao": "Licitantes perdedores frequentes",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes":["16499349000150"]
-                    }
-                },
-                "T10":{
-                    "descricao": "Licitantes com CNAE incongruente",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "cnaes":[
-                                    {
-                                        "codigo":"4921301",
-                                        "flag_cnae_primario":1,
-                                        "descricao": "TRANSPORTE RODOVIÁRIO COLETIVO DE PASSAGEIROS, COM ITINERÁRIO FIXO, MUNICIPAL"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T11":{
-                    "descricao": "Licitantes antes do início das atividades",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "data_inicio_atividade": "2022-04-23",
-                                "data_licitacao": "2017-03-15"
-                            }
-                        ]
-                    }
-                },
-                "T12":{
-                    "descricao": "Licitantes com restrição no CEIS",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":2,
-                    "info":{
-                        "licitantes":[
-                            {
-                                "cpf_cnpj":"15416313000100",
-                                "sancoes_ceis":[
-                                    {
-                                        "tipo_sancao":"Suspensão - Legislação Estadual",
-                                        "nome_orgao_sancionador":"Governo do Estado da Bahia",
-                                        "cod_fundamentacao_legal":"Art. 186, inciso II, Lei 9433/2005",
-                                        "desc_fundamentacao_legal":"Ao candidato a cadastramento, ao licitante e ao contratado, que incorram nas faltas previstas nesta Lei, aplicam-se, segundo a natureza e a gravidade da falta, assegurada a defesa prévia, as seguintes sanções: II- suspensão temporária de participação em li",
-                                        "data_inicio_sancao_show":"16/09/2014",
-                                        "data_final_sancao_show":"27/01/2024"
-                                    },
-                                    {
-                                        "tipo_sancao":"Suspensão - Legislação Estadual",
-                                        "nome_orgao_sancionador":"Governo do Estado da Bahia",
-                                        "cod_fundamentacao_legal":"Art. 186, inciso II, Lei 9433/2005",
-                                        "desc_fundamentacao_legal":"Ao candidato a cadastramento, ao licitante e ao contratado, que incorram nas faltas previstas nesta Lei, aplicam-se, segundo a natureza e a gravidade da falta, assegurada a defesa prévia, as seguintes sanções: II- suspensão temporária de participação em li",
-                                        "data_inicio_sancao_show":"23/01/2014",
-                                        "data_final_sancao_show":"23/10/2030"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "T13":{
-                    "descricao": "Licitantes cujos sócios são ou têm vínculo com servidores públicos",
-                    "flag_possui_irregularidade":1,
-                    "qtde_licitantes_envolvidos":1,
-                    "qtde_irregularidades":1,
-                    "info":{
-                        "licitantes": [
-                            {
-                                "cpf_cnpj":"15416313000100" ,
-                                "representantes_servidor":[
-                                    {
-                                        "cpf_cnpj":"03555398610",
-                                        "vinculo":"SERVIDOR"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-              }
-            }
-          ],
-          "licitantes": [
-            {
-              "seq_dim_licitacao": "88142",
-              "ind_venceu": "S",
-              "numero_de_itens": "1",
-              "participacao_licitacao": 0.03,
-              "num_documento": "15416313000100",
-              "participacao_itens_licitacao": 0.05,
-              "soma_recurso_alocado": 39204,
-              "detalhes": [
-                {
-                  "nome_socio": "TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL;SÓCIO-ADMINISTRADOR;SÓCIO",                
-                  "cpf_cnpj_socio": "41499891687;03555398610;11057443611",             
-                  "num_documento": "15416313000100",
-                  "descricao_logradouro_numero_soundex": "r000f652100   ",
-                  "descricao_logradouro_soundex": "r000f652",
-                  "email": "baracho@citel1.com.br",
-                  "flag_lict_unic": "0",
-                  "logradouro": "FRANCISCO CANUTO",
-                  "numero": "100   ",
-                  "seq_dim_licitacao": "88142",
-                  "complemento": "",
-                  "descricao_logradouro_numero_complemento_soundex": "r000f652100   N000",
-                  "descricao_tipo_logradouro": "RUA",
-                  "flag_cnpj_inativo": "1",
-                  "ind_tipo_pessoa": "J",
-                  "telefones": "3835311296;3888130405",
-                  "flag_vencedor_frequente":1,
-                  "flag_perdedor_frequente":0
-                }
-              ],
-              "cnpj": {
-                "cnae_fiscal": "4921301",
-                "descricao_tipo_logradouro": "RUA",
-                "uf": "MG",
-                "codigo_municipio": "4507",
-                "ind_tipo_pessoa": "J",
-                "complemento": "",
-                "logradouro": "FRANCISCO CANUTO",
-                "correio_eletronico": "baracho@citel1.com.br",
-                "municipio": "FELICIO DOS SANTOS",
-                "bairro": "CENTRO",
-                "data_inicio_atividade": "2012-04-23",
-                "nome_fantasia": "",
-                "num_documento": "15416313000100",
-                "ddd_telefone_1": "3835311296",
-                "numero": "100   ",
-                "cep": "39180000",
-                "ddd_telefone_2": "3888130405",
-                "qtde_socios": "3",
-                "cnae_desc": "TRANSPORTE RODOVIÁRIO COLETIVO DE PASSAGEIROS, COM ITINERÁRIO FIXO, MUNICIPAL",
-                "razao_social": "RAIMUNDO FRANCISCO VIEIRA CPF33197865987"
-              }
-            },
-            {
-              "seq_dim_licitacao": "88142",
-              "ind_venceu": "S",
-              "numero_de_itens": "1",
-              "participacao_licitacao": 0.06,
-              "num_documento": "16499349000150",
-              "participacao_itens_licitacao": 0.05,
-              "soma_recurso_alocado": 84068.16,
-              "detalhes": [
-                {
-                  "nome_socio": "TITULAR PESSOA FÍSICA RESIDENTE OU DOMICILIADO NO BRASIL;SÓCIO",                
-                  "cpf_cnpj_socio": "41499891687;11057443611",
-                  "num_documento": "16499349000150",
-                  "descricao_logradouro_numero_soundex": "r000s532238   ",
-                  "descricao_logradouro_soundex": "r000s532",
-                  "email": "baracho@citel1.com.br",
-                  "flag_lict_unic": "0",
-                  "logradouro": "FRANCISCO CANUTO",
-                  "numero": "100   ",
-                  "seq_dim_licitacao": "88142",
-                  "complemento": "",
-                  "descricao_logradouro_numero_complemento_soundex": "r000f652100   N000",
-                  "descricao_tipo_logradouro": "RUA",
-                  "flag_cnpj_inativo": "0",
-                  "ind_tipo_pessoa": "J",
-                  "telefones": "3835311296;3888130405",
-                  "flag_vencedor_frequente":0,
-                  "flag_perdedor_frequente":1
-                }
-              ],
-              "cnpj": {
-                "cnae_fiscal": "4924800",
-                "descricao_tipo_logradouro": "RUA",
-                "uf": "MG",
-                "codigo_municipio": "4507",
-                "ind_tipo_pessoa": "J",
-                "complemento": "",
-                "logradouro": "FRANCISCO CANUTO",
-                "correio_eletronico": "baracho@citel1.com.br",
-                "municipio": "FELICIO DOS SANTOS",
-                "bairro": "CENTRO",
-                "data_inicio_atividade": "2012-07-17",
-                "nome_fantasia": "",
-                "num_documento": "16499349000150",
-                "ddd_telefone_1": "3835311296",
-                "numero": "100   ",
-                "cep": "39180000",
-                "ddd_telefone_2": "3888130405",
-                "qtde_socios": "2",
-                "cnae_desc": "TRANSPORTE ESCOLAR",
-                "razao_social": "ALCIVANDER DA SILVA 06176212685"
-              }
-            }
-          ]
-        }
-
-    
-    def old_get_licitacoes(params: LicitacaoQuery, pageable: Pageable):
         filters = get_params_values(params)
         limit = pageable.get_limit()
         offset = pageable.get_offset()
@@ -519,47 +33,81 @@ class LicitacaoRepository:
         result = db_session.query(
             LicitacaoModel.seq_dim_licitacao,\
             LicitacaoModel.nom_entidade,\
+            LicitacaoModel.nom_micro_regiao,\
+            LicitacaoModel.nom_meso_regiao,\
+            LicitacaoModel.nom_comarca,\
             LicitacaoModel.nom_modalidade,\
+            LicitacaoModel.num_exercicio,\
             LicitacaoModel.vlr_licitacao,\
-            LicitacaoModel.ranking_irregularidades, \
-            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
-            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
-            LicitacaoModel.qtd_lograd_nro_comum,\
+            LicitacaoModel.ranking_irregularidades,\
             LicitacaoModel.dsc_objeto,\
-            LicitacaoModel.flag_socios_comum,\
-            LicitacaoModel.qtde_licitantes_nao_ativos,\
-            LicitacaoModel.qtde_licitantes_nao_ativos_vencedores,\
-            LicitacaoModel.flag_lict_unic_com_venc,\
             LicitacaoModel.num_exercicio_licitacao,\
             LicitacaoModel.nom_fonte_recurso,\
             LicitacaoModel.cod_modalidade,\
-            LicitacaoModel.qtd_lograd_nro_compl_comum
+            LicitacaoModel.qtde_licitantes_nao_ativos,\
+            LicitacaoModel.qtd_cnpjs_envolvidos_socios_comum,\
+            LicitacaoModel.qtd_cnpjs_antes_atividade,\
+            LicitacaoModel.qtd_cnpjs_envolvidos_nao_socios_comum,\
+            LicitacaoModel.qtd_cnpjs_cnae_incongruente,\
+            LicitacaoModel.qtd_cnpjs_restricao_ceis,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_endereco,\
+            LicitacaoModel.qtd_cnpjs_vencedores_frequentes,\
+            LicitacaoModel.qtd_cnpjs_perdedores_frequentes,\
+            LicitacaoModel.qtd_cnpjs_socio_servidor_publico,\
+            LicitacaoModel.flag_lict_unic_com_venc,\
+            LicitacaoModel.flag_lict_unic_sem_venc\
             )\
            .filter(and_(*filters)) \
            .group_by( \
             LicitacaoModel.seq_dim_licitacao,\
             LicitacaoModel.nom_entidade,\
+            LicitacaoModel.nom_micro_regiao,\
+            LicitacaoModel.nom_meso_regiao,\
+            LicitacaoModel.nom_comarca,\
             LicitacaoModel.nom_modalidade,\
+            LicitacaoModel.num_exercicio,\
             LicitacaoModel.vlr_licitacao,\
-            LicitacaoModel.ranking_irregularidades, \
-            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
-            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
-            LicitacaoModel.qtd_lograd_nro_comum,\
+            LicitacaoModel.ranking_irregularidades,\
             LicitacaoModel.dsc_objeto,\
-            LicitacaoModel.flag_socios_comum,\
-            LicitacaoModel.qtde_licitantes_nao_ativos,\
-            LicitacaoModel.qtde_licitantes_nao_ativos_vencedores,\
-            LicitacaoModel.flag_lict_unic_com_venc,\
             LicitacaoModel.num_exercicio_licitacao,\
             LicitacaoModel.nom_fonte_recurso,\
             LicitacaoModel.cod_modalidade,\
-            LicitacaoModel.qtd_lograd_nro_compl_comum)\
+            LicitacaoModel.qtde_licitantes_nao_ativos,\
+            LicitacaoModel.qtd_cnpjs_envolvidos_socios_comum,\
+            LicitacaoModel.qtd_cnpjs_antes_atividade,\
+            LicitacaoModel.qtd_cnpjs_envolvidos_nao_socios_comum,\
+            LicitacaoModel.qtd_cnpjs_cnae_incongruente,\
+            LicitacaoModel.qtd_cnpjs_restricao_ceis,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_emails,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_tels,\
+            LicitacaoModel.qtde_de_cnpjs_envolvidos_endereco,\
+            LicitacaoModel.qtd_cnpjs_vencedores_frequentes,\
+            LicitacaoModel.qtd_cnpjs_perdedores_frequentes,\
+            LicitacaoModel.qtd_cnpjs_socio_servidor_publico,\
+            LicitacaoModel.flag_lict_unic_com_venc,\
+            LicitacaoModel.flag_lict_unic_sem_venc)\
            .order_by(LicitacaoModel.ranking_irregularidades.desc())\
            .offset(offset) \
            .limit(limit)
 
         dict_list = []
         for row in result:
+            qtde_licitantes_nao_ativos = row[13]
+            qtd_cnpjs_envolvidos_socios_comum = row[14]
+            qtd_cnpjs_antes_atividade = row[15]
+            qtd_cnpjs_envolvidos_nao_socios_comum = row[16]
+            qtd_cnpjs_cnae_incongruente = row[17]
+            qtd_cnpjs_restricao_ceis = row[18]
+            qtde_de_cnpjs_envolvidos_emails = row[19]
+            qtde_de_cnpjs_envolvidos_tels = row[20]
+            qtde_de_cnpjs_envolvidos_endereco = row[21]
+            qtd_cnpjs_vencedores_frequentes = row[22]
+            qtd_cnpjs_perdedores_frequentes = row[23]
+            qtd_cnpjs_socio_servidor_publico = row[24]
+            flag_lict_unic_com_venc = row[25]
+            flag_lict_unic_sem_venc = row[26]
             dict_list.append({
                 "seq_dim_licitacao":row[0],
                 "nom_entidade":row[1],
@@ -570,37 +118,40 @@ class LicitacaoRepository:
                 "num_exercicio":row[6],
                 "vlr_licitacao":row[7],
                 "ranking_irregularidades":row[8],
-                
-            "seq_dim_licitacao":row[0],
-            "nom_entidade":row[1],
-            "nom_modalidade":row[2],
-            "vlr_licitacao":row[3],
-            "ranking_irregularidades":row[4],
-            "qtde_de_cnpjs_envolvidos_emails":row[5],
-            "qtde_de_cnpjs_envolvidos_tels":row[6],
-            "qtd_lograd_nro_comum":row[7],
-            "dsc_objeto":row[8],
-            "flag_socios_comum":row[9],
-            "qtde_licitantes_nao_ativos":row[10],
-            "qtde_licitantes_nao_ativos_vencedores":row[11],
-            "flag_lict_unic_com_venc":row[12],
-            "num_exercicio_licitacao":row[13],
-            "nom_fonte_recurso":row[14],
-            "cod_modalidade":row[15],
-            "qtd_lograd_nro_compl_comum":row[16]
+                "dsc_objeto":row[9],
+                "num_exercicio_licitacao":row[10],
+                "nom_fonte_recurso":row[11],
+                "cod_modalidade":row[12],
+                "T01":flag_lict_unic_com_venc*flag_lict_unic_sem_venc,
+                "T02":qtde_licitantes_nao_ativos,
+                "T03":qtde_de_cnpjs_envolvidos_emails,
+                "T04":qtde_de_cnpjs_envolvidos_tels,
+                "T05":qtde_de_cnpjs_envolvidos_endereco,
+                "T06":qtd_cnpjs_envolvidos_nao_socios_comum,
+                "T07":qtd_cnpjs_envolvidos_socios_comum,
+                "T08":qtd_cnpjs_vencedores_frequentes,
+                "T09":qtd_cnpjs_perdedores_frequentes,
+                "T10":qtd_cnpjs_cnae_incongruente,
+                "T11":qtd_cnpjs_antes_atividade,
+                "T12":qtd_cnpjs_restricao_ceis,
+                "T13":qtd_cnpjs_socio_servidor_publico
             })
-
         heatmap_aggregations  = db_session.query( \
             func.count(LicitacaoModel.seq_dim_licitacao).label('seq_dim_licitacao'), \
             func.max(LicitacaoModel.ranking_irregularidades).label('ranking_irregularidades'), \
-            func.max(LicitacaoModel.qtde_de_cnpjs_envolvidos_emails).label('qtde_de_cnpjs_envolvidos_emails'), \
-            func.max(LicitacaoModel.qtd_lograd_nro_compl_comum).label('qtd_lograd_nro_compl_comum'), \
-            func.max(LicitacaoModel.qtd_lograd_nro_comum).label('qtd_lograd_nro_comum'), \
-            func.max(LicitacaoModel.qtde_licitantes_nao_ativos).label('qtde_licitantes_nao_ativos'), \
-            func.max(LicitacaoModel.qtde_licitantes_nao_ativos_vencedores).label('qtde_licitantes_nao_ativos_vencedores'), \
             func.max(LicitacaoModel.flag_lict_unic_com_venc).label('flag_lict_unic_com_venc'), \
-            func.max(LicitacaoModel.flag_socios_comum).label('flag_socios_comum'), \
-            func.max(LicitacaoModel.qtde_de_cnpjs_envolvidos_tels).label('qtde_de_cnpjs_envolvidos_tels'))\
+            func.max(LicitacaoModel.qtde_licitantes_nao_ativos).label('qtde_licitantes_nao_ativos'), \
+            func.max(LicitacaoModel.qtde_de_cnpjs_envolvidos_emails).label('qtde_de_cnpjs_envolvidos_emails'), \
+            func.max(LicitacaoModel.qtde_de_cnpjs_envolvidos_tels).label('qtde_de_cnpjs_envolvidos_tels'), \
+            func.max(LicitacaoModel.qtde_de_cnpjs_envolvidos_endereco).label('qtde_de_cnpjs_envolvidos_endereco'), \
+            func.max(LicitacaoModel.qtd_cnpjs_envolvidos_nao_socios_comum).label('qtd_cnpjs_envolvidos_nao_socios_comum'), \
+            func.max(LicitacaoModel.qtd_cnpjs_envolvidos_socios_comum).label('qtd_cnpjs_envolvidos_socios_comum'), \
+            func.max(LicitacaoModel.qtd_cnpjs_vencedores_frequentes).label('qtd_cnpjs_vencedores_frequentes'), \
+            func.max(LicitacaoModel.qtd_cnpjs_perdedores_frequentes).label('qtd_cnpjs_perdedores_frequentes'), \
+            func.max(LicitacaoModel.qtd_cnpjs_cnae_incongruente).label('qtd_cnpjs_cnae_incongruente'), \
+            func.max(LicitacaoModel.qtd_cnpjs_antes_atividade).label('qtd_cnpjs_antes_atividade'), \
+            func.max(LicitacaoModel.qtd_cnpjs_restricao_ceis).label('qtd_cnpjs_restricao_ceis'), \
+            func.max(LicitacaoModel.qtd_cnpjs_socio_servidor_publico).label('qtd_cnpjs_socio_servidor_publico'))\
             .filter(and_(*filters))
 
         filters.append(LicitacaoModel.ranking_irregularidades > 0)
@@ -618,35 +169,83 @@ class LicitacaoRepository:
           "heatmap_numbers": {
             "count":heatmap_aggregations[0][0],
             "ranking_irregularidades":heatmap_aggregations[0][1],
-            "qtde_de_cnpjs_envolvidos_emails":heatmap_aggregations[0][2],
-            "qtd_lograd_nro_compl_comum":heatmap_aggregations[0][3],
-            "qtd_lograd_nro_comum":heatmap_aggregations[0][4],
-            "qtde_licitantes_nao_ativos":heatmap_aggregations[0][5],
-            "qtde_licitantes_nao_ativos_vencedores":heatmap_aggregations[0][6],
-            "flag_lict_unic_com_venc":heatmap_aggregations[0][7],
-            "flag_socios_comum":heatmap_aggregations[0][8],
-            "qtde_de_cnpjs_envolvidos_tels":heatmap_aggregations[0][9]
+            "T01":heatmap_aggregations[0][2],
+            "T02":heatmap_aggregations[0][3],
+            "T03":heatmap_aggregations[0][4],
+            "T04":heatmap_aggregations[0][5],
+            "T05":heatmap_aggregations[0][6],
+            "T06":heatmap_aggregations[0][7],
+            "T07":heatmap_aggregations[0][8],
+            "T08":heatmap_aggregations[0][9],
+            "T09":heatmap_aggregations[0][10],
+            "T10":heatmap_aggregations[0][11],
+            "T11":heatmap_aggregations[0][12],
+            "T12":heatmap_aggregations[0][13],
+            "T13":heatmap_aggregations[0][14],
           },
           "data": dict_list
         }
 
         return res
 
-    def old_find_by_id(id_licitacao: str):
+    def find_by_id(id_licitacao: str):
         filters_lictacao = [LicitacaoModel.seq_dim_licitacao == id_licitacao]
         licitacao  = db_session.query(LicitacaoModel).filter(and_(*filters_lictacao))
-        dict_licitacao = [row.__dict__ for row in licitacao]
+        dict_licitacao = [row.__dict__ for row in licitacao][0]
 
         filters_lictante = [LicitanteModel.seq_dim_licitacao == id_licitacao]
         licitantes  = db_session.query(LicitanteModel).filter(and_(*filters_lictante))
         dict_licitantes = [row.__dict__ for row in licitantes]
 
+        t01_licitantes=[]
+        t02_licitantes=[]
+        t03_vinculo=[]
+        t04_vinculo=[]
+        t05_vinculo=[]
+        t06_vinculo=[]
+        t07_vinculo=[]
+        t08_licitantes=[]
+        t09_licitantes=[]
+        t10_licitantes=[]
+        t11_licitantes=[]
+        t12_licitantes=[]
+        t13_licitantes=[]
         for licitante in dict_licitantes:
             filters_det_lictacao = []
             filters_det_lictacao.append(DetalhamentoLicitacaoModel.seq_dim_licitacao == id_licitacao)
             filters_det_lictacao.append(DetalhamentoLicitacaoModel.num_documento == licitante['num_documento'])
             det_licitacao  = db_session.query(DetalhamentoLicitacaoModel).filter(and_(*filters_det_lictacao))
-            dict_det_licitacao = [row.__dict__ for row in det_licitacao]
+            dict_det_licitacao = [row.__dict__ for row in det_licitacao][0]
+            
+            filters_rep_legal = []
+            filters_rep_legal.append(RepresentanteLegalModel.id_licitacao == id_licitacao)
+            filters_rep_legal.append(RepresentanteLegalModel.cnpj == licitante['num_documento'])
+            det_rep_legal  = db_session.query(RepresentanteLegalModel).filter(and_(*filters_rep_legal))
+            dict_rep_legal = [row.__dict__ for row in det_rep_legal]            
+
+
+            representantes_nao_socio=[]
+            representantes_socio=[]
+            cpf_cnpj_socio=[]
+            nome_socio=[]
+            for rep_legal in dict_rep_legal:
+                cpf_cnpj_socio.append(rep_legal['cpf_cnpj_representante'])
+                nome_socio.append(rep_legal['qualificacao_representante'])
+                
+                if rep_legal['flag_socio']:
+                    if (rep_legal['cpf_cnpj_representante'] not in (None, '')) & (rep_legal['cpf_cnpj_representante'] not in t07_vinculo):
+                        t07_vinculo.append(rep_legal['cpf_cnpj_representante'])
+                    representantes_socio.append((rep_legal['cpf_cnpj_representante'], rep_legal['qualificacao_representante']))
+                else:
+                    if (rep_legal['cpf_cnpj_representante'] not in (None, '')) & (rep_legal['cpf_cnpj_representante'] not in t06_vinculo):
+                        t06_vinculo.append(rep_legal['cpf_cnpj_representante'])
+                    representantes_nao_socio.append((rep_legal['cpf_cnpj_representante'], rep_legal['qualificacao_representante']))
+
+            dict_det_licitacao['cpf_cnpj_socio'] = ';'.join(cpf_cnpj_socio)
+            dict_det_licitacao['nome_socio'] = ';'.join(nome_socio)
+            dict_det_licitacao['representantes_nao_socio'] = representantes_nao_socio
+            dict_det_licitacao['representantes_socio'] = representantes_socio
+            
             licitante['detalhes'] = dict_det_licitacao
 
             filters_det_cnpj = []
@@ -654,6 +253,298 @@ class LicitacaoRepository:
             det_cnpj  = db_session.query(DetalhamentoCnpjModel).filter(and_(*filters_det_cnpj))
             dict_det_cnpj = [row.__dict__ for row in det_cnpj]
             licitante['cnpj'] = dict_det_cnpj[0]
+            
+            if dict_det_licitacao['flag_lict_unic']==1:
+                t01_licitantes.append(licitante['num_documento'])
+
+            if dict_det_licitacao['flag_cnpj_inativo']==1:
+                t02_licitantes.append(licitante['num_documento'])
+                
+            if (dict_det_licitacao['email'] not in (None, '')) & (dict_det_licitacao['email'] not in t03_vinculo):
+                t03_vinculo.append(dict_det_licitacao['email'])
+
+            if (dict_det_licitacao['telefones'] not in (None, '')):
+                tels=dict_det_licitacao['telefones'].split(';')
+                for t in tels:
+                    if (t not in (None, '')) & (t not in t04_vinculo):
+                        t04_vinculo.append(t)
+
+            endereco = dict_det_licitacao['descricao_tipo_logradouro'] + ' ' +\
+                        dict_det_licitacao['logradouro'] + ' ' +\
+                        dict_det_licitacao['numero'] + ' ' +\
+                        dict_det_licitacao['complemento']
+            if (endereco not in (None, '')) & (endereco not in t05_vinculo):
+                t05_vinculo.append(endereco)
+
+            if dict_det_licitacao['flag_vencedor_frequente']==1:
+                t08_licitantes.append(licitante['num_documento'])
+
+            if dict_det_licitacao['flag_perdedor_frequente']==1:
+                t09_licitantes.append(licitante['num_documento'])
+
+            if dict_det_licitacao['flag_perdedor_frequente']==1:
+                t10_licitantes.append({
+                    "cpf_cnpj":licitante['num_documento'],
+                    "cnaes":[
+                        {
+                            "codigo":licitante['cnpj']["cnae_desc"],
+                            "flag_cnae_primario":1,
+                            "descricao": licitante['cnpj']["cnae_fiscal"]
+                        }
+                    ]
+                })
+
+            if dict_det_licitacao['flag_licitante_antes_atividade']==1:
+                t11_licitantes.append({
+                    "cpf_cnpj":licitante['num_documento'],
+                    "data_inicio_atividade": dict_det_licitacao['data_inicio_atividade'],
+                    "data_licitacao": dict_det_licitacao['data_habilitacao']
+                })
+
+            if dict_det_licitacao['flag_licitante_penalidade_ceis']==1:
+                filters_ceis = []
+                filters_ceis.append(SancoesCeisModel.id_licitacao == id_licitacao)
+                filters_ceis.append(SancoesCeisModel.num_documento == licitante['num_documento'])
+                det_ceis  = db_session.query(SancoesCeisModel).filter(and_(*filters_ceis))
+                dict_ceis = [row.__dict__ for row in det_ceis]  
+                
+                sancoes_ceis = []
+                for c in dict_ceis:
+                    sancoes_ceis.append({
+                        "tipo_sancao":c["tipo_sancao"],
+                        "nome_orgao_sancionador":c["nome_orgao_sancionador"],
+                        "cod_fundamentacao_legal":c["cod_fundamentacao_legal"],
+                        "desc_fundamentacao_legal":c["desc_fundamentacao_legal"],
+                        "data_inicio_sancao_show":c["data_inicio_sancao_show"],
+                        "data_final_sancao_show":c["data_final_sancao_show"]
+                    })
+                t12_licitantes.append({
+                    "cpf_cnpj":licitante['num_documento'],
+                    "sancoes_ceis":sancoes_ceis
+                })
+
+            if dict_det_licitacao['flag_licitante_servidor_publico']==1:
+                filters_rep_serv = []
+                filters_rep_serv.append(RepresentanteServidorModel.id_licitacao == id_licitacao)
+                filters_rep_serv.append(RepresentanteServidorModel.num_documento == licitante['num_documento'])
+                det_rep_serv  = db_session.query(RepresentanteServidorModel).filter(and_(*filters_rep_serv))
+                dict_rep_serv = [row.__dict__ for row in det_rep_serv] 
+
+                rep_serv = []
+                for r in dict_rep_serv:
+                    rep_serv.append({
+                        "cpf_cnpj":dict_rep_serv["cpf_socio_servidor"],
+                        "vinculo":dict_rep_serv["vinculo_socio_servidor"]
+                    })
+            
+                t13_licitantes.append({
+                    "cpf_cnpj":licitante['num_documento'],
+                    "representantes_servidor":rep_serv
+                })
+
+        t03_licitantes=[]
+        t04_licitantes=[]
+        t05_licitantes=[]
+        t06_licitantes=[]
+        t07_licitantes=[]
+        for licitante in dict_licitantes:
+            emails = []
+            if licitante['detalhes']["email"] not in (None, ''):
+                emails.append({
+                    "email":licitante['detalhes']["email"],
+                    "grupo":t03_vinculo.index(licitante['detalhes']["email"])+1
+                })
+
+            t03_licitantes.append({
+                "cpf_cnpj":licitante['num_documento'],
+                "emails":emails
+            })
+            
+            t04_info=[]
+            if (licitante['detalhes']['telefones'] not in (None, '')):
+                tels=licitante['detalhes']['telefones'].split(';')
+                for t in tels:
+                    t04_info.append({
+                        "telefone":t,
+                        "grupo":t04_vinculo.index(t)+1
+                    })
+            t04_licitantes.append({
+                "cpf_cnpj":licitante['num_documento'],
+                "telefones":t04_info
+            })
+
+            endereco = licitante['detalhes']['descricao_tipo_logradouro'] + ' ' +\
+            licitante['detalhes']['logradouro'] + ' ' +\
+            licitante['detalhes']['numero'] + ' ' +\
+            licitante['detalhes']['complemento']
+            t05_licitantes.append({
+                "cpf_cnpj":licitante['num_documento'],
+                "enderecos":[
+                    {
+                        "endereco":endereco,
+                        "grupo":t05_vinculo.index(endereco)+1
+                    }
+                ]
+            })
+
+            t06_info = []
+            for r in licitante['detalhes']['representantes_nao_socio']:
+                t06_info.append({
+                        "cpf_cnpj":r[0],
+                        "qualificacao_representante":r[1],
+                        "grupo":t06_vinculo.index(r[0])+1
+                    })
+            t06_licitantes.append({
+                "cpf_cnpj":licitante['num_documento'],
+                "representantes_nao_socio":t06_info
+            })
+
+            t07_info = []
+            for r in licitante['detalhes']['representantes_socio']:
+                t07_info.append({
+                        "cpf_cnpj":r[0],
+                        "qualificacao_representante":r[1],
+                        "grupo":t07_vinculo.index(r[0])+1
+                    })
+            t07_licitantes.append({
+                "cpf_cnpj":licitante['num_documento'],
+                "representantes_socio":t07_info
+            })
+            
+            del licitante['detalhes']['representantes_nao_socio']
+            del licitante['detalhes']['representantes_socio']
+
+
+        dict_licitacao["grafos"]=[]
+        
+        t01_flag = dict_licitacao["flag_lict_unic_com_venc"]*dict_licitacao["flag_lict_unic_sem_venc"]
+        
+        dict_licitacao["trilhas"] = {
+            "T01":{
+                "descricao":"Licitantes únicos",
+                "flag_possui_irregularidade":t01_flag,
+                "qtde_licitantes_envolvidos":t01_flag,
+                "qtde_irregularidades":t01_flag,
+                "info":{
+                    "flag_lict_unic_com_venc":dict_licitacao["flag_lict_unic_com_venc"],
+                    "flag_lict_unic_sem_venc":dict_licitacao["flag_lict_unic_sem_venc"],
+                    "licitantes":t01_licitantes
+                }
+            },
+            "T02":{
+                "descricao": "Licitantes com CNPJ inativo",
+                "flag_possui_irregularidade":dict_licitacao["flag_existe_licitante_nao_ativo"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtde_licitantes_nao_ativos"],
+                "qtde_irregularidades":dict_licitacao["qtde_licitantes_nao_ativos"],
+                "info":{
+                    "licitantes":t02_licitantes
+                }
+            },
+            "T03":{
+                "descricao": "Licitantes com e-mails em comum",
+                "flag_possui_irregularidade":dict_licitacao["flag_existe_email_em_comum"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtde_de_cnpjs_envolvidos_emails"],
+                "qtde_irregularidades":dict_licitacao["qtde_emails_que_repetem"],
+                "info":{
+                    "qtd_grupos":len(t03_vinculo),
+                    "licitantes":t03_licitantes
+                }
+            },
+            "T04":{
+                "descricao": "Licitantes com telefones em comum",
+                "flag_possui_irregularidade":dict_licitacao["flag_existe_tel_em_comum"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtde_de_cnpjs_envolvidos_tels"],
+                "qtde_irregularidades":dict_licitacao["qtde_tels_que_repetem"],
+                "info":{
+                    "qtd_grupos":len(t04_vinculo),
+                    "licitantes":t04_licitantes
+                }
+            },
+            "T05":{
+                "descricao": "Licitantes com endereços em comum",
+                "flag_possui_irregularidade":dict_licitacao["flag_lograd_nro_compl_comum"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtde_de_cnpjs_envolvidos_endereco"],
+                "qtde_irregularidades":dict_licitacao["qtd_lograd_nro_compl_comum"],
+                "info":{
+                    "qtd_grupos":len(t05_vinculo),
+                    "licitantes":t05_licitantes
+                }
+            },
+            "T06":{
+                "descricao": "Licitantes com representantes legal não-sócios em comum",
+                "flag_possui_irregularidade":dict_licitacao["flag_nao_socios_comum"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_envolvidos_nao_socios_comum"],
+                "qtde_irregularidades":dict_licitacao["qtd_nao_socios_comum"],
+                "info":{
+                    "qtd_grupos":len(t06_vinculo),
+                    "licitantes":t06_licitantes
+                }
+            },
+            "T07":{
+                "descricao": "Licitantes com representantes sócios em comum",
+                "flag_possui_irregularidade":dict_licitacao["flag_socios_comum"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_envolvidos_socios_comum"],
+                "qtde_irregularidades":dict_licitacao["qtd_socios_comum"],
+                "info":{
+                    "qtd_grupos":len(t07_vinculo),
+                    "licitantes":t07_licitantes
+                }
+            },
+            "T08":{
+                "descricao": "Licitantes vencedores frequentes",
+                "flag_possui_irregularidade":dict_licitacao["flag_possui_vencedor_frequente"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_vencedores_frequentes"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_vencedores_frequentes"],
+                "info":{
+                    "licitantes":t08_licitantes
+                }
+            },
+            "T09":{
+                "descricao": "Licitantes perdedores frequentes",
+                "flag_possui_irregularidade":dict_licitacao["flag_possui_perdedor_frequente"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_perdedores_frequentes"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_perdedores_frequentes"],
+                "info":{
+                    "licitantes":t09_licitantes
+                }
+            },
+            "T10":{
+                "descricao": "Licitantes com CNAE incongruente",
+                "flag_possui_irregularidade":dict_licitacao["flag_licitante_cnae_incongruente"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_cnae_incongruente"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_cnae_incongruente"],
+                "info":{
+                    "licitantes":t10_licitantes
+                }
+            },
+            "T11":{
+                "descricao": "Licitantes antes do início das atividades",
+                "flag_possui_irregularidade":dict_licitacao["flag_licitante_antes_atividade"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_antes_atividade"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_antes_atividade"],
+                "info":{
+                    "licitantes":t11_licitantes
+                }
+            },
+            "T12":{
+                "descricao": "Licitantes com restrição no CEIS",
+                "flag_possui_irregularidade":dict_licitacao["flag_licitante_restricao_ceis"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_restricao_ceis"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_restricao_ceis"],
+                "info":{
+                    "licitantes":t12_licitantes
+                }
+            },
+            "T13":{
+                "descricao": "Licitantes cujos sócios são ou têm vínculo com servidores públicos",
+                "flag_possui_irregularidade":dict_licitacao["flag_licitante_servidor_publico"],
+                "qtde_licitantes_envolvidos":dict_licitacao["qtd_cnpjs_socio_servidor_publico"],
+                "qtde_irregularidades":dict_licitacao["qtd_cnpjs_socio_servidor_publico"],
+                "info":{
+                    "licitantes":t13_licitantes
+                }
+            }
+          }
 
         res = {
           "licitacao": dict_licitacao,

@@ -1,7 +1,7 @@
 from typing import List
-from src.modules.painel_bi.v1.licitacoes.licitacoes_operations import LicitacaoQuery
+from src.modules.painel_bi.v2.licitacoes.licitacoes_operations import LicitacaoQuery
 from src.modules.painel_bi.v2.licitacoes.licitacoes_repository import LicitacaoRepository as repository
-from src.modules.painel_bi.v1.utils.utils import Pageable
+from src.modules.painel_bi.v2.utils.utils import Pageable
 
 class LicitacaoService:
 
