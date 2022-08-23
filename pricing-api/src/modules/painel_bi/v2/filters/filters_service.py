@@ -1,4 +1,4 @@
-from src.modules.painel_bi.v1.filters.filters_repository import FiltersRepository as repository
+from src.modules.painel_bi.v2.filters.filters_repository import FiltersRepository as repository
 
 class FiltersService:
 

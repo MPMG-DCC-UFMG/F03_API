@@ -1,6 +1,6 @@
 import os
 
-from src.modules.painel_bi.v1.model.licitacao import LicitacaoModel
+from src.modules.painel_bi.v2.model.licitacao import LicitacaoModel
 
 from src.db.database import db_session
 

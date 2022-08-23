@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from src.modules.painel_bi.v1.filters.filters_service import FiltersService as service
+from src.modules.painel_bi.v2.filters.filters_service import FiltersService as service
 
 
 filters_router = APIRouter()
