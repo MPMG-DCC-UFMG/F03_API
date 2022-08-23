@@ -131,7 +131,7 @@ def get_filter(params):
     return filters
 
 
-def get_item_query(params: dict):
+def get_item_query_smart(params: dict):
     """
     Gera a query para a listagem de items
     """
@@ -167,6 +167,47 @@ def get_item_query(params: dict):
 
     return QUERY
 
+def get_item_query_anywhere(params: dict):
+    filters = get_filter(params)
+
+    QUERY = {
+        "bool": {
+            "must": [
+                *filters,
+                {
+                    "match_phrase": {
+                        "original": {
+                            "query": params["description"],
+                            "analyzer": "analyzer_plural_acentos"
+                        }
+                    }
+                }
+            ],
+        }
+    }
+
+    return QUERY
+
+def get_item_query_exact(params: dict):
+    filters = get_filter(params)
+
+    QUERY = {
+        "bool": {
+            "must": [
+                *filters,
+                {
+                    "term": {
+                        "original_raw.keyword": {
+                            "query": params["description"],
+                            "analyzer": "analyzer_plural_acentos"
+                        }
+                    }
+                }
+            ],
+        }
+    }
+
+    return QUERY
 
 def get_autocomplete_query(description):
     """
@@ -398,11 +439,12 @@ def check_params_values(params):
 
 
 class Pageable:
-    def __init__(self, page: int, size: int, sort: str, order: str):
+    def __init__(self, page: int, size: int, sort: str, order: str, search_type: str):
         self._page = page
         self._size = size
         self._sort = sort
         self._order = order
+        self._search_type = search_type
 
     def get_page(self):
         return self._page
@@ -416,10 +458,14 @@ class Pageable:
     def get_order(self):
         return self._order
 
+    def get_search_type(self):
+        return self._search_type
+
     def __str__(self):
         return str({
             "page": self._page,
             "size": self._size,
             "sort": self._sort,
-            "order": self._order
+            "order": self._order,
+            "search_type": self._search_type
         })

@@ -1,6 +1,7 @@
 
 ### IDE Fragments ###
 /.vscode
+/.vs
 *__pycache__*
 *.idea*
 
