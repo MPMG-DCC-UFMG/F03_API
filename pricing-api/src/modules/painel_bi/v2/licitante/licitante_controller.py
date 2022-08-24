@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
-from src.modules.painel_bi.v1.licitante.licitante_operations import LicitanteQueryParams
-from src.modules.painel_bi.v1.licitante.licitante_service import LicitanteService as service
+from src.modules.painel_bi.v2.licitante.licitante_operations import LicitanteQueryParams
+from src.modules.painel_bi.v2.licitante.licitante_service import LicitanteService as service
 
 
 licitante_router = APIRouter()

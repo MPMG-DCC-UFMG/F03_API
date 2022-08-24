@@ -5,7 +5,7 @@ class DetalhamentoLicitacaoModel(Base):
     __tablename__ = 'painel_bi_detalhamento_licitacao_dev'
 
     num_documento = Column(String, primary_key=True)
-    seq_dim_licitacao = Column(BigInteger)
+    seq_dim_licitacao = Column(BigInteger, primary_key=True)
     complemento = Column(String)
     descricao_logradouro_numero_complemento_soundex = Column(String)
     descricao_logradouro_numero_soundex = Column(String)

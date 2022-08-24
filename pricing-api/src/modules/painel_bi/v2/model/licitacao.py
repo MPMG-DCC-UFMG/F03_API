@@ -32,7 +32,7 @@ class LicitacaoModel(Base):
     vlr_latitude = Column(Float)
     vlr_licitacao = Column(Float)
     vlr_longitude = Column(Float)   
-    ranking_irregularidades = Column(Integer)
+    ranking_irregularidades = Column(Float)
     seq_dim_entidade = Column(BigInteger)   
     qtd_populacao_total = Column(Integer)
     flag_lict_unic_com_venc = Column(Integer)

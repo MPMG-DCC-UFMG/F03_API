@@ -5,7 +5,7 @@ class LicitanteModel(Base):
     __tablename__ = 'painel_bi_detalhamento_licitante_dev'
 
     num_documento = Column(String, primary_key=True)
-    seq_dim_licitacao = Column(BigInteger)
+    seq_dim_licitacao = Column(BigInteger, primary_key=True)
     ind_venceu = Column(String)
     numero_de_itens = Column(Integer)
     participacao_itens_licitacao = Column(Float)

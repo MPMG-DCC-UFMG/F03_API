@@ -1,6 +1,6 @@
 from typing import List
-from src.modules.painel_bi.v1.licitante.licitante_repository import LicitanteRepository as repository
-from src.modules.painel_bi.v1.utils.utils import Pageable
+from src.modules.painel_bi.v2.licitante.licitante_repository import LicitanteRepository as repository
+from src.modules.painel_bi.v2.utils.utils import Pageable
 
 class LicitanteService:
 

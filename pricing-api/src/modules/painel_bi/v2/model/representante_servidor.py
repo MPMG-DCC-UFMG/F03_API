@@ -6,7 +6,7 @@ class RepresentanteServidorModel(Base):
 
     id_licitacao = Column(String, primary_key=True)
     num_documento = Column(String, primary_key=True)
-    cpf_socio_servidor = Column(String)
+    cpf_socio_servidor = Column(String, primary_key=True)
     vinculo_socio_servidor = Column(String)
 
     class Config:

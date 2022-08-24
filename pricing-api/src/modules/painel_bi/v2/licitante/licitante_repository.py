@@ -1,9 +1,10 @@
 import os
 
-from src.modules.painel_bi.v1.model.licitacao import LicitacaoModel
-from src.modules.painel_bi.v1.model.licitante import LicitanteModel
-from src.modules.painel_bi.v1.model.detalhamento_cnpj import DetalhamentoCnpjModel
-from src.modules.painel_bi.v1.model.detalhamento_licitacao import DetalhamentoLicitacaoModel
+from src.modules.painel_bi.v2.model.licitacao import LicitacaoModel
+from src.modules.painel_bi.v2.model.licitante import LicitanteModel
+from src.modules.painel_bi.v2.model.detalhamento_cnpj import DetalhamentoCnpjModel
+from src.modules.painel_bi.v2.model.detalhamento_licitacao import DetalhamentoLicitacaoModel
+from src.modules.painel_bi.v2.model.representante_legal import RepresentanteLegalModel
 
 from src.db.database import db_session
 
@@ -16,7 +17,6 @@ class LicitanteRepository:
 
 
     def find_by_id(id_licitante: str):
-
         filters_det_cnpj = []
         filters_det_cnpj.append(DetalhamentoCnpjModel.num_documento == id_licitante)
         det_cnpj  = db_session.query(DetalhamentoCnpjModel).filter(and_(*filters_det_cnpj))
@@ -31,7 +31,6 @@ class LicitanteRepository:
 
         filterLics = [];
         listLics=[];
-
         for l in licitacoes:
           listLics.append(l['seq_dim_licitacao'])
         
@@ -58,14 +57,17 @@ class LicitanteRepository:
                 l['ranking_irregularidades'] = None
 
         socios = []
-        if((len(licitacoes)>0) and (licitacoes[0]['nome_socio'])):
-            nomes = licitacoes[0]['nome_socio'].split(";");
-            cpf = licitacoes[0]['cpf_cnpj_socio'].split(";");
+        if(len(licitacoes)>0):
+            filters_rep_legal = []
+            filters_rep_legal.append(RepresentanteLegalModel.id_licitacao == licitacoes[0]['seq_dim_licitacao'])
+            filters_rep_legal.append(RepresentanteLegalModel.cnpj == id_licitante)
+            det_rep_legal  = db_session.query(RepresentanteLegalModel).filter(and_(*filters_rep_legal))
+            dict_rep_legal = [row.__dict__ for row in det_rep_legal]
 
-            for n,c in zip(nomes, cpf):
+            for r in dict_rep_legal:
                 socios.append({
-                    "nome": n.strip(),
-                    "cpf_cnpj": c.strip()
+                    "nome": r["qualificacao_representante"],
+                    "cpf_cnpj": r["cpf_cnpj_representante"]
                 })
 
         res = {
