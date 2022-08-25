@@ -195,15 +195,8 @@ def get_item_query_exact(params: dict):
         "bool": {
             "must": [
                 *filters,
-                {
-                    "term": {
-                        "original_raw.keyword": {
-                            "query": params["description"],
-                            "analyzer": "analyzer_plural_acentos"
-                        }
-                    }
-                }
-            ],
+                {"term": {"original_raw.keyword": params["description"].upper()}}
+            ]
         }
     }
 

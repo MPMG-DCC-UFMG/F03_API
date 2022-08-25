@@ -1,4 +1,5 @@
 import os
+from pydoc import pager
 from warnings import warn
 
 from dotenv import load_dotenv
@@ -6,7 +7,9 @@ from dotenv import load_dotenv
 from src.db.database import es
 from src.modules.banco_preco.items.items_operations import ListItemsQuery
 from src.modules.banco_preco.utils.utils import (
-    get_item_query,
+    get_item_query_smart,
+    get_item_query_anywhere,
+    get_item_query_exact,
     get_autocomplete_query,
     get_id_query,
     Pageable
@@ -47,7 +50,17 @@ class ItemsRepository:
         return res
 
     def list(params: ListItemsQuery, pageable: Pageable):
-        QUERY = get_item_query(params.dict())
+
+        aux = pageable.get_search_type()
+        
+        if aux == "smart":
+            QUERY = get_item_query_smart(params.dict())
+        
+        if aux == "anywhere":
+            QUERY = get_item_query_anywhere(params.dict())
+        
+        if aux == "exact":
+            QUERY = get_item_query_exact(params.dict())
 
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
@@ -65,7 +78,18 @@ class ItemsRepository:
         return [item['_source'] for item in hits]
 
     def list_sample(params: ListItemsQuery, pageable: Pageable):
-        QUERY = get_item_query(params.dict())
+
+        aux = pageable.get_search_type()
+        
+        if aux == "smart":
+            QUERY = get_item_query_smart(params.dict())
+        
+        if aux == "anywhere":
+            QUERY = get_item_query_anywhere(params.dict())
+        
+        if aux == "exact":
+            QUERY = get_item_query_exact(params.dict())
+
         
         fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
                   'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
