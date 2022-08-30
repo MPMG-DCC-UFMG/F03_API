@@ -383,36 +383,30 @@ def get_groupby(columns, from_value, size_value):
     return aggs
 
 
-def get_princing_query(params, columns, pageable):
+def get_princing_query(params, columns, pageable, search_type):
     """
     Gera a query para a precificação
     """
-    filters = get_filter(params)
+    
+    if search_type == "smart":
+        QUERY = get_item_query_smart(params)
+    
+    elif search_type == "anywhere":
+        QUERY = get_item_query_anywhere(params)
+    
+    elif search_type == "exact":
+        QUERY = get_item_query_exact(params)
+    
     if len(columns) == 1:
         groupby = get_groupby_single(columns, pageable.get_page()
                               * pageable.get_size(), pageable.get_size())        
     else:
         groupby = get_groupby(columns, pageable.get_page() * pageable.get_size(), pageable.get_size())
-
+    
     body = {
         # "track_total_hits": True,
         "size": 0,
-        'query': {
-            'bool': {
-                'must': [
-                    *filters,
-                    {
-                        "match": {
-                            "original": {
-                                "query": params["description"],
-                                "minimum_should_match": "70%",
-                                "analyzer": "analyzer_plural_acentos"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
+        'query': QUERY,
         'aggs': groupby,
 
     }
