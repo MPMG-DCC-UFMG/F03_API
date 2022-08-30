@@ -1,6 +1,7 @@
 
 ### IDE Fragments ###
 /.vscode
+/.vs
 *__pycache__*
 *.idea*
 
@@ -286,5 +287,8 @@ pip-selfcheck.json
 
 # Ignore Emacs backup files
 *~
+
+#Dependencies
+*.whl
 
 # End of .gitignore
