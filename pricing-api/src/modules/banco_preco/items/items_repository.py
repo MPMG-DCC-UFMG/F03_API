@@ -1,5 +1,5 @@
 import os
-from pydoc import pager
+
 from warnings import warn
 
 from dotenv import load_dotenv
@@ -56,10 +56,10 @@ class ItemsRepository:
         if aux == "smart":
             QUERY = get_item_query_smart(params.dict())
         
-        if aux == "anywhere":
+        elif aux == "anywhere":
             QUERY = get_item_query_anywhere(params.dict())
         
-        if aux == "exact":
+        else aux == "exact":
             QUERY = get_item_query_exact(params.dict())
 
         result = es.search(index=ES_INDEX_ITEM,
@@ -84,10 +84,10 @@ class ItemsRepository:
         if aux == "smart":
             QUERY = get_item_query_smart(params.dict())
         
-        if aux == "anywhere":
+        elif aux == "anywhere":
             QUERY = get_item_query_anywhere(params.dict())
         
-        if aux == "exact":
+        else aux == "exact":
             QUERY = get_item_query_exact(params.dict())
 
         

@@ -168,7 +168,21 @@ def get_item_query_smart(params: dict):
     return QUERY
 
 def get_item_query_anywhere(params: dict):
+    """
+    Gera a query para a listagem de items
+    """
     filters = get_filter(params)
+
+    if params["before"]:
+        pass
+    if params["after"]:
+        pass
+    if params["min_amount"] or params["max_amount"]:
+        l = get_range(params, min_field="min_amount", max_field="max_amount")
+        filters.append({"range": {"qtde_item": l}})
+    if params["min_homolog_price"] or params["max_homolog_price"]:
+        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
+        filters.append({"range": {"preco": l}})
 
     QUERY = {
         "bool": {
@@ -189,7 +203,21 @@ def get_item_query_anywhere(params: dict):
     return QUERY
 
 def get_item_query_exact(params: dict):
+    """
+    Gera a query para a listagem de items
+    """
     filters = get_filter(params)
+
+    if params["before"]:
+        pass
+    if params["after"]:
+        pass
+    if params["min_amount"] or params["max_amount"]:
+        l = get_range(params, min_field="min_amount", max_field="max_amount")
+        filters.append({"range": {"qtde_item": l}})
+    if params["min_homolog_price"] or params["max_homolog_price"]:
+        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
+        filters.append({"range": {"preco": l}})
 
     QUERY = {
         "bool": {
