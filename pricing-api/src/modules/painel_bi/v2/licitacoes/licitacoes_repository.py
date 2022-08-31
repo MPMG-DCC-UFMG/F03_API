@@ -156,7 +156,7 @@ class LicitacaoRepository:
 
         filters.append(LicitacaoModel.ranking_irregularidades > 0)
 
-        irregularities  = db_session.query(func.count(LicitacaoModel.ranking_irregularidades).label('ranking_irregularidades'), func.sum(LicitacaoModel.ranking_irregularidades).label('sum_ranking_irregularidades')) \
+        irregularities  = db_session.query(func.count(LicitacaoModel.ranking_irregularidades).label('ranking_irregularidades'), func.sum(LicitacaoModel.qtde_irregularidades).label('sum_ranking_irregularidades')) \
                                     .filter(and_(*filters))
         res = {
           "current_page": pageable.get_page(),
@@ -216,7 +216,7 @@ class LicitacaoRepository:
             filters_det_lictacao.append(DetalhamentoLicitacaoModel.num_documento == licitante['num_documento'])
             det_licitacao  = db_session.query(DetalhamentoLicitacaoModel).filter(and_(*filters_det_lictacao))
             dict_det_licitacao = [row.__dict__ for row in det_licitacao][0]
-            
+
             filters_rep_legal = []
             filters_rep_legal.append(RepresentanteLegalModel.id_licitacao == id_licitacao)
             filters_rep_legal.append(RepresentanteLegalModel.cnpj == licitante['num_documento'])
@@ -254,10 +254,10 @@ class LicitacaoRepository:
             dict_det_cnpj = [row.__dict__ for row in det_cnpj]
             licitante['cnpj'] = dict_det_cnpj[0]
             
-            if dict_det_licitacao['flag_lict_unic']==1:
+            if dict_det_licitacao['flag_lict_unic']=="1":
                 t01_licitantes.append(licitante['num_documento'])
 
-            if dict_det_licitacao['flag_cnpj_inativo']==1:
+            if dict_det_licitacao['flag_cnpj_inativo']=="1":
                 t02_licitantes.append(licitante['num_documento'])
                 
             if (dict_det_licitacao['email'] not in (None, '')) & (dict_det_licitacao['email'] not in t03_vinculo):
@@ -276,13 +276,13 @@ class LicitacaoRepository:
             if (endereco not in (None, '')) & (endereco not in t05_vinculo):
                 t05_vinculo.append(endereco)
 
-            if dict_det_licitacao['flag_vencedor_frequente']==1:
+            if dict_det_licitacao['flag_vencedor_frequente']=="1":
                 t08_licitantes.append(licitante['num_documento'])
 
-            if dict_det_licitacao['flag_perdedor_frequente']==1:
+            if dict_det_licitacao['flag_perdedor_frequente']=="1":
                 t09_licitantes.append(licitante['num_documento'])
 
-            if dict_det_licitacao['flag_perdedor_frequente']==1:
+            if dict_det_licitacao['flag_perdedor_frequente']=="1":
                 t10_licitantes.append({
                     "cpf_cnpj":licitante['num_documento'],
                     "cnaes":[
@@ -294,14 +294,14 @@ class LicitacaoRepository:
                     ]
                 })
 
-            if dict_det_licitacao['flag_licitante_antes_atividade']==1:
+            if dict_det_licitacao['flag_licitante_antes_atividade']=="1":
                 t11_licitantes.append({
                     "cpf_cnpj":licitante['num_documento'],
                     "data_inicio_atividade": dict_det_licitacao['data_inicio_atividade'],
                     "data_licitacao": dict_det_licitacao['data_habilitacao']
                 })
 
-            if dict_det_licitacao['flag_licitante_penalidade_ceis']==1:
+            if dict_det_licitacao['flag_licitante_penalidade_ceis']=="1":
                 filters_ceis = []
                 filters_ceis.append(SancoesCeisModel.id_licitacao == id_licitacao)
                 filters_ceis.append(SancoesCeisModel.num_documento == licitante['num_documento'])
@@ -323,13 +323,13 @@ class LicitacaoRepository:
                     "sancoes_ceis":sancoes_ceis
                 })
 
-            if dict_det_licitacao['flag_licitante_servidor_publico']==1:
+            if dict_det_licitacao['flag_licitante_servidor_publico']=="1":
                 filters_rep_serv = []
                 filters_rep_serv.append(RepresentanteServidorModel.id_licitacao == id_licitacao)
                 filters_rep_serv.append(RepresentanteServidorModel.num_documento == licitante['num_documento'])
                 det_rep_serv  = db_session.query(RepresentanteServidorModel).filter(and_(*filters_rep_serv))
                 dict_rep_serv = [row.__dict__ for row in det_rep_serv] 
-
+                return dict_rep_serv
                 rep_serv = []
                 for r in dict_rep_serv:
                     rep_serv.append({

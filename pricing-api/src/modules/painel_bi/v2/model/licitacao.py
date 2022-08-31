@@ -70,6 +70,7 @@ class LicitacaoModel(Base):
     qtd_cnpjs_socio_servidor_publico = Column(Integer)
     somatorio_de_emails_repetidos = Column(Integer)
     somatorio_de_tels_repetidos = Column(Integer)
+    qtde_irregularidades = Column(Integer)
 
     class Config:
         arbitrary_types_allowed = True

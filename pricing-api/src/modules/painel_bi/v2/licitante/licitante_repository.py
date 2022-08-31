@@ -50,11 +50,13 @@ class LicitanteRepository:
                 l['vlr_longitude'] = geral['vlr_longitude']
                 l['nom_entidade'] = geral['nom_entidade']
                 l['ranking_irregularidades'] = geral['ranking_irregularidades']
+                l['qtde_irregularidades'] = geral['qtde_irregularidades']
             else:
                 l['vlr_latitude'] = None
                 l['vlr_longitude'] = None
                 l['nom_entidade'] = None
                 l['ranking_irregularidades'] = None
+                l['qtde_irregularidades'] = None
 
         socios = []
         if(len(licitacoes)>0):
