@@ -59,7 +59,7 @@ class ItemsRepository:
         elif aux == "anywhere":
             QUERY = get_item_query_anywhere(params.dict())
         
-        else aux == "exact":
+        elif aux == "exact":
             QUERY = get_item_query_exact(params.dict())
 
         result = es.search(index=ES_INDEX_ITEM,
@@ -87,7 +87,7 @@ class ItemsRepository:
         elif aux == "anywhere":
             QUERY = get_item_query_anywhere(params.dict())
         
-        else aux == "exact":
+        elif aux == "exact":
             QUERY = get_item_query_exact(params.dict())
 
         
