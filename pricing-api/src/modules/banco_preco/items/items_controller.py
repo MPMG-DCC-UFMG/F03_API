@@ -30,3 +30,10 @@ async def get_item(id: str):
 @items_router.get('/autocomplete/', description='Complete description', )
 async def get_descriptions(desc: str):
   return service.autocomplete_description(desc)
+
+@items_router.post('/sample_overprice/', description='List items which have evidences of overpricing')
+async def list_items_sample(params: ListItemsQuery, page: int = 0, size: int = 10, sort: str = "id_item", order: str = "desc", search_type: str = "smart"):
+  if page < 0:
+    page = 0
+  pageable = Pageable(page, size, sort, order, search_type)
+  return service.list_sample_overprice(params, pageable)

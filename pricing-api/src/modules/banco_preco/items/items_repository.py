@@ -137,3 +137,48 @@ class ItemsRepository:
         #     item['preco'] = round(item['preco'], 2)
         #
         # return res
+    
+    def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
+
+        aux = pageable.get_search_type()
+        
+        if aux == "smart":
+            QUERY = get_item_query_smart(params.dict())
+        
+        elif aux == "anywhere":
+            QUERY = get_item_query_anywhere(params.dict())
+        
+        else aux == "exact":
+            QUERY = get_item_query_exact(params.dict())
+
+        
+        fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade',
+                  'ano', 'original', 'original_dsc', 'dsc_unidade_medida', 'preco', 'qtde_item',
+                  'id_grupo', 'grupo', 'qtde_grupo', 'preco_medio_grupo']
+        result = es.search(index=ES_INDEX_ITEM,
+                           query=QUERY,
+                           from_=pageable.get_page() * pageable.get_size(),
+                           size=pageable.get_size(),
+                           sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
+                           _source_includes=fields,
+                           filter_path='hits',
+                           track_total_hits=True,
+                           request_timeout=20,
+                           ignore=[400, 404])
+        print(result)
+
+        if "hits" not in result:
+            return {}
+
+        hits = result["hits"]["hits"]        
+        res = {
+            # max(101, result["hits"]["total"]["value"]),  # total de itens
+            "total": result["hits"]["total"]["value"],
+            "pageSize": pageable.get_size(),  # qtd de itens por página
+            "currentPage": pageable.get_page(),  # página atual
+            "data": [item['_source'] for item in hits]  # dados
+            #"overprice": #TODO sobrepreço
+        }
+        
+        return res
+
