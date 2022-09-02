@@ -12,6 +12,7 @@ from src.modules.banco_preco.utils.utils import (
     get_item_query_exact,
     get_autocomplete_query,
     get_id_query,
+    overprice,
     Pageable
 )
 
@@ -148,13 +149,13 @@ class ItemsRepository:
         elif aux == "anywhere":
             QUERY = get_item_query_anywhere(params.dict())
         
-        else aux == "exact":
+        elif aux == "exact":
             QUERY = get_item_query_exact(params.dict())
 
         
-        fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade',
-                  'ano', 'original', 'original_dsc', 'dsc_unidade_medida', 'preco', 'qtde_item',
-                  'id_grupo', 'grupo', 'qtde_grupo', 'preco_medio_grupo']
+        fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade','ano',
+                  'original', 'original_dsc', 'dsc_unidade_medida', 'preco', 'qtde_item','id_grupo', 'grupo',
+                  'qtde_grupo', 'preco_medio_grupo']
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
                            from_=pageable.get_page() * pageable.get_size(),
@@ -165,7 +166,8 @@ class ItemsRepository:
                            track_total_hits=True,
                            request_timeout=20,
                            ignore=[400, 404])
-        print(result)
+        
+        prices_avarage = overprice(result)
 
         if "hits" not in result:
             return {}
@@ -176,9 +178,10 @@ class ItemsRepository:
             "total": result["hits"]["total"]["value"],
             "pageSize": pageable.get_size(),  # qtd de itens por página
             "currentPage": pageable.get_page(),  # página atual
-            "data": [item['_source'] for item in hits]  # dados
-            #"overprice": #TODO sobrepreço
+            "data": [item['_source'] for item in hits],  # dados
+            "overprice": prices_avarage
         }
         
+        print("\n\n******PRINTING RES******\n\n",res)#Remover
         return res
 

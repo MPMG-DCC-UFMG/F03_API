@@ -2,6 +2,8 @@ from fastapi import HTTPException
 
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
+import pandas as pd #Remover
+
 
 def get_params_values(params):
     filters = []
@@ -452,23 +454,31 @@ def check_params_values(params):
     #     raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
     #                                                 "necessário especificar um valor mínimo e máximo.")
 
-"""def get_overprice(result):
+def overprice(result):
 #TODO
     #Standard deviation
-    sigma = 0  
-    sigma += pow(valor_individual - result['preco_medio_grupo'],2)
-    sd = sigma / result['qtde_grupo']
+    #sigma = 0  
+    #sigma += pow(valor_individual - result['preco_medio_grupo'],2)
+    #sd = sigma / result['qtde_grupo']
     
     #Overprice metric = mean + (1) standard deviation
-    overprice = result['preco_medio_grupo'] + sd
+    #overprice = result['preco_medio_grupo'] + sd
 
     #Agrupar por grupo
         #Groupby no python
+    prices_avarage = []
+    print(result) #Remover
+
+    dataframe = pd.DataFrame(result)
+    consultas=dataframe['hits']['hits']
+    dataframe = pd.DataFrame(consultas)
+    fonte = dataframe.loc[:,"_source"]
+
+    for i in fonte:
+        aux = round(float(i['preco_medio_grupo']),2)
+        prices_avarage.append(aux)
+    return prices_avarage
   
-
-    
-"""
-
 class Pageable:
     def __init__(self, page: int, size: int, sort: str, order: str, search_type: str):
         self._page = page
