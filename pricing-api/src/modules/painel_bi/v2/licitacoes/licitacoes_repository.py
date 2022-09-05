@@ -232,7 +232,7 @@ class LicitacaoRepository:
                 cpf_cnpj_socio.append(rep_legal['cpf_cnpj_representante'])
                 nome_socio.append(rep_legal['qualificacao_representante'])
                 
-                if rep_legal['flag_socio']:
+                if rep_legal['flag_socio'] == "1":
                     if (rep_legal['cpf_cnpj_representante'] not in (None, '')) & (rep_legal['cpf_cnpj_representante'] not in t07_vinculo):
                         t07_vinculo.append(rep_legal['cpf_cnpj_representante'])
                     representantes_socio.append((rep_legal['cpf_cnpj_representante'], rep_legal['qualificacao_representante']))
@@ -282,7 +282,7 @@ class LicitacaoRepository:
             if dict_det_licitacao['flag_perdedor_frequente']=="1":
                 t09_licitantes.append(licitante['num_documento'])
 
-            if dict_det_licitacao['flag_perdedor_frequente']=="1":
+            if dict_det_licitacao['flag_cnae_incongruente']=="1":
                 t10_licitantes.append({
                     "cpf_cnpj":licitante['num_documento'],
                     "cnaes":[

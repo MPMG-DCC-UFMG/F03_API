@@ -25,6 +25,7 @@ class DetalhamentoLicitacaoModel(Base):
     flag_licitante_servidor_publico = Column(Integer)
     flag_perdedor_frequente = Column(Integer)
     flag_vencedor_frequente = Column(Integer)
+    flag_cnae_incongruente = Column(Integer)
 
 
 
