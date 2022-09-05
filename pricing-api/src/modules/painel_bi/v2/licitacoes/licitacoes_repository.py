@@ -333,8 +333,8 @@ class LicitacaoRepository:
                 rep_serv = []
                 for r in dict_rep_serv:
                     rep_serv.append({
-                        "cpf_cnpj":dict_rep_serv["cpf_socio_servidor"],
-                        "vinculo":dict_rep_serv["vinculo_socio_servidor"]
+                        "cpf_cnpj":r["cpf_socio_servidor"],
+                        "vinculo":r["vinculo_socio_servidor"]
                     })
             
                 t13_licitantes.append({
