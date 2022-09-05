@@ -329,7 +329,7 @@ class LicitacaoRepository:
                 filters_rep_serv.append(RepresentanteServidorModel.num_documento == licitante['num_documento'])
                 det_rep_serv  = db_session.query(RepresentanteServidorModel).filter(and_(*filters_rep_serv))
                 dict_rep_serv = [row.__dict__ for row in det_rep_serv] 
-                return dict_rep_serv
+
                 rep_serv = []
                 for r in dict_rep_serv:
                     rep_serv.append({
@@ -417,7 +417,9 @@ class LicitacaoRepository:
 
         dict_licitacao["grafos"]=[]
         
-        t01_flag = dict_licitacao["flag_lict_unic_com_venc"]*dict_licitacao["flag_lict_unic_sem_venc"]
+        t01_flag = dict_licitacao["flag_lict_unic_com_venc"]+dict_licitacao["flag_lict_unic_sem_venc"]
+        if t01_flag > 1:
+            t01_flag = 1
         
         dict_licitacao["trilhas"] = {
             "T01":{
