@@ -32,6 +32,7 @@ class ListItemsQuery(BaseModel):
     min_homolog_price: Optional[float] = Query(None, description="Valor mínimo dos itens homologados")
     max_homolog_price: Optional[float] = Query(None, description="Valor máximo dos itens homologados")
     object_nature: Optional[str] = Query(None, description="Natureza do item")
+    group_by_overprice: Optional[str] = Query(None, description="Campo usada para agrupar o resultado do sobrepreco")
 
     class Config:
         arbitrary_types_allowed = True

@@ -104,7 +104,8 @@ item_term_translation = {
     "bidder_name": "nome_vencedor",
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
-    "object_nature": "natureza_objeto"
+    "object_nature": "natureza_objeto",
+    "group_by_overprice": "grupo_unidade_medida"
 }
 
 pricing_translate = {
@@ -453,6 +454,78 @@ def check_params_values(params):
     #         not bool(params.min_homolog_price) and bool(params.max_homolog_price)):
     #     raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
     #                                                 "necessário especificar um valor mínimo e máximo.")
+
+def get_groupby_overprice(from_value, size_value):
+    """
+    Monta a parte do agrupamento da consulta com agregação do sobrepreço
+    """
+    
+    aggs = {
+        "group_by_script": {
+            "terms": {
+                "field": "group_by_overprice.keyword",
+                "size": 999999,
+                "order": {"_term": "asc" }
+            },
+            "aggs": {
+                "avg_preco": {"avg": {"field": "preco"}},
+                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+                "sum_overprincing": {"sum": {"script" : "if (doc['preco'].value > Float.parseFloat(doc['preco_medio_grupo.keyword'].value)) {return 1;} else {return 0;}"}},
+                "agg_bucket_sort": {"bucket_sort": {"sort": [{"sum_overprincing": {"order": "desc"}}], "from":0, "size": 5}},
+                "top_grupo_hits": {
+                  "top_hits": {
+                    "sort": [
+                      {
+                        "preco": {
+                          "order": "desc"
+                        }
+                      }
+                    ],
+                    "_source": {
+                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", 
+                      "num_modalidade", "modalidade", "ano", "original", "original_dsc", 
+                      "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo", 
+                      "qtde_grupo", "preco_medio_grupo" ]
+                    },
+                    "size": 5
+                  }
+                }
+            }
+        },
+        # "all_buckets": {
+        #     "stats_bucket": {
+        #         "buckets_path": "group_by_script._count"
+        #     }
+        # }
+    }
+
+    return aggs
+
+
+def get_overprincing_query(params, pageable, search_type):
+    """
+    Gera a query para a precificação
+    """
+    
+    if search_type == "smart":
+        QUERY = get_item_query_smart(params)
+    
+    elif search_type == "anywhere":
+        QUERY = get_item_query_anywhere(params)
+    
+    elif search_type == "exact":
+        QUERY = get_item_query_exact(params)
+    
+    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())
+   
+    
+    body = {
+        # "track_total_hits": True,
+        "size": 0,
+        'query': QUERY,
+        'aggs': groupby,
+
+    }
 
 def overprice(result):
 #TODO

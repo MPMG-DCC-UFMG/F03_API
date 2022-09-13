@@ -12,6 +12,7 @@ from src.modules.banco_preco.utils.utils import (
     get_item_query_exact,
     get_autocomplete_query,
     get_id_query,
+    get_overprincing_query,
     overprice,
     Pageable
 )
@@ -141,16 +142,9 @@ class ItemsRepository:
     
     def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
 
-        aux = pageable.get_search_type()
+        search_type = pageable.get_search_type()
         
-        if aux == "smart":
-            QUERY = get_item_query_smart(params.dict())
-        
-        elif aux == "anywhere":
-            QUERY = get_item_query_anywhere(params.dict())
-        
-        elif aux == "exact":
-            QUERY = get_item_query_exact(params.dict())
+        QUERY = get_overprincing_query(params.dict(), pageable, search_type)
 
         
         fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade','ano',
