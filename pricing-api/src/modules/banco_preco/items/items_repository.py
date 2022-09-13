@@ -13,7 +13,6 @@ from src.modules.banco_preco.utils.utils import (
     get_autocomplete_query,
     get_id_query,
     get_overprincing_query,
-    overprice,
     Pageable
 )
 
@@ -160,8 +159,6 @@ class ItemsRepository:
                            track_total_hits=True,
                            request_timeout=20,
                            ignore=[400, 404])
-        
-        prices_avarage = overprice(result)
 
         if "hits" not in result:
             return {}
@@ -173,9 +170,7 @@ class ItemsRepository:
             "pageSize": pageable.get_size(),  # qtd de itens por página
             "currentPage": pageable.get_page(),  # página atual
             "data": [item['_source'] for item in hits],  # dados
-            "overprice": prices_avarage
         }
-        
-        print("\n\n******PRINTING RES******\n\n",res)#Remover
+       
         return res
 
