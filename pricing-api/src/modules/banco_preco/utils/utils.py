@@ -417,7 +417,7 @@ def get_princing_query(params, columns, pageable, search_type):
     return body
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year, group_by_cluster):
     columns = []
 
     if group_by_description:
@@ -426,6 +426,8 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append("group_by_unit_metric")
     if group_by_year:
         columns.append("group_by_year")
+    if group_by_cluster:
+        columns.append("group_by_cluster")
 
     if len(columns) == 0:
         columns.append("group_by_description")
@@ -464,14 +466,19 @@ def get_groupby_overprice(from_value, size_value):
         "group_by_grupo-agg": {
             "terms": {
                 "field": f"{item_term_translation['group_by_overprice']}.keyword",
-                "order": {"_key": "asc" }, 
+                "order": {"_term": "asc" }, 
                 "size": 999999
             },
             "aggs": {
                 "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "sum_overprincing": {"sum": {"script" : "if (doc['preco_medio_grupo'].size()==0 || doc['desvio_padrao_grupo'].size()==0) {return 0;} else if (doc['preco'].value > (doc['preco_medio_grupo'].value + doc['desvio_padrao_grupo'].value)) {return 1;} else {return 0;}"}},
-                "agg_bucket_sort": {"bucket_sort": {"sort": [{"sum_overprincing": {"order": "desc"}}], "from": from_value, "size": size_value}}}},
+                "agg_bucket_sort": {
+                    "bucket_sort": {
+                        "sort": [{"sum_overprincing": {"order": "desc"}}], "from": from_value, 
+                        "size": size_value
+                    }
+                },
                 "top_grupo_hits": {
                   "top_hits": {
                     "sort": [
@@ -482,12 +489,16 @@ def get_groupby_overprice(from_value, size_value):
                       }
                     ],
                     "_source": {
-                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", "num_modalidade", "modalidade", "ano", "original", "original_dsc", "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo",  "qtde_grupo", "preco_medio_grupo" ]
+                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", 
+                      "num_modalidade", "modalidade", "ano", "original", "original_dsc", 
+                      "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo", 
+                      "qtde_grupo", "preco_medio_grupo" ]
                     },
                     "size": 5
                   }
                 }
-                
+            }
+        }
     }
     return aggs
 

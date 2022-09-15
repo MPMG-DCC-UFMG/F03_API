@@ -152,13 +152,15 @@ class ItemsRepository:
             return []
         
         aggr = result['aggregations']['group_by_grupo-agg']['buckets']
-        hits = result['aggregations']['top_grupo_hits']['hits']['hits']
         data = []
-        for a, h in zip(aggr, hits):
+        for a in aggr:
             bucket = {}
+            bucket_data = []
             bucket['group_by_grupo'] = a['key']
-            bucket['avg_preco'] = a['avg_preco']['value']            #     
-            bucket['data'] = h['_source']
+            bucket['avg_preco'] = a['avg_preco']['value']
+            for i in a['top_grupo_hits']['hits']['hits']:
+                bucket_data.append(i['_source'])
+            bucket['data'] = bucket_data
             data.append(bucket)
                  
         res = {
