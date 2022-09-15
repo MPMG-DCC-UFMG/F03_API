@@ -12,6 +12,7 @@ from src.modules.banco_preco.utils.utils import (
     get_item_query_exact,
     get_autocomplete_query,
     get_id_query,
+    get_overprincing_query,
     Pageable
 )
 
@@ -91,9 +92,9 @@ class ItemsRepository:
             QUERY = get_item_query_exact(params.dict())
 
         
-        fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
-                  'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
-                  'municipio', 'qtde_item', 'preco']
+        fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'data',
+                  'id_licitacao', 'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao', 
+                  'num_processo', 'num_modalidade', 'municipio', 'qtde_item', 'preco']
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
                            from_=pageable.get_page() * pageable.get_size(),
@@ -137,3 +138,37 @@ class ItemsRepository:
         #     item['preco'] = round(item['preco'], 2)
         #
         # return res
+    
+    def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
+
+        search_type = pageable.get_search_type()
+        QUERY = get_overprincing_query(params.dict(), pageable, search_type)
+        result = es.search(index=ES_INDEX_ITEM,
+                           body=QUERY,
+                           request_timeout=60,
+                           ignore=[400, 404])
+        
+        if "aggregations" not in result:
+            return []
+        
+        aggr = result['aggregations']['group_by_grupo-agg']['buckets']
+        data = []
+        for a in aggr:
+            bucket = {}
+            bucket_data = []
+            bucket['group_by_grupo'] = a['key']
+            bucket['avg_preco'] = a['avg_preco']['value']
+            for i in a['top_grupo_hits']['hits']['hits']:
+                bucket_data.append(i['_source'])
+            bucket['data'] = bucket_data
+            data.append(bucket)
+                 
+        res = {
+            # max(101, result["hits"]["total"]["value"]),  # total de itens
+            # "total": result['aggregations']['all_buckets']['count'],
+            "pageSize": pageable.get_size(),  # qtd de itens por página
+            "currentPage": pageable.get_page(),  # página atual
+            "data": data  # dados
+        }       
+        return res
+

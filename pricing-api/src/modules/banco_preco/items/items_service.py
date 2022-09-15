@@ -23,3 +23,7 @@ class ItemsService:
     def autocomplete_description(desc: str):
         item = repository.autocomplete_description(desc)
         return item
+    
+    def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
+        items = repository.list_sample_overprice(params, pageable)
+        return items

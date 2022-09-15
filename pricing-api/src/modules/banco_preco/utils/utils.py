@@ -2,6 +2,8 @@ from fastapi import HTTPException
 
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
+import pandas as pd #Remover
+
 
 def get_params_values(params):
     filters = []
@@ -102,7 +104,8 @@ item_term_translation = {
     "bidder_name": "nome_vencedor",
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
-    "object_nature": "natureza_objeto"
+    "object_nature": "natureza_objeto",
+    "group_by_overprice": "grupo_unidade_medida"
 }
 
 pricing_translate = {
@@ -414,7 +417,7 @@ def get_princing_query(params, columns, pageable, search_type):
     return body
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year, group_by_cluster):
     columns = []
 
     if group_by_description:
@@ -423,6 +426,8 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append("group_by_unit_metric")
     if group_by_year:
         columns.append("group_by_year")
+    if group_by_cluster:
+        columns.append("group_by_cluster")
 
     if len(columns) == 0:
         columns.append("group_by_description")
@@ -452,7 +457,77 @@ def check_params_values(params):
     #     raise HTTPException(status_code=422, detail="Ao buscar pelo valor homologado, é" +
     #                                                 "necessário especificar um valor mínimo e máximo.")
 
+def get_groupby_overprice(from_value, size_value):
+    """
+    Monta a parte do agrupamento da consulta com agregação do sobrepreço
+    """
+    
+    aggs = {
+        "group_by_grupo-agg": {
+            "terms": {
+                "field": f"{item_term_translation['group_by_overprice']}.keyword",
+                "order": {"_key": "asc" }, 
+                "size": 999999
+            },
+            "aggs": {
+                "avg_preco": {"avg": {"field": "preco"}},
+                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+                "sum_overprincing": {"sum": {"script" : "if (doc['preco_medio_grupo'].size()==0 || doc['desvio_padrao_grupo'].size()==0) {return 0;} else if (doc['preco'].value > (doc['preco_medio_grupo'].value + doc['desvio_padrao_grupo'].value)) {return 1;} else {return 0;}"}},
+                "agg_bucket_sort": {
+                    "bucket_sort": {
+                        "sort": [{"sum_overprincing": {"order": "desc"}}], "from": from_value, 
+                        "size": size_value
+                    }
+                },
+                "top_grupo_hits": {
+                  "top_hits": {
+                    "sort": [
+                      {
+                        "preco": {
+                          "order": "desc"
+                        }
+                      }
+                    ],
+                    "_source": {
+                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", 
+                      "num_modalidade", "modalidade", "ano", "original", "original_dsc", 
+                      "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo", 
+                      "qtde_grupo", "preco_medio_grupo" ]
+                    },
+                    "size": 5
+                  }
+                }
+            }
+        }
+    }
+    return aggs
 
+
+def get_overprincing_query(params, pageable, search_type):
+    """
+    Gera a query para a precificação
+    """
+    
+    if search_type == "smart":
+        QUERY = get_item_query_smart(params)
+    
+    elif search_type == "anywhere":
+        QUERY = get_item_query_anywhere(params)
+    
+    elif search_type == "exact":
+        QUERY = get_item_query_exact(params)
+    
+    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())   
+    
+    body = {
+        "track_total_hits": True,
+        "size": 0,
+        'query': QUERY,
+        'aggs': groupby,
+    }
+    
+    return body
+  
 class Pageable:
     def __init__(self, page: int, size: int, sort: str, order: str, search_type: str):
         self._page = page

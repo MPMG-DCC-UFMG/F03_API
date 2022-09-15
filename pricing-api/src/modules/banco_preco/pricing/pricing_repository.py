@@ -21,11 +21,9 @@ class PricingRepository:
         
         search_type = pageable.get_search_type()        
         QUERY = get_princing_query(params.dict(), group_by_columns, pageable, search_type)
-        # print(f'QUERY: {QUERY}\n')
         
         result = es.search(index=ES_INDEX_ITEM,
                            body=QUERY,
-                        #    filter_path=['hits.hits._source.id_item'],
                            request_timeout=60,
                            ignore=[400, 404])
 
