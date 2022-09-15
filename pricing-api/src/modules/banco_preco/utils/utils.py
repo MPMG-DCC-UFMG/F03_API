@@ -466,7 +466,7 @@ def get_groupby_overprice(from_value, size_value):
         "group_by_grupo-agg": {
             "terms": {
                 "field": f"{item_term_translation['group_by_overprice']}.keyword",
-                "order": {"_term": "asc" }, 
+                "order": {"_key": "asc" }, 
                 "size": 999999
             },
             "aggs": {
