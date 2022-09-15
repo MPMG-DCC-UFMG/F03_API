@@ -143,32 +143,30 @@ class ItemsRepository:
 
         search_type = pageable.get_search_type()
         QUERY = get_overprincing_query(params.dict(), pageable, search_type)
-        
-        fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade','ano',
-                  'original', 'original_dsc', 'dsc_unidade_medida', 'preco', 'qtde_item','id_grupo', 'grupo',
-                  'qtde_grupo', 'preco_medio_grupo']
         result = es.search(index=ES_INDEX_ITEM,
-                           query=QUERY,
-                           from_=pageable.get_page() * pageable.get_size(),
-                           size=pageable.get_size(),
-                           sort=[{pageable.get_sort(): pageable.get_order()}, "_score"],
-                           _source_includes=fields,
-                           filter_path='hits',
-                           track_total_hits=True,
-                           request_timeout=20,
+                           body=QUERY,
+                           request_timeout=60,
                            ignore=[400, 404])
-
-        if "hits" not in result:
-            return {}
-
-        hits = result["hits"]["hits"]        
+        
+        if "aggregations" not in result:
+            return []
+        
+        aggr = result['aggregations']['group_by_grupo-agg']['buckets']
+        hits = result['aggregations']['top_grupo_hits']['hits']['hits']
+        data = []
+        for a, h in zip(aggr, hits):
+            bucket = {}
+            bucket['group_by_grupo'] = a['key']
+            bucket['avg_preco'] = a['avg_preco']['value']            #     
+            bucket['data'] = h['_source']
+            data.append(bucket)
+                 
         res = {
             # max(101, result["hits"]["total"]["value"]),  # total de itens
-            "total": result["hits"]["total"]["value"],
+            # "total": result['aggregations']['all_buckets']['count'],
             "pageSize": pageable.get_size(),  # qtd de itens por página
             "currentPage": pageable.get_page(),  # página atual
-            "data": [item['_source'] for item in hits],  # dados
-        }
-       
+            "data": data  # dados
+        }       
         return res
 

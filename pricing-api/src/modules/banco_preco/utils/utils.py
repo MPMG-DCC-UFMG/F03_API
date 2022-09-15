@@ -461,17 +461,17 @@ def get_groupby_overprice(from_value, size_value):
     """
     
     aggs = {
-        "group_by_script": {
+        "group_by_grupo-agg": {
             "terms": {
-                "field": "group_by_overprice.keyword",
-                "size": 999999,
-                "order": {"_term": "asc" }
+                "field": f"{item_term_translation['group_by_overprice']}.keyword",
+                "order": {"_key": "asc" }, 
+                "size": 999999
             },
             "aggs": {
                 "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
-                "sum_overprincing": {"sum": {"script" : "if (doc['preco'].value > Float.parseFloat(doc['preco_medio_grupo.keyword'].value)) {return 1;} else {return 0;}"}},
-                "agg_bucket_sort": {"bucket_sort": {"sort": [{"sum_overprincing": {"order": "desc"}}], "from":0, "size": 5}},
+                "sum_overprincing": {"sum": {"script" : "if (doc['preco_medio_grupo'].size()==0 || doc['desvio_padrao_grupo'].size()==0) {return 0;} else if (doc['preco'].value > (doc['preco_medio_grupo'].value + doc['desvio_padrao_grupo'].value)) {return 1;} else {return 0;}"}},
+                "agg_bucket_sort": {"bucket_sort": {"sort": [{"sum_overprincing": {"order": "desc"}}], "from": from_value, "size": size_value}}}},
                 "top_grupo_hits": {
                   "top_hits": {
                     "sort": [
@@ -482,23 +482,13 @@ def get_groupby_overprice(from_value, size_value):
                       }
                     ],
                     "_source": {
-                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", 
-                      "num_modalidade", "modalidade", "ano", "original", "original_dsc", 
-                      "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo", 
-                      "qtde_grupo", "preco_medio_grupo" ]
+                      "includes": [ "id_licitacao", "municipio", "orgao", "num_processo", "num_modalidade", "modalidade", "ano", "original", "original_dsc", "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo",  "qtde_grupo", "preco_medio_grupo" ]
                     },
                     "size": 5
                   }
                 }
-            }
-        },
-        # "all_buckets": {
-        #     "stats_bucket": {
-        #         "buckets_path": "group_by_script._count"
-        #     }
-        # }
+                
     }
-
     return aggs
 
 
@@ -516,16 +506,16 @@ def get_overprincing_query(params, pageable, search_type):
     elif search_type == "exact":
         QUERY = get_item_query_exact(params)
     
-    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())
-   
+    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())   
     
     body = {
-        # "track_total_hits": True,
+        "track_total_hits": True,
         "size": 0,
         'query': QUERY,
         'aggs': groupby,
-
     }
+    
+    return body
   
 class Pageable:
     def __init__(self, page: int, size: int, sort: str, order: str, search_type: str):
