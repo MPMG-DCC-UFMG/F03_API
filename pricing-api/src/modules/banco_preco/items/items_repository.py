@@ -92,9 +92,9 @@ class ItemsRepository:
             QUERY = get_item_query_exact(params.dict())
 
         
-        fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
-                  'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao',
-                  'municipio', 'qtde_item', 'preco']
+        fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'data',
+                  'id_licitacao', 'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao', 
+                  'num_processo', 'num_modalidade', 'municipio', 'qtde_item', 'preco']
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
                            from_=pageable.get_page() * pageable.get_size(),
@@ -142,9 +142,7 @@ class ItemsRepository:
     def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
 
         search_type = pageable.get_search_type()
-        
         QUERY = get_overprincing_query(params.dict(), pageable, search_type)
-
         
         fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade','ano',
                   'original', 'original_dsc', 'dsc_unidade_medida', 'preco', 'qtde_item','id_grupo', 'grupo',
