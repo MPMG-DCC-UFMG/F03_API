@@ -157,7 +157,11 @@ class ItemsRepository:
             bucket = {}
             bucket_data = []
             bucket['group_by_grupo'] = a['key']
-            bucket['avg_preco'] = a['avg_preco']['value']
+            bucket['group_size'] = a['stats_preco']['count']
+            bucket['avg_preco'] = a['stats_preco']['avg']
+            bucket['min_preco'] = a['stats_preco']['min']
+            bucket['max_preco'] = a['stats_preco']['max']
+            bucket['std_preco'] = a['stats_preco']['std_deviation']
             for i in a['top_grupo_hits']['hits']['hits']:
                 bucket_data.append(i['_source'])
             bucket['data'] = bucket_data

@@ -313,9 +313,10 @@ def get_groupby_single(column, from_value, size_value):
                 "order": order_by
             },
             "aggs": {
-                "max_preco": {"max": {"field": "preco"}},
-                "min_preco": {"min": {"field": "preco"}},
-                "avg_preco": {"avg": {"field": "preco"}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},
+                # "max_preco": {"max": {"field": "preco"}},
+                # "min_preco": {"min": {"field": "preco"}},
+                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -364,9 +365,10 @@ def get_groupby(columns, from_value, size_value):
                 "order": order_by
             },
             "aggs": {
-                "max_preco": {"max": {"field": "preco"}},
-                "min_preco": {"min": {"field": "preco"}},
-                "avg_preco": {"avg": {"field": "preco"}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},
+                # "max_preco": {"max": {"field": "preco"}},
+                # "min_preco": {"min": {"field": "preco"}},
+                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -470,8 +472,7 @@ def get_groupby_overprice(from_value, size_value):
                 "size": 999999
             },
             "aggs": {
-                "avg_preco": {"avg": {"field": "preco"}},
-                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},                
                 "sum_overprincing": {"sum": {"script" : "if (doc['preco_medio_grupo'].size()==0 || doc['desvio_padrao_grupo'].size()==0) {return 0;} else if (doc['preco'].value > (doc['preco_medio_grupo'].value + doc['desvio_padrao_grupo'].value)) {return 1;} else {return 0;}"}},
                 "agg_bucket_sort": {
                     "bucket_sort": {

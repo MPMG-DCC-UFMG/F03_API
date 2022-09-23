@@ -32,6 +32,7 @@ class PricingRepository:
         
 
         arr = result['aggregations']['group_by_script']['buckets']
+        print(arr)
         data = []
         for a in arr:
             a_split = a['key'].split('__!@#$%__')
@@ -39,9 +40,9 @@ class PricingRepository:
             for i, gc in enumerate(group_by_columns):
                 bucket[gc] = a_split[i]
             
-            bucket['max_preco'] = a['max_preco']['value']
-            bucket['min_preco'] = a['min_preco']['value']
-            bucket['avg_preco'] = a['avg_preco']['value']
+            bucket['max_preco'] = a['stats_preco']['max']
+            bucket['min_preco'] = a['stats_preco']['min']
+            bucket['avg_preco'] = a['stats_preco']['avg']
             bucket['sum_qtde_item'] = a['sum_qtde_item']['value']
             data.append(bucket)
             
