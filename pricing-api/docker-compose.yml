@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/src
     ports:
-      - 8008:8080
+      - 8008:8081
     extra_hosts:
       localhost: 177.190.215.24
     volumes:
