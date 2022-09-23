@@ -42,6 +42,7 @@ class PricingRepository:
             bucket['max_preco'] = a['stats_preco']['max']
             bucket['min_preco'] = a['stats_preco']['min']
             bucket['avg_preco'] = a['stats_preco']['avg']
+            bucket['std_preco'] = a['stats_preco']['std_deviation']
             bucket['sum_qtde_item'] = a['sum_qtde_item']['value']
             data.append(bucket)
             
