@@ -24,7 +24,7 @@ def get_params_values(params):
 
     # # filtros relacionados aos itens
     if bool(params.group):
-        filters.append(ItemModel.grupo.__eq__(params.group))
+        filters.append(ItemModel.grupo_unidade_medida.__eq__(params.group))
     if bool(params.object_nature):
         filters.append(ItemModel.natureza_objeto.__eq__(params.object_nature))
     if bool(params.max_amount):
@@ -95,7 +95,7 @@ item_terms_translation = {
 item_term_translation = {
     # "description": "original_dsc",
     "unit_measure": "dsc_unidade_medida",
-    "group": "grupo",
+    "group": "grupo_unidade_medida",
     "first_token": "primeiro_termo",
     "body": "orgao",
     "body_type": "tipo_orgao",
@@ -112,7 +112,7 @@ pricing_translate = {
     "group_by_description": "original_raw",
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
-    "group_by_cluster": "grupo",
+    "group_by_cluster": "grupo_unidade_medida",
 }
 
 
@@ -314,9 +314,6 @@ def get_groupby_single(column, from_value, size_value):
             },
             "aggs": {
                 "stats_preco": {"extended_stats": {"field": "preco"}},
-                # "max_preco": {"max": {"field": "preco"}},
-                # "min_preco": {"min": {"field": "preco"}},
-                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -354,8 +351,12 @@ def get_groupby(columns, from_value, size_value):
                 h += " + '__!@#$%__' + doc['" + f"{pricing_translate[c]}.keyword" + "'].value"
         h += ';'
     else:
-        order_by = {"_key": "asc"}
-        h += "return doc['"+ f"{pricing_translate[columns[0]]}.keyword" + "'].value" + [';', " + '__!@#$%__' + doc['" + f"{pricing_translate[columns[1]]}.keyword" + "'].value;"][len(columns) == 2]
+        order_by = {"_key": "asc"}        
+        h += "return doc['"+ f"{pricing_translate[columns[0]]}.keyword" + "'].value"
+        if len(columns) > 1:
+            for c in columns[1:]:
+                h += " + '__!@#$%__' + doc['" + f"{pricing_translate[c]}.keyword" + "'].value"
+        h += ';'
     
     aggs = {
         "group_by_script": {
@@ -366,9 +367,6 @@ def get_groupby(columns, from_value, size_value):
             },
             "aggs": {
                 "stats_preco": {"extended_stats": {"field": "preco"}},
-                # "max_preco": {"max": {"field": "preco"}},
-                # "min_preco": {"min": {"field": "preco"}},
-                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
