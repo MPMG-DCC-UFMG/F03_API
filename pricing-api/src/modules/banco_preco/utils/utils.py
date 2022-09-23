@@ -112,7 +112,7 @@ pricing_translate = {
     "group_by_description": "original_raw",
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
-    "group_by_cluster": "grupo",
+    "group_by_cluster": "grupo_unidade_medida",
 }
 
 
@@ -314,9 +314,6 @@ def get_groupby_single(column, from_value, size_value):
             },
             "aggs": {
                 "stats_preco": {"extended_stats": {"field": "preco"}},
-                # "max_preco": {"max": {"field": "preco"}},
-                # "min_preco": {"min": {"field": "preco"}},
-                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -366,9 +363,6 @@ def get_groupby(columns, from_value, size_value):
             },
             "aggs": {
                 "stats_preco": {"extended_stats": {"field": "preco"}},
-                # "max_preco": {"max": {"field": "preco"}},
-                # "min_preco": {"min": {"field": "preco"}},
-                # "avg_preco": {"avg": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {

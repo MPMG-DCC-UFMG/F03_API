@@ -32,7 +32,6 @@ class PricingRepository:
         
 
         arr = result['aggregations']['group_by_script']['buckets']
-        print(arr)
         data = []
         for a in arr:
             a_split = a['key'].split('__!@#$%__')
