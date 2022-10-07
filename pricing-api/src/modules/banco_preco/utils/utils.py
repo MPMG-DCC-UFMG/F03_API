@@ -1,8 +1,6 @@
 from fastapi import HTTPException
-
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
-import pandas as pd #Remover
 
 
 def get_params_values(params):
@@ -22,7 +20,7 @@ def get_params_values(params):
     if bool(params.inter_region):
         filters.append(ItemModel.regiao_intermediaria.in_(params.inter_region))
 
-    # # filtros relacionados aos itens
+    # filtros relacionados aos itens
     if bool(params.group):
         filters.append(ItemModel.grupo.__eq__(params.group))
     if bool(params.object_nature):
@@ -36,7 +34,7 @@ def get_params_values(params):
     if bool(params.min_homolog_price):
         filters.append(ItemModel.preco >= params.min_homolog_price)
 
-    # # filtros relacionados à licitação
+    # filtros relacionados à licitação
     if bool(params.modality):
         filters.append(ItemModel.modalidade.__eq__(params.modality))
     if bool(params.procurement_type):
@@ -55,7 +53,7 @@ def get_params_values(params):
     if bool(params.bidder_document):
         filters.append(ItemModel.cnpj_vencedor.__eq__(params.bidder_document))
 
-    # # filtros de data
+    # filtros de data
     if bool(params.year):
         filters.append(ItemModel.ano.in_(params.year))
     if bool(params.month):
@@ -385,12 +383,7 @@ def get_groupby(columns, from_value, size_value):
     }
     return aggs
 
-
-def get_princing_query(params, columns, pageable, search_type):
-    """
-    Gera a query para a precificação
-    """
-    
+def search_type(params,search_type = ""):
     if search_type == "smart":
         QUERY = get_item_query_smart(params)
     
@@ -399,7 +392,15 @@ def get_princing_query(params, columns, pageable, search_type):
     
     elif search_type == "exact":
         QUERY = get_item_query_exact(params)
-    
+
+    return QUERY
+
+def get_princing_query(params, columns, pageable):
+    """
+    Gera a query para a precificação
+    """
+    QUERY = search_type(params)
+
     if len(columns) == 1:
         groupby = get_groupby_single(columns, pageable.get_page()
                               * pageable.get_size(), pageable.get_size())        
@@ -502,19 +503,12 @@ def get_groupby_overprice(from_value, size_value):
     return aggs
 
 
-def get_overprincing_query(params, pageable, search_type):
+def get_overprincing_query(params, pageable):
     """
     Gera a query para a precificação
     """
     
-    if search_type == "smart":
-        QUERY = get_item_query_smart(params)
-    
-    elif search_type == "anywhere":
-        QUERY = get_item_query_anywhere(params)
-    
-    elif search_type == "exact":
-        QUERY = get_item_query_exact(params)
+    QUERY = search_type(params)
     
     groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())
    

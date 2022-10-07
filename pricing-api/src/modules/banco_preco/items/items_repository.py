@@ -7,9 +7,7 @@ from dotenv import load_dotenv
 from src.db.database import es
 from src.modules.banco_preco.items.items_operations import ListItemsQuery
 from src.modules.banco_preco.utils.utils import (
-    get_item_query_smart,
-    get_item_query_anywhere,
-    get_item_query_exact,
+    search_type,
     get_autocomplete_query,
     get_id_query,
     get_overprincing_query,
@@ -51,17 +49,10 @@ class ItemsRepository:
         return res
 
     def list(params: ListItemsQuery, pageable: Pageable):
-
+        
         aux = pageable.get_search_type()
-        
-        if aux == "smart":
-            QUERY = get_item_query_smart(params.dict())
-        
-        elif aux == "anywhere":
-            QUERY = get_item_query_anywhere(params.dict())
-        
-        elif aux == "exact":
-            QUERY = get_item_query_exact(params.dict())
+
+        QUERY = search_type(params.dict(),aux)
 
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
@@ -79,17 +70,10 @@ class ItemsRepository:
         return [item['_source'] for item in hits]
 
     def list_sample(params: ListItemsQuery, pageable: Pageable):
-
+        
         aux = pageable.get_search_type()
-        
-        if aux == "smart":
-            QUERY = get_item_query_smart(params.dict())
-        
-        elif aux == "anywhere":
-            QUERY = get_item_query_anywhere(params.dict())
-        
-        elif aux == "exact":
-            QUERY = get_item_query_exact(params.dict())
+
+        QUERY = search_type(params.dict(),aux)
 
         
         fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'grupo', 'data',
@@ -140,10 +124,8 @@ class ItemsRepository:
         # return res
     
     def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
-
-        search_type = pageable.get_search_type()
         
-        QUERY = get_overprincing_query(params.dict(), pageable, search_type)
+        QUERY = get_overprincing_query(params.dict(), pageable)
 
         
         fields =  ['id_licitacao', 'municipio', 'orgao', 'num_processo', 'num_modalidade', 'modalidade','ano',

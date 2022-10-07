@@ -1,13 +1,8 @@
 import os
-
 from dotenv import load_dotenv
-
 from src.db.database import es
 from src.modules.banco_preco.pricing.pricing_operations import PricingQuery
 from src.modules.banco_preco.utils.utils import (
-    get_item_query_smart,
-    get_item_query_anywhere,
-    get_item_query_exact,
     get_princing_query,
     Pageable
 )
@@ -20,8 +15,7 @@ class PricingRepository:
     def get(params: PricingQuery, group_by_columns, pageable: Pageable):
         
         search_type = pageable.get_search_type()        
-        QUERY = get_princing_query(params.dict(), group_by_columns, pageable, search_type)
-        # print(f'QUERY: {QUERY}\n')
+        QUERY = get_princing_query(params.dict(), group_by_columns, pageable)
         
         result = es.search(index=ES_INDEX_ITEM,
                            body=QUERY,

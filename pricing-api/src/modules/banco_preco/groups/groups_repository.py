@@ -3,7 +3,6 @@ from src.modules.banco_preco.groups.groups_operations import ListGroupsQuery
 from src.modules.banco_preco.groups.group import GroupModel
 from src.db.database import db_session, es
 from sqlalchemy import and_, desc, asc
-
 from dotenv import load_dotenv
 import os
 

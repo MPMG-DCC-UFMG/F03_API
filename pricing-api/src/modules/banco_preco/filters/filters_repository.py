@@ -1,7 +1,7 @@
 from src.modules.banco_preco.filters.filters_operations import ListFiltersQueryParams
 from src.modules.banco_preco.items.item import ItemModel
 from src.db.database import db_session, es
-from sqlalchemy import and_, desc, asc, func
+from sqlalchemy import and_, desc
 
 class FilterRepository:
     def list(params: ListFiltersQueryParams):

@@ -6,7 +6,7 @@ from sqlalchemy import and_
 from collections import defaultdict
 from datetime import datetime
 import numpy as np
-import random
+
 
 
 class ChartsRepository:
