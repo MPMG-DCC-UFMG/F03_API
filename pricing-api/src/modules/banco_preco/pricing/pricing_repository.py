@@ -5,9 +5,6 @@ from dotenv import load_dotenv
 from src.db.database import es
 from src.modules.banco_preco.pricing.pricing_operations import PricingQuery
 from src.modules.banco_preco.utils.utils import (
-    get_item_query_smart,
-    get_item_query_anywhere,
-    get_item_query_exact,
     get_princing_query,
     Pageable
 )

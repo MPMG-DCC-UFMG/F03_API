@@ -11,9 +11,13 @@ class ItemsService:
     def list_sample(params: ListItemsQuery, pageable: Pageable):
         items = repository.list_sample(params, pageable)
         return items
-
-    def list_items_with_values(params: ListItemsQuery):
-        items = repository.list_items_with_values(params)
+    
+    def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
+        items = repository.list_sample_overprice(params, pageable)
+        return items
+    
+    def list_overprice(params: ListItemsQuery, pageable: Pageable):
+        items = repository.list_overprice(params, pageable)
         return items
 
     def find_by_id(id: str):
@@ -23,7 +27,3 @@ class ItemsService:
     def autocomplete_description(desc: str):
         item = repository.autocomplete_description(desc)
         return item
-    
-    def list_sample_overprice(params: ListItemsQuery, pageable: Pageable):
-        items = repository.list_sample_overprice(params, pageable)
-        return items
