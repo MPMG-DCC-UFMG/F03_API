@@ -2,7 +2,6 @@ from fastapi import HTTPException
 
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
-import pandas as pd #Remover
 
 
 def get_params_values(params):
