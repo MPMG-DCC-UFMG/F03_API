@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from pyparsing import col
 
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
@@ -35,6 +36,8 @@ def get_params_values(params):
         filters.append(ItemModel.preco <= params.max_homolog_price)
     if bool(params.min_homolog_price):
         filters.append(ItemModel.preco >= params.min_homolog_price)
+    if bool(params.noise):
+        filters.append(ItemModel.grupo_ruido.__eq__(params.noise))
 
     # # filtros relacionados à licitação
     if bool(params.modality):
@@ -105,7 +108,8 @@ item_term_translation = {
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
     "object_nature": "natureza_objeto",
-    "group_by_overprice": "grupo_unidade_medida"
+    "group_by_overprice": "grupo_unidade_medida",
+    "noise": "grupo_ruido"
 }
 
 pricing_translate = {
@@ -134,12 +138,12 @@ def get_filter(params):
     return filters
 
 
-def get_item_query_smart(params: dict):
+def get_item_query(params: dict, search_type: str = "smart"):
     """
     Gera a query para a listagem de items
     """
     filters = get_filter(params)
-
+    
     if params["before"]:
         pass
     if params["after"]:
@@ -150,86 +154,42 @@ def get_item_query_smart(params: dict):
     if params["min_homolog_price"] or params["max_homolog_price"]:
         l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
         filters.append({"range": {"preco": l}})
-
+        
     QUERY = {
         "bool": {
             "must": [
-                *filters,
-                {
-                    "match": {
-                        "original": {
-                            "query": params["description"],
-                            "minimum_should_match": "70%",
-                            "analyzer": "analyzer_plural_acentos"
-                        }
-                    }
-                }
-            ],
-        }
-    }
-
-    return QUERY
-
-def get_item_query_anywhere(params: dict):
-    """
-    Gera a query para a listagem de items
-    """
-    filters = get_filter(params)
-
-    if params["before"]:
-        pass
-    if params["after"]:
-        pass
-    if params["min_amount"] or params["max_amount"]:
-        l = get_range(params, min_field="min_amount", max_field="max_amount")
-        filters.append({"range": {"qtde_item": l}})
-    if params["min_homolog_price"] or params["max_homolog_price"]:
-        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
-        filters.append({"range": {"preco": l}})
-
-    QUERY = {
-        "bool": {
-            "must": [
-                *filters,
-                {
-                    "match_phrase": {
-                        "original": {
-                            "query": params["description"],
-                            "analyzer": "analyzer_plural_acentos"
-                        }
-                    }
-                }
-            ],
-        }
-    }
-
-    return QUERY
-
-def get_item_query_exact(params: dict):
-    """
-    Gera a query para a listagem de items
-    """
-    filters = get_filter(params)
-
-    if params["before"]:
-        pass
-    if params["after"]:
-        pass
-    if params["min_amount"] or params["max_amount"]:
-        l = get_range(params, min_field="min_amount", max_field="max_amount")
-        filters.append({"range": {"qtde_item": l}})
-    if params["min_homolog_price"] or params["max_homolog_price"]:
-        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
-        filters.append({"range": {"preco": l}})
-
-    QUERY = {
-        "bool": {
-            "must": [
-                *filters,
-                {"term": {"original_raw.keyword": params["description"].upper()}}
+                *filters
             ]
         }
     }
+        
+    if search_type == "smart":
+        QUERY['bool']['must'].append({
+            "match": {
+                "original": {
+                    "query": params["description"],
+                    "minimum_should_match": "70%",
+                    "analyzer": "analyzer_plural_acentos"
+                }
+            }
+        })
+    
+    elif search_type == "anywhere":
+        QUERY['bool']['must'].append({
+            "match_phrase": {
+                "original": {	
+                    "query": params["description"],	
+                    "analyzer": "analyzer_plural_acentos"	
+                }
+            }
+        })
+    
+    elif search_type == "exact":
+        QUERY['bool']['must'].append({
+            "term": {
+                "original_raw.keyword": params["description"].upper()
+            }
+        })
 
     return QUERY
 
@@ -391,15 +351,8 @@ def get_princing_query(params, columns, pageable, search_type):
     Gera a query para a precificação
     """
     
-    if search_type == "smart":
-        QUERY = get_item_query_smart(params)
-    
-    elif search_type == "anywhere":
-        QUERY = get_item_query_anywhere(params)
-    
-    elif search_type == "exact":
-        QUERY = get_item_query_exact(params)
-    
+    QUERY = get_item_query(params, search_type)
+        
     if len(columns) == 1:
         groupby = get_groupby_single(columns, pageable.get_page()
                               * pageable.get_size(), pageable.get_size())        
@@ -507,15 +460,7 @@ def get_overprincing_query(params, pageable, search_type):
     Gera a query para a precificação
     """
     
-    if search_type == "smart":
-        QUERY = get_item_query_smart(params)
-    
-    elif search_type == "anywhere":
-        QUERY = get_item_query_anywhere(params)
-    
-    elif search_type == "exact":
-        QUERY = get_item_query_exact(params)
-    
+    QUERY = get_item_query(params, search_type)    
     groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())   
     
     body = {
