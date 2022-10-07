@@ -1,6 +1,4 @@
 from fastapi import HTTPException
-from pyparsing import col
-
 from src.modules.banco_preco.items.item import ItemModel
 from warnings import warn
 
