@@ -71,7 +71,7 @@ class ItemsRepository:
         QUERY = get_item_query(params.dict(), pageable.get_search_type())        
         fields = ['id_item', 'original', 'original_dsc', 'dsc_unidade_medida', 'data',
                   'id_licitacao', 'modalidade', 'tipo_licitacao', 'nome_vencedor', 'orgao', 
-                  'num_processo', 'num_modalidade', 'municipio', 'qtde_item', 'preco
+                  'num_processo', 'num_modalidade', 'municipio', 'qtde_item', 'preco']
         result = es.search(index=ES_INDEX_ITEM,
                            query=QUERY,
                            from_=pageable.get_page() * pageable.get_size(),
