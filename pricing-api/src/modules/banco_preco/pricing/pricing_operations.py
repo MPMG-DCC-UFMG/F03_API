@@ -5,9 +5,10 @@ from pydantic import BaseModel
 
 
 class PricingQuery(BaseModel):
-    group_by_description: bool = Query(None, description="Considerar as descrições para o agrupamento de dados.")
-    group_by_unit_metric: bool = Query(None, description="Considerar as unidades de medida para o agrupamento de dados.")
-    group_by_year: bool = Query(None, description="Considerar os anos das licitações para o agrupamento de dados.")
+    group_by_description: bool = Query(False, description="Considerar as descrições para o agrupamento de dados.")
+    group_by_unit_metric: bool = Query(False, description="Considerar as unidades de medida para o agrupamento de dados.")
+    group_by_year: bool = Query(False, description="Considerar os anos das licitações para o agrupamento de dados.")
+    group_by_cluster: bool = Query(False, description="Considerar os grupos das licitações para o agrupamento de dados.")
     city: Optional[List[str]] = Query(None, description="Município do órgão licitante")
     microregion: Optional[List[str]] = Query(None, description="Microrregião do licitante")
     mesoregion: Optional[List[str]] = Query(None, description="Mesorregião do licitante")
@@ -34,5 +35,6 @@ class PricingQuery(BaseModel):
     max_homolog_price: Optional[float] = Query(None, description="Valor máximo dos itens homologados")
     object_nature: Optional[float] = Query(None, description="Natureza do item")
     units_of_measure: Optional[List[str]] = Query(None, description="Selected units of measure")
+    noise: Optional[bool] = Query(False, description="Apresentar grupos de ruídos")
 
     

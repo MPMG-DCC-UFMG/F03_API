@@ -15,11 +15,10 @@ class PricingRepository:
     def get(params: PricingQuery, group_by_columns, pageable: Pageable):
         
         search_type = pageable.get_search_type()        
-        QUERY = get_princing_query(params.dict(), group_by_columns, pageable)
+        QUERY = get_princing_query(params.dict(), group_by_columns, pageable, search_type)
         
         result = es.search(index=ES_INDEX_ITEM,
                            body=QUERY,
-                        #    filter_path=['hits.hits._source.id_item'],
                            request_timeout=60,
                            ignore=[400, 404])
 
@@ -35,9 +34,10 @@ class PricingRepository:
             for i, gc in enumerate(group_by_columns):
                 bucket[gc] = a_split[i]
             
-            bucket['max_preco'] = a['max_preco']['value']
-            bucket['min_preco'] = a['min_preco']['value']
-            bucket['avg_preco'] = a['avg_preco']['value']
+            bucket['max_preco'] = a['stats_preco']['max']
+            bucket['min_preco'] = a['stats_preco']['min']
+            bucket['avg_preco'] = a['stats_preco']['avg']
+            bucket['std_preco'] = a['stats_preco']['std_deviation']
             bucket['sum_qtde_item'] = a['sum_qtde_item']['value']
             data.append(bucket)
             

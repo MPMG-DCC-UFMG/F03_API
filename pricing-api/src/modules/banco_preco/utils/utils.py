@@ -22,7 +22,7 @@ def get_params_values(params):
 
     # filtros relacionados aos itens
     if bool(params.group):
-        filters.append(ItemModel.grupo.__eq__(params.group))
+        filters.append(ItemModel.grupo_unidade_medida.__eq__(params.group))
     if bool(params.object_nature):
         filters.append(ItemModel.natureza_objeto.__eq__(params.object_nature))
     if bool(params.max_amount):
@@ -33,6 +33,8 @@ def get_params_values(params):
         filters.append(ItemModel.preco <= params.max_homolog_price)
     if bool(params.min_homolog_price):
         filters.append(ItemModel.preco >= params.min_homolog_price)
+    if bool(params.noise):
+        filters.append(ItemModel.grupo_ruido.__eq__(params.noise))
 
     # filtros relacionados à licitação
     if bool(params.modality):
@@ -93,7 +95,7 @@ item_terms_translation = {
 item_term_translation = {
     # "description": "original_dsc",
     "unit_measure": "dsc_unidade_medida",
-    "group": "grupo",
+    "group": "grupo_unidade_medida",
     "first_token": "primeiro_termo",
     "body": "orgao",
     "body_type": "tipo_orgao",
@@ -103,14 +105,15 @@ item_term_translation = {
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
     "object_nature": "natureza_objeto",
-    "group_by_overprice": "grupo_unidade_medida"
+    "group_by_overprice": "grupo_unidade_medida",
+    "noise": "grupo_ruido"
 }
 
 pricing_translate = {
     "group_by_description": "original_raw",
     "group_by_unit_metric": "dsc_unidade_medida",
     "group_by_year": "ano",
-    "group_by_cluster": "grupo",
+    "group_by_cluster": "grupo_unidade_medida",
 }
 
 
@@ -132,12 +135,12 @@ def get_filter(params):
     return filters
 
 
-def get_item_query_smart(params: dict):
+def get_item_query(params: dict, search_type: str = "smart"):
     """
     Gera a query para a listagem de items
     """
     filters = get_filter(params)
-
+    
     if params["before"]:
         pass
     if params["after"]:
@@ -148,86 +151,42 @@ def get_item_query_smart(params: dict):
     if params["min_homolog_price"] or params["max_homolog_price"]:
         l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
         filters.append({"range": {"preco": l}})
-
+        
     QUERY = {
         "bool": {
             "must": [
-                *filters,
-                {
-                    "match": {
-                        "original": {
-                            "query": params["description"],
-                            "minimum_should_match": "70%",
-                            "analyzer": "analyzer_plural_acentos"
-                        }
-                    }
-                }
-            ],
-        }
-    }
-
-    return QUERY
-
-def get_item_query_anywhere(params: dict):
-    """
-    Gera a query para a listagem de items
-    """
-    filters = get_filter(params)
-
-    if params["before"]:
-        pass
-    if params["after"]:
-        pass
-    if params["min_amount"] or params["max_amount"]:
-        l = get_range(params, min_field="min_amount", max_field="max_amount")
-        filters.append({"range": {"qtde_item": l}})
-    if params["min_homolog_price"] or params["max_homolog_price"]:
-        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
-        filters.append({"range": {"preco": l}})
-
-    QUERY = {
-        "bool": {
-            "must": [
-                *filters,
-                {
-                    "match_phrase": {
-                        "original": {
-                            "query": params["description"],
-                            "analyzer": "analyzer_plural_acentos"
-                        }
-                    }
-                }
-            ],
-        }
-    }
-
-    return QUERY
-
-def get_item_query_exact(params: dict):
-    """
-    Gera a query para a listagem de items
-    """
-    filters = get_filter(params)
-
-    if params["before"]:
-        pass
-    if params["after"]:
-        pass
-    if params["min_amount"] or params["max_amount"]:
-        l = get_range(params, min_field="min_amount", max_field="max_amount")
-        filters.append({"range": {"qtde_item": l}})
-    if params["min_homolog_price"] or params["max_homolog_price"]:
-        l = get_range(params, min_field="min_homolog_price", max_field="max_homolog_price")
-        filters.append({"range": {"preco": l}})
-
-    QUERY = {
-        "bool": {
-            "must": [
-                *filters,
-                {"term": {"original_raw.keyword": params["description"].upper()}}
+                *filters
             ]
         }
     }
+        
+    if search_type == "smart":
+        QUERY['bool']['must'].append({
+            "match": {
+                "original": {
+                    "query": params["description"],
+                    "minimum_should_match": "70%",
+                    "analyzer": "analyzer_plural_acentos"
+                }
+            }
+        })
+    
+    elif search_type == "anywhere":
+        QUERY['bool']['must'].append({
+            "match_phrase": {
+                "original": {	
+                    "query": params["description"],	
+                    "analyzer": "analyzer_plural_acentos"	
+                }
+            }
+        })
+    
+    elif search_type == "exact":
+        QUERY['bool']['must'].append({
+            "term": {
+                "original_raw.keyword": params["description"].upper()
+            }
+        })
 
     return QUERY
 
@@ -311,9 +270,7 @@ def get_groupby_single(column, from_value, size_value):
                 "order": order_by
             },
             "aggs": {
-                "max_preco": {"max": {"field": "preco"}},
-                "min_preco": {"min": {"field": "preco"}},
-                "avg_preco": {"avg": {"field": "preco"}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -351,8 +308,12 @@ def get_groupby(columns, from_value, size_value):
                 h += " + '__!@#$%__' + doc['" + f"{pricing_translate[c]}.keyword" + "'].value"
         h += ';'
     else:
-        order_by = {"_key": "asc"}
-        h += "return doc['"+ f"{pricing_translate[columns[0]]}.keyword" + "'].value" + [';', " + '__!@#$%__' + doc['" + f"{pricing_translate[columns[1]]}.keyword" + "'].value;"][len(columns) == 2]
+        order_by = {"_key": "asc"}        
+        h += "return doc['"+ f"{pricing_translate[columns[0]]}.keyword" + "'].value"
+        if len(columns) > 1:
+            for c in columns[1:]:
+                h += " + '__!@#$%__' + doc['" + f"{pricing_translate[c]}.keyword" + "'].value"
+        h += ';'
     
     aggs = {
         "group_by_script": {
@@ -362,9 +323,7 @@ def get_groupby(columns, from_value, size_value):
                 "order": order_by
             },
             "aggs": {
-                "max_preco": {"max": {"field": "preco"}},
-                "min_preco": {"min": {"field": "preco"}},
-                "avg_preco": {"avg": {"field": "preco"}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},
                 "sum_qtde_item": {"sum": {"field": "qtde_item"}},
                 "max_score": max_score,
                 "commits_bucket_sort": {
@@ -383,24 +342,13 @@ def get_groupby(columns, from_value, size_value):
     }
     return aggs
 
-def search_type(params,search_type = ""):
-    if search_type == "smart":
-        QUERY = get_item_query_smart(params)
-    
-    elif search_type == "anywhere":
-        QUERY = get_item_query_anywhere(params)
-    
-    elif search_type == "exact":
-        QUERY = get_item_query_exact(params)
-
-    return QUERY
-
-def get_princing_query(params, columns, pageable):
+def get_princing_query(params, columns, pageable, search_type):
     """
     Gera a query para a precificação
     """
-    QUERY = search_type(params)
-
+    
+    QUERY = get_item_query(params, search_type)
+    
     if len(columns) == 1:
         groupby = get_groupby_single(columns, pageable.get_page()
                               * pageable.get_size(), pageable.get_size())        
@@ -418,7 +366,7 @@ def get_princing_query(params, columns, pageable):
     return body
 
 
-def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year):
+def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_year, group_by_cluster):
     columns = []
 
     if group_by_description:
@@ -427,6 +375,8 @@ def get_group_by_columns(group_by_description, group_by_unit_metric, group_by_ye
         columns.append("group_by_unit_metric")
     if group_by_year:
         columns.append("group_by_year")
+    if group_by_cluster:
+        columns.append("group_by_cluster")
 
     if len(columns) == 0:
         columns.append("group_by_description")
@@ -462,17 +412,21 @@ def get_groupby_overprice(from_value, size_value):
     """
     
     aggs = {
-        "group_by_script": {
+        "group_by_grupo-agg": {
             "terms": {
-                "field": "group_by_overprice.keyword",
-                "size": 999999,
-                "order": {"_term": "asc" }
+                "field": f"{item_term_translation['group_by_overprice']}.keyword",
+                "order": {"_key": "asc" }, 
+                "size": 999999
             },
             "aggs": {
-                "avg_preco": {"avg": {"field": "preco"}},
-                "sum_qtde_item": {"sum": {"field": "qtde_item"}},
-                "sum_overprincing": {"sum": {"script" : "if (doc['preco'].value > Float.parseFloat(doc['preco_medio_grupo.keyword'].value)) {return 1;} else {return 0;}"}},
-                "agg_bucket_sort": {"bucket_sort": {"sort": [{"sum_overprincing": {"order": "desc"}}], "from":0, "size": 5}},
+                "stats_preco": {"extended_stats": {"field": "preco"}},                
+                "sum_overprincing": {"sum": {"script" : "if (doc['preco_medio_grupo'].size()==0 || doc['desvio_padrao_grupo'].size()==0) {return 0;} else if (doc['preco'].value > (doc['preco_medio_grupo'].value + doc['desvio_padrao_grupo'].value)) {return 1;} else {return 0;}"}},
+                "agg_bucket_sort": {
+                    "bucket_sort": {
+                        "sort": [{"sum_overprincing": {"order": "desc"}}], "from": from_value, 
+                        "size": size_value
+                    }
+                },
                 "top_grupo_hits": {
                   "top_hits": {
                     "sort": [
@@ -492,14 +446,8 @@ def get_groupby_overprice(from_value, size_value):
                   }
                 }
             }
-        },
-        # "all_buckets": {
-        #     "stats_bucket": {
-        #         "buckets_path": "group_by_script._count"
-        #     }
-        # }
+        }
     }
-
     return aggs
 
 
@@ -507,19 +455,18 @@ def get_overprincing_query(params, pageable):
     """
     Gera a query para a precificação
     """
-    
-    QUERY = search_type(params)
-    
-    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())
-   
+
+    QUERY = get_item_query(params, search_type)    
+    groupby = get_groupby_overprice(pageable.get_page() * pageable.get_size(), pageable.get_size())   
     
     body = {
-        # "track_total_hits": True,
+        "track_total_hits": True,
         "size": 0,
         'query': QUERY,
         'aggs': groupby,
-
     }
+    
+    return body
   
 class Pageable:
     def __init__(self, page: int, size: int, sort: str, order: str, search_type: str):

@@ -12,13 +12,11 @@ import numpy as np
 class ChartsRepository:
 
     def get_aggregate(params: ChartsQueryParams):
-        filters = params.filters
+        filters = params.filters          
 
         if params.description:
             filters.append(ItemModel.original.__eq__(params.description))
             
-        print(params.description)
-
         if params.unit_measure:
             filters.append(
                 ItemModel.dsc_unidade_medida.__eq__(params.unit_measure))
@@ -28,7 +26,7 @@ class ChartsRepository:
                            .offset(params.offset) \
                            .limit(params.limit)
 
-        dict_list = [row.__dict__ for row in result]
+        dict_list = [row.__dict__ for row in result]      
 
         pivot = defaultdict(list)
         pivot2 = defaultdict(list)
@@ -40,10 +38,20 @@ class ChartsRepository:
         dict_x = [{'data': k, 'qtde_item': sum(values)} for k, values in pivot.items()]
         dict_y = [{'data': k, 'mean_preco': round(np.mean(values), 2), 'median_preco': round(np.median(values),2)} for k, values in pivot2.items()]
         
-        res = [{**dx, **dy} for dx, dy in zip(dict_x, dict_y)]
-        for item in res:
+        chart_res = [{**dx, **dy} for dx, dy in zip(dict_x, dict_y)]
+        for item in chart_res:
             data = datetime.strptime(item['data'], '%m/%Y')
             item['mes'] = data.strftime('%m')
             item['ano'] = data.strftime('%Y')
-        
-        return sorted(res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
+            
+        if params.group:
+            your_keys = [ "id_licitacao", "municipio", "orgao", "num_processo",  "num_modalidade", "modalidade", "ano", "original", "original_dsc", "dsc_unidade_medida", "preco", "qtde_item", "id_grupo", "grupo", "preco_medio_grupo" ]
+            items_dict = [{ your_key: d[your_key] for your_key in your_keys } for d in dict_list]
+            
+            res = {
+                "items": items_dict,
+                "charts": sorted(chart_res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
+            }
+            return res
+        else:
+            return sorted(chart_res, key=lambda d: datetime.strptime(d['data'], '%m/%Y'))
