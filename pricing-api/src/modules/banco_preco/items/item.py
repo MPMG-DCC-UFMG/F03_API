@@ -1,8 +1,6 @@
-import datetime
-
-from sqlalchemy import Column, BigInteger, String, Float, Date
+from sqlalchemy import Column, BigInteger, String, Float
 from src.db.database import Base
-from pydantic.dataclasses import dataclass
+
 
 
 class ItemModel(Base):

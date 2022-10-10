@@ -1,6 +1,5 @@
 from datetime import date
 from typing import List, Optional
-
 from fastapi import Query
 from pydantic import BaseModel
 
