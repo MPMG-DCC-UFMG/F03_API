@@ -15,6 +15,10 @@ class ChartsQueryParams:
         sort: Optional[str] = Query(None, description="Atributo de ordenação"),
         order: Optional[str] = Query(
             "desc", description="Critério de ordenação", regex="^asc|desc$"),
+        before: Optional[date] = Query(
+            None, description="Limite superior de data"),
+        after: Optional[date] = Query(
+            None, description="Limite inferior de data"),
         city: Optional[List[str]] = Query(
             None, description="Município do órgão licitante"),
         microregion: Optional[List[str]] = Query(
@@ -31,10 +35,6 @@ class ChartsQueryParams:
             None, description="Ano de exercício"),
         month: Optional[List[str]] = Query(
             None, description="Mês de exercício"),
-        before: Optional[date] = Query(
-            None, description="Limite superior de data"),
-        after: Optional[date] = Query(
-            None, description="Limite inferior de data"),
         description: str = Query(
             None, min_length=3, description="Texto na descrição original do item"),
         unit_measure: Optional[str] = Query(
@@ -65,7 +65,9 @@ class ChartsQueryParams:
         max_homolog_price: Optional[float] = Query(
             None, description="Valor máximo dos itens homologados"),
         object_nature: Optional[str] = Query(
-            None, description="Natureza do item")
+            None, description="Natureza do item"),
+        noise: Optional[int] = Query(
+            0, description="Apresentar grupos de ruídos")
     ):
         self.limit = limit
         self.offset = offset
@@ -97,6 +99,7 @@ class ChartsQueryParams:
         self.body_type = body_type
         self.bidder_type = bidder_type
         self.object_nature = object_nature
+        self.noise = noise
 
         # check if all filter values are valid
         check_params_values(self, )
