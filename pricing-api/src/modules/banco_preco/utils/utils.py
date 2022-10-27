@@ -80,8 +80,7 @@ def get_range(params, min_field, max_field):
         l["lte"] = params[max_field]
     return l
 
-
-item_term_translation = {
+item_terms_translation = {
     "city": "municipio",
     "microregion": "microrregiao",
     "mesoregion": "mesorregiao",
@@ -90,18 +89,21 @@ item_term_translation = {
     "inter_region": "regiao_intermediaria",
     "year": "ano",
     "month": "mes",
-    # "description": "original_dsc",
-    "unit_measure": "dsc_unidade_medida",
-    "group": "grupo_unidade_medida",
-    "first_token": "primeiro_termo",
     "body": "orgao",
     "body_type": "tipo_orgao",
     "modality": "modalidade",
     "procurement_type": "tipo_licitacao",
+    "object_nature": "natureza_objeto",
+}
+
+item_term_translation = {
+    # "description": "original_dsc",
+    "unit_measure": "dsc_unidade_medida",
+    "group": "grupo_unidade_medida",
+    "first_token": "primeiro_termo",
     "bidder_name": "nome_vencedor",
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
-    "object_nature": "natureza_objeto",
     "group_by_overprice": "grupo_unidade_medida",
     "noise": "grupo_ruido"
 }
