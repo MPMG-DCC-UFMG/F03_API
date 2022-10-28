@@ -71,6 +71,7 @@ class ChartsQueryParams:
         self.body_type = body_type
         self.bidder_type = bidder_type
         self.object_nature = object_nature
+        self.noise = noise
 
         # check if all filter values are valid
         check_params_values(self, )
