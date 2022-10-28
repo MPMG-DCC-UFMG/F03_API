@@ -22,7 +22,7 @@ def get_params_values(params):
 
     # filtros relacionados aos itens
     if bool(params.group):
-        filters.append(ItemModel.grupo_unidade_medida.in_(params.group))
+        filters.append(ItemModel.grupo_unidade_medida.__eq__(params.group))
     if bool(params.object_nature):
         filters.append(ItemModel.natureza_objeto.in_(params.object_nature))
     if bool(params.max_amount):
@@ -40,8 +40,7 @@ def get_params_values(params):
     if bool(params.modality):
         filters.append(ItemModel.modalidade.in_(params.modality))
     if bool(params.procurement_type):
-        filters.append(ItemModel.tipo_licitacao.__eq__(
-            params.procurement_type))
+        filters.append(ItemModel.tipo_licitacao.in_(params.procurement_type))
     if bool(params.body):
         filters.append(ItemModel.orgao.in_(params.body))
     if bool(params.body_type):
