@@ -24,7 +24,7 @@ def get_params_values(params):
     if bool(params.group):
         filters.append(ItemModel.grupo_unidade_medida.__eq__(params.group))
     if bool(params.object_nature):
-        filters.append(ItemModel.natureza_objeto.__eq__(params.object_nature))
+        filters.append(ItemModel.natureza_objeto.in_(params.object_nature))
     if bool(params.max_amount):
         filters.append(ItemModel.qtde_item <= params.max_amount)
     if bool(params.min_amount):
@@ -38,14 +38,13 @@ def get_params_values(params):
 
     # filtros relacionados à licitação
     if bool(params.modality):
-        filters.append(ItemModel.modalidade.__eq__(params.modality))
+        filters.append(ItemModel.modalidade.in_(params.modality))
     if bool(params.procurement_type):
-        filters.append(ItemModel.tipo_licitacao.__eq__(
-            params.procurement_type))
+        filters.append(ItemModel.tipo_licitacao.in_(params.procurement_type))
     if bool(params.body):
-        filters.append(ItemModel.orgao.__eq__(params.body))
+        filters.append(ItemModel.orgao.in_(params.body))
     if bool(params.body_type):
-        filters.append(ItemModel.tipo_orgao.__eq__(params.body_type))
+        filters.append(ItemModel.tipo_orgao.in_(params.body_type))
     if bool(params.bidder_type):
         filters.append(ItemModel.tipo_vencedor.__eq__(params.bidder_type))
 
@@ -80,7 +79,6 @@ def get_range(params, min_field, max_field):
         l["lte"] = params[max_field]
     return l
 
-
 item_terms_translation = {
     "city": "municipio",
     "microregion": "microrregiao",
@@ -90,6 +88,11 @@ item_terms_translation = {
     "inter_region": "regiao_intermediaria",
     "year": "ano",
     "month": "mes",
+    "body": "orgao",
+    "body_type": "tipo_orgao",
+    "modality": "modalidade",
+    "procurement_type": "tipo_licitacao",
+    "object_nature": "natureza_objeto",
 }
 
 item_term_translation = {
@@ -97,14 +100,9 @@ item_term_translation = {
     "unit_measure": "dsc_unidade_medida",
     "group": "grupo_unidade_medida",
     "first_token": "primeiro_termo",
-    "body": "orgao",
-    "body_type": "tipo_orgao",
-    "modality": "modalidade",
-    "procurement_type": "tipo_licitacao",
     "bidder_name": "nome_vencedor",
     "bidder_type": "tipo_vencedor",
     "bidder_document": "cnpj_vencedor",
-    "object_nature": "natureza_objeto",
     "group_by_overprice": "grupo_unidade_medida",
     "noise": "grupo_ruido"
 }

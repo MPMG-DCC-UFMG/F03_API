@@ -19,10 +19,10 @@ class ListItemsQuery(BaseModel):
     unit_measure: Optional[str] = Query(None, min_length=1, description="Unidade de medida do item")
     group: Optional[str] = Query(None, description="Nome do grupo do item")
     first_token: Optional[str] = Query(None, description="Primeiro termo do item")
-    body: Optional[str] = Query(None, description="Órgão da licitação")
-    body_type: Optional[str] = Query(None, description="Tipo do órgão da licitação")
-    modality: Optional[str] = Query(None, description="Modalidade de licitação")
-    procurement_type: Optional[str] = Query(None, description="Tipo de licitação")
+    body: Optional[List[str]] = Query(None, description="Órgão da licitação")
+    body_type: Optional[List[str]] = Query(None, description="Tipo do órgão da licitação")
+    modality: Optional[List[str]] = Query(None, description="Modalidade de licitação")
+    procurement_type: Optional[List[str]] = Query(None, description="Tipo de licitação")
     bidder_name: Optional[str] = Query(None, description="Nome do licitante")
     bidder_type: Optional[str] = Query(None, description="Tipo do licitante")
     bidder_document: Optional[str] = Query(None, description="Documento do licitante (CPF/CNPJ)")
@@ -30,7 +30,7 @@ class ListItemsQuery(BaseModel):
     max_amount: Optional[int] = Query(None, description="Quantidade máxima de itens homologados")
     min_homolog_price: Optional[float] = Query(None, description="Valor mínimo dos itens homologados")
     max_homolog_price: Optional[float] = Query(None, description="Valor máximo dos itens homologados")
-    object_nature: Optional[str] = Query(None, description="Natureza do item")
+    object_nature: Optional[List[str]] = Query(None, description="Natureza do item")
     noise: Optional[int] = Query(0, description="Apresentar grupos de ruídos")
 
     class Config:

@@ -15,10 +15,10 @@
       "01"
   ],
   "description": "clips",
-  "body": "PREFEITURA MUNICIPAL DE RIO POMBA",
-  "body_type": "PREFEITURA MUNICIPAL",
-  "modality": "PREGAO PRESENCIAL",
-  "procurement_type": "MENOR PRECO",
+  "body": ["PREFEITURA MUNICIPAL DE RIO POMBA"],
+  "body_type": ["PREFEITURA MUNICIPAL"],
+  "modality": ["PREGAO PRESENCIAL"],
+  "procurement_type": ["MENOR PRECO"],
   "bidder_name": "SEVEN COPY COMERCIAL LTDA",
   "bidder_type": "J",
   "bidder_document": "07416432000127",
@@ -26,5 +26,5 @@
   "max_amount": 220,
   "min_homolog_price": 1.0,
   "max_homolog_price": 5.7,
-  "object_nature": "COMPRAS E OUTROS SERVICOS"
+  "object_nature": ["COMPRAS E OUTROS SERVICOS"]
 }
